@@ -1,0 +1,30 @@
+protobuf (3.5.1-1) xenial; urgency=medium
+
+  * New upstream release 3.5.1
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 31 Aug 2017 21:44:01 +0200
+
+protobuf (3.4.0-3ubuntu1) UNRELEASED; urgency=medium
+
+  *dummy version bump for attila 
+
+ -- root <root@kitty.lan.ultinous.com>  Mon, 25 Sep 2017 12:25:54 +0200
+
+protobuf (3.4.0-3) xenial; urgency=medium
+
+  * Remove libprotoc-dev includes from libprotobuf-dev
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 31 Aug 2017 21:44:01 +0200
+
+protobuf (3.4.0-2) xenial; urgency=medium
+
+  * Split into multiple binary packages
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 31 Aug 2017 15:27:23 +0200
+
+protobuf (3.4.0-1) unstable; urgency=medium
+
+  * Initial release
+ (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- FRANK Kristof <oturw@ultinous.com>  Tue, 29 Aug 2017 14:33:31 +0200
