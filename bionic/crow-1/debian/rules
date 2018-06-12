@@ -16,6 +16,3 @@ export DEB_CXXFLAGS_MAINT_APPEND  = ${EXTRA_FLAGS}
 
 %:
 	dh $@ --build_system=cmake
-
-override_dh_auto_install:
-	dh_install amalgamate/crow_all.h usr/include

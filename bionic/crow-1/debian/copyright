@@ -1,1 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: crow
+
+Files: *
+Copyright: 2018 Ultinous Zrt <sysadmin@ultinous.com>
+License: BSD

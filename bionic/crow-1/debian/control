@@ -12,7 +12,7 @@ Homepage: https://github.com/Ultinous/crow
 Vcs-Git: https://github.com/Ultinous/crow.git
 Vcs-Browser: https://github.com/Ultinous/crow
 
-Package: crow-dev
+Package: libcrow-dev
 Architecture: all
 Depends:
  ${misc:Depends},
