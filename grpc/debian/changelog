@@ -1,0 +1,71 @@
+grpc (1.9.1-1) xenial; urgency=medium
+
+  * New upstream release 1.9.1
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Wed, 13 Sep 2017 21:39:01 +0200
+
+grpc (1.6.0-7ubuntu1) UNRELEASED; urgency=medium
+
+  * dummy version bump for attila 
+
+ -- root <root@kitty.lan.ultinous.com>  Fri, 22 Sep 2017 12:28:29 +0200
+
+grpc (1.6.0-7) xenial; urgency=medium
+
+  * Patched cmake dependecies
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Wed, 13 Sep 2017 21:39:01 +0200
+
+grpc (1.6.0-6) xenial; urgency=medium
+
+  * Fixed dependecies of libgrpc-dev and libgrpcxx-dev packages 
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Tue, 12 Sep 2017 17:01:06 +0200
+
+grpc (1.6.0-5) xenial; urgency=medium
+
+  * Included all .so files in libgrpc4
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Tue, 12 Sep 2017 10:25:34 +0200
+
+grpc (1.6.0-4) xenial; urgency=medium
+
+  * Included some more .so files in libgrpc4
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 07 Sep 2017 14:09:43 +0200
+
+grpc (1.6.0-3) xenial; urgency=medium
+
+  * Switched to buildsystem cmake
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 07 Sep 2017 10:10:35 +0200
+
+grpc (1.6.0-2) xenial; urgency=medium
+
+  * Binary package file contents mixup fix
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 01 Sep 2017 10:15:18 +0200
+
+grpc (1.6.0-1) xenial; urgency=medium
+
+  * New upstream release
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 01 Sep 2017 09:35:16 +0200
+
+grpc (1.4.5-3) xenial; urgency=medium
+
+  * Introduced grpc-plugins binary package with grpc_*_plugin binaries
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 01 Sep 2017 09:07:19 +0200
+
+grpc (1.4.5-2) xenial; urgency=medium
+
+  * Split into multiple binary packages
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 31 Aug 2017 15:43:04 +0200
+
+grpc (1.4.5-1) xenial; urgency=medium
+
+  * Initial release
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Wed, 30 Aug 2017 17:58:09 +0200

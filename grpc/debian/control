@@ -1,0 +1,58 @@
+Source: grpc
+Section: libs
+Priority: optional
+Maintainer: Lengyel Zsolt <zsolt@kitty.lan.ultinous.com>
+Build-Depends: debhelper (>=9), build-essential, autoconf, libtool, cmake (>=3.8.0), pkg-config, libgflags-dev (>=2.2.0), libgtest-dev, clang, libc++-dev, libprotoc-dev (>=3.5.1), libprotobuf-dev (>=3.5.1), protobuf-compiler (>=3.5.1), zlib1g-dev, libssl-dev, libgoogle-perftools-dev, python, libc-ares-dev
+Standards-Version: 3.9.6
+
+Package: libgrpc-dev
+Section: libdevel
+Architecture: any
+Depends: libgrpc4 (= ${binary:Version}), ${misc:Depends}, libgflags-dev (>=2.2.0), libgtest-dev, libprotoc-dev (>=3.5.1), libprotobuf-dev (>=3.5.1), zlib1g-dev, libssl-dev, libgoogle-perftools-dev, libc-ares-dev 
+Description: high performance general RPC framework (C development)
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package contains the headers and the static library for libgrpc4.
+
+Package: libgrpc4
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: high performance general RPC framework
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package provides the gRPC C bindings.
+
+Package: libgrpcxx-dev
+Section: libdevel
+Architecture: any
+Depends: libgrpcxx1v6 (= ${binary:Version}), ${misc:Depends}, libgflags-dev (>=2.2.0), libgtest-dev, libc++-dev, libprotoc-dev (>=3.5.1), libprotobuf-dev (>=3.5.1), zlib1g-dev, libssl-dev, libgoogle-perftools-dev, libc-ares-dev
+Description: high performance general RPC framework (C++ development)
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package contains the headers and the static library for libgrpcxx1v6.
+
+Package: libgrpcxx1v6
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: high performance general RPC framework
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package provides the gRPC C++ bindings.
+
+Package: grpc-plugins
+Architecture: any
+Depends: libgrpc4 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: high performance general RPC framework (plugins)
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package provides the gRPC plugins for various languages.

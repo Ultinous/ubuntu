@@ -1,0 +1,36 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+export DEB_BUILD_OPTIONS = "parallel=8"
+
+%:
+	dh $@ --parallel --with autoreconf
+
+override_dh_auto_configure:
+	./autogen.sh
+	dh_auto_configure -- --prefix=/usr
+
+override_dh_auto_build:
+	dh_auto_build
+	(cd java; mvn --settings settings.xml package)
+
+override_dh_install:
+	dh_install
+	# Convert doc dir to symlink for the -dev packages.
+	rm -rf $(CURDIR)/debian/libprotobuf-dev/usr/share/doc/libprotobuf-dev
+	ln -s libprotobuf9v5 $(CURDIR)/debian/libprotobuf-dev/usr/share/doc/libprotobuf-dev
+	rm -rf $(CURDIR)/debian/libprotoc-dev/usr/share/doc/libprotoc-dev
+	ln -s libprotoc9v5 $(CURDIR)/debian/libprotoc-dev/usr/share/doc/libprotoc-dev
+	# Remove compiler headers from libprotobuf-dev.
+	rm -rf $(CURDIR)/debian/libprotobuf-dev/usr/include/google/protobuf/compiler

@@ -1,0 +1,37 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+CONFIGURE_ARGS= \
+ -DCMAKE_BUILD_TYPE=Release \
+ -DBUILD_SHARED_LIBS=ON \
+ -DgRPC_CARES_PROVIDER=pkgconfig \
+ -DgRPC_ZLIB_PROVIDER=package \
+ -DgRPC_SSL_PROVIDER=package \
+ -DgRPC_PROTOBUF_PROVIDER=package \
+ -DgRPC_GFLAGS_PROVIDER=package \
+ -DgRPC_BUILD_TESTS=OFF \
+
+%:
+	dh $@ --buildsystem=cmake
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(CONFIGURE_ARGS)
+
+override_dh_auto_test:
+	:
+
+# dh_make generated override targets
+# This is example for Cmake (See https://bugs.debian.org/641051 )
+#override_dh_auto_configure:
+#	dh_auto_configure -- #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
