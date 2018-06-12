@@ -1,0 +1,112 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE = 1
+
+# Hardening Caffe according to https://wiki.debian.org/Hardening
+export DEB_BUILD_MAINT_OPTIONS   = hardening=+all
+export DEB_CFLAGS_MAINT_APPEND   = -Wall #-pedantic
+export DEB_CXXFLAGS_MAINT_APPEND = -Wall #-pedantic
+export DEB_LDFLAGS_MAINT_APPEND  = -Wl,--as-needed
+
+# Try this if it fails to build with a new glibc.
+# Thanks to Gianfranco Costamagna <locutusofborg@debian.org>
+#export DEB_CFLAGS_MAINT_APPEND   = -Wall -D_GLIBCXX_USE_C99_MATH=1
+#export DEB_CXXFLAGS_MAINT_APPEND = -Wall -D_GLIBCXX_USE_C99_MATH=1
+
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+RULES         := debian/rules
+CAFFE_SOVER   := 1.0.0
+BUILDDIR      := "caffe_cuda_build"
+
+TEMPLATES     := $(wildcard debian/*.in)
+AUTOGEN       := $(patsubst %.in,%,$(TEMPLATES))
+
+## CMake Configuration Template.
+## Should sync this with the caffe CPU_ONLY version.
+CMAKE_CONFIGURE_TEMPLATE = \
+	-DALLOW_LMDB_NOLOCK=OFF \
+	-DBLAS="Generic" \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_docs=OFF \
+	-DBUILD_matlab=OFF \
+	-DBUILD_python=ON \
+	-DBUILD_python_layer=ON \
+	-Dpython_version="3" \
+	-DCMAKE_BUILD_TYPE="Release" \
+	-DCMAKE_C_FLAGS="$(CFLAGS) $(CPPFLAGS)" \
+	-DCMAKE_CXX_FLAGS="$(CXXFLAGS) $(CPPFLAGS)" \
+	-DCMAKE_SKIP_RPATH=TRUE \
+	-DCMAKE_VERBOSE_MAKEFILE=ON \
+	-DUSE_CUDNN=OFF \
+	-DUSE_LEVELDB=ON \
+	-DUSE_LMDB=ON \
+	-DUSE_OPENCV=ON \
+	-DCPU_ONLY=$(FILL_THIS_BLANK) \
+	-DCMAKE_INSTALL_PREFIX="/usr"
+
+CONFFLAG_CUDA = \
+	$(CMAKE_CONFIGURE_TEMPLATE) \
+	-DCPU_ONLY=OFF \
+	-DCUDA_ARCH_NAME="All" \
+	-DCMAKE_CXX_COMPILER=g++-6 \
+	-DCMAKE_C_COMPILER=gcc-6 \
+	-DCUDA_NVCC_FLAGS=-G
+    # Temporary fix for CUDA 9.1 https://github.com/BVLC/caffe/issues/6164
+
+
+%:: %.in
+	perl -p \
+	-e 's{#CAFFE_CONFIGURE#}{caffe_cuda}g;' \
+	-e 's{#CAFFE_SOVER#}{$(CAFFE_SOVER)}g;' \
+	-e 's{#DEB_HOST_MULTIARCH#}{$(DEB_HOST_MULTIARCH)}g;' \
+	< $< > $@
+
+%:
+	dh $@ \
+		--buildsystem=cmake \
+		--with python3,bash-completion
+
+override_dh_auto_configure: $(AUTOGEN)
+	dh_auto_configure --builddirectory=$(BUILDDIR) \
+		-- $(CONFFLAG_CUDA)
+
+override_dh_auto_clean:
+	dh_auto_clean --builddirectory=$(BUILDDIR)
+	-$(RM) -rf python/caffe/proto/ doxygen
+	-$(RM) python/caffe/_caffe.so
+	-find . -type d -name '__pycache__' -exec rm -rf '{}' +
+
+override_dh_auto_build:
+	dh_auto_build --builddirectory=$(BUILDDIR) \
+		-- caffe pycaffe test.testbin all
+
+# In the test phase, we need to set LD_LIBRARY_PATH properly
+# for those test ELFs linked with libcaffe.so.X
+override_dh_auto_test:
+	# the i386/amd64 build machine may have no CUDA-capable
+	# video card. Hence heading with a dash.
+	-dh_auto_test --builddirectory=$(BUILDDIR) \
+		-- runtest pytest LD_LIBRARY_PATH=$(shell pwd)/$(BUILDDIR)/lib/
+
+override_dh_python3:
+	dh_python3 --requires=python/requirements.txt
+	dh_numpy3
+
+override_dh_install:
+	dh_install
+	# The upstream unittest can be used to verify the BLAS correctness.
+	mv caffe_cuda_build/test/test.testbin  caffe-gtest
+	install -m0755 caffe-gtest debian/caffe-tools-cuda/usr/bin/
+	dh_missing --list-missing
+
+override_dh_auto_install:
+	dh_auto_install --builddirectory=$(BUILDDIR) -- install
+
+override_dh_makeshlibs:
+	dh_makeshlibs --package=python3-caffe-cuda -X/usr/lib/python
+	dh_makeshlibs --remaining-packages
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod -x debian/tmp/usr/lib/python3/dist-packages/caffe/proto/caffe_pb2.py
+	chmod -x debian/tmp/usr/lib/python3/dist-packages/caffe/proto/__init__.py

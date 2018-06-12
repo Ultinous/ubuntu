@@ -1,0 +1,10 @@
+Homepage: http://caffe.berkeleyvision.org/
+Name: Caffe
+Reference:
+  Author: Jia, Yangqing and Shelhamer, Evan and Donahue, Jeff and Karayev, Sergey and Long, Jonathan and Girshick, Ross and Guadarrama, Sergio and Darrell, Trevor
+  Title: "Caffe: Convolutional Architecture for Fast Feature Embedding"
+  Journal: arXiv preprint arXiv:1408.5093
+  Year: 2014
+  URL: http://arxiv.org/abs/1408.5093
+  eprint: http://arxiv.org/pdf/1408.5093.pdf
+Repository-Browse: https://github.com/BVLC/caffe

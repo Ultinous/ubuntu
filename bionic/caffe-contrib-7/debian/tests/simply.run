@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+# simply run caffe to see if it explodes.
+caffe 2>&1
+
+exit 0

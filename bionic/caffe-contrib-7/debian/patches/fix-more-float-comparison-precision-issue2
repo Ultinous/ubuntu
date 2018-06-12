@@ -1,0 +1,15 @@
+Purpose: fix float point number comparison precision issue to avoid FTBFS
+Forward: not-yet
+diff --git a/src/caffe/test/test_deconvolution_layer.cpp b/src/caffe/test/test_deconvolution_layer.cpp
+index c4b09ad..858a72c 100644
+--- a/src/caffe/test/test_deconvolution_layer.cpp
++++ b/src/caffe/test/test_deconvolution_layer.cpp
+@@ -257,7 +257,7 @@ TYPED_TEST(DeconvolutionLayerTest, TestNDAgainst2D) {
+   }
+   ASSERT_EQ(result_nd.count(), result_2d.count());
+   for (int i = 0; i < result_2d.count(); ++i)  {
+-    EXPECT_EQ(result_2d.cpu_data()[i], result_nd.cpu_data()[i]);
++    EXPECT_FLOAT_EQ(result_2d.cpu_data()[i], result_nd.cpu_data()[i]);
+   }
+   ASSERT_EQ(backward_result_nd.count(), backward_result_2d.count());
+   for (int i = 0; i < backward_result_2d.count(); ++i) {

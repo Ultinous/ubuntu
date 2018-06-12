@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+# using the deploy version of lenet for a benchmark test, which requires
+# no MNIST dataset.
+model=examples/mnist/lenet.prototxt
+
+# launch a caffe benchmark on the above network
+caffe time -model $model -iterations 20 2>&1

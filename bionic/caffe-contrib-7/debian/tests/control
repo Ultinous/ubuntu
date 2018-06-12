@@ -1,0 +1,11 @@
+Tests: simply.run
+
+Tests: test.forward.backward.lenet
+
+Tests: test.python3.import
+
+Tests: test.python3.simple.forward
+
+# This test is allowed to fail because it requires GPU
+Test-Command: caffe-gtest --gtest_shuffle || true
+Depends: @
