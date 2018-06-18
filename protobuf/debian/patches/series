@@ -1,1 +1,5 @@
-mvn-settings
+hurd.patch
+#java-test-scope.patch
+#misleading-indentation.patch
+s390x.patch
+disable_local_gmock.patch
