@@ -1,2 +1,9 @@
 usr/include/grpc/
-usr/lib/cmake/grpc/
+usr/lib/*/libgpr.a
+usr/lib/*/libgpr.so
+usr/lib/*/libgrpc.a
+usr/lib/*/libgrpc.so
+usr/lib/*/libgrpc_*.a
+usr/lib/*/libgrpc_*.so
+usr/lib/*/pkgconfig/grpc.pc
+usr/lib/*/pkgconfig/grpc_unsecure.pc

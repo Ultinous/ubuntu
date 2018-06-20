@@ -1,23 +1,29 @@
 Source: grpc
-Section: libs
 Priority: optional
-Maintainer: Lengyel Zsolt <zsolt@kitty.lan.ultinous.com>
-Build-Depends: debhelper (>=9), build-essential, autoconf, libtool, cmake (>=3.8.0), pkg-config, libgflags-dev (>=2.2.0), libgtest-dev, clang, libc++-dev, libprotoc-dev (>=3.5.1), libprotobuf-dev (>=3.5.1), protobuf-compiler (>=3.5.1), zlib1g-dev, libssl-dev, libgoogle-perftools-dev, python, libc-ares-dev
-Standards-Version: 3.9.6
+Maintainer: Laszlo Boszormenyi (GCS) <gcs@debian.org>
+Uploaders: Andrew Pollock <apollock@debian.org>
+Build-Depends: debhelper (>= 11~), zlib1g-dev, libssl-dev, libprotobuf-dev, protobuf-compiler (>= 3.5.2~), libgflags-dev, libgtest-dev, libgoogle-perftools-dev, python, libprotoc-dev (>= 3.5.2~), libc-ares-dev
+Standards-Version: 4.1.4
+Section: libs
+Homepage: http://www.grpc.io/
+Vcs-Git: https://github.com/grpc/grpc.git
+Vcs-Browser: https://github.com/grpc/grpc
 
 Package: libgrpc-dev
 Section: libdevel
 Architecture: any
-Depends: libgrpc4 (= ${binary:Version}), ${misc:Depends}, libgflags-dev (>=2.2.0), libgtest-dev, libprotoc-dev (>=3.5.1), libprotobuf-dev (>=3.5.1), zlib1g-dev, libssl-dev, libgoogle-perftools-dev, libc-ares-dev 
-Description: high performance general RPC framework (C development)
+Multi-Arch: same
+Depends: libgrpc5 (= ${binary:Version}), ${misc:Depends}
+Description: high performance general RPC framework (development)
  A modern, open source remote procedure call (RPC) framework that can
  run anywhere. It enables client and server applications to communicate
  transparently, and makes it easier to build connected systems.
  .
- This package contains the headers and the static library for libgrpc4.
+ This package contains the headers and the static library for libgrpc5.
 
-Package: libgrpc4
+Package: libgrpc5
 Architecture: any
+Multi-Arch: same
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: high performance general RPC framework
  A modern, open source remote procedure call (RPC) framework that can
@@ -26,19 +32,21 @@ Description: high performance general RPC framework
  .
  This package provides the gRPC C bindings.
 
-Package: libgrpcxx-dev
+Package: libgrpc++-dev
 Section: libdevel
 Architecture: any
-Depends: libgrpcxx1v6 (= ${binary:Version}), ${misc:Depends}, libgflags-dev (>=2.2.0), libgtest-dev, libc++-dev, libprotoc-dev (>=3.5.1), libprotobuf-dev (>=3.5.1), zlib1g-dev, libssl-dev, libgoogle-perftools-dev, libc-ares-dev
-Description: high performance general RPC framework (C++ development)
+Multi-Arch: same
+Depends: libgrpc++1 (= ${binary:Version}), libgrpc-dev (=${binary:Version}), ${misc:Depends}
+Description: high performance general RPC framework (development)
  A modern, open source remote procedure call (RPC) framework that can
  run anywhere. It enables client and server applications to communicate
  transparently, and makes it easier to build connected systems.
  .
- This package contains the headers and the static library for libgrpcxx1v6.
+ This package contains the headers and the static library for libgrpc++1.
 
-Package: libgrpcxx1v6
+Package: libgrpc++1
 Architecture: any
+Multi-Arch: same
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: high performance general RPC framework
  A modern, open source remote procedure call (RPC) framework that can
@@ -47,12 +55,13 @@ Description: high performance general RPC framework
  .
  This package provides the gRPC C++ bindings.
 
-Package: grpc-plugins
+Package: protobuf-compiler-grpc
 Architecture: any
-Depends: libgrpc4 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: high performance general RPC framework (plugins)
+Depends: ${shlibs:Depends}, ${misc:Depends}, protobuf-compiler
+Description: high performance general RPC framework - protobuf plugin
  A modern, open source remote procedure call (RPC) framework that can
  run anywhere. It enables client and server applications to communicate
  transparently, and makes it easier to build connected systems.
  .
- This package provides the gRPC plugins for various languages.
+ This package provides the plugins needed for compiling gRPC service
+ definitions with the protobuf compiler.

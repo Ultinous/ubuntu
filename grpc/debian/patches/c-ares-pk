@@ -1,8 +1,6 @@
-Index: grpc-1.9.1/CMakeLists.txt
-===================================================================
---- grpc-1.9.1.orig/CMakeLists.txt
-+++ grpc-1.9.1/CMakeLists.txt
-@@ -54,7 +54,7 @@ set(gRPC_ZLIB_PROVIDER "module" CACHE ST
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,7 +54,7 @@
  set_property(CACHE gRPC_ZLIB_PROVIDER PROPERTY STRINGS "module" "package")
  
  set(gRPC_CARES_PROVIDER "module" CACHE STRING "Provider of c-ares library")
@@ -11,11 +9,9 @@ Index: grpc-1.9.1/CMakeLists.txt
  
  set(gRPC_SSL_PROVIDER "module" CACHE STRING "Provider of ssl library")
  set_property(CACHE gRPC_SSL_PROVIDER PROPERTY STRINGS "module" "package")
-Index: grpc-1.9.1/cmake/cares.cmake
-===================================================================
---- grpc-1.9.1.orig/cmake/cares.cmake
-+++ grpc-1.9.1/cmake/cares.cmake
-@@ -36,4 +36,11 @@ elseif("${gRPC_CARES_PROVIDER}" STREQUAL
+--- a/cmake/cares.cmake
++++ b/cmake/cares.cmake
+@@ -36,4 +36,11 @@
      set(_gRPC_CARES_INCLUDE_DIR ${c-ares_INCLUDE_DIR})
    endif()
    set(_gRPC_FIND_CARES "if(NOT c-ares_FOUND)\n  find_package(c-ares CONFIG)\nendif()")
