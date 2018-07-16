@@ -14,16 +14,57 @@
 
 export DEB_BUILD_OPTIONS = "parallel=8"
 
+include /usr/share/dpkg/architecture.mk
+ifeq ($(origin CXX),default)
+CXX := $(DEB_HOST_GNU_TYPE)-g++
+endif
+
 %:
-	dh $@ --parallel --with autoreconf
+	dh $@ --parallel --with autoreconf,python3
 
 override_dh_auto_configure:
 	./autogen.sh
 	dh_auto_configure -- --prefix=/usr
+PYTHON_CROSS_VARS += PROTOC=$(CURDIR)/debian/run_protoc
+PYTHON_CROSS_VARS += PYTHONPATH=/usr/lib/python$$pv/plat-$(DEB_HOST_MULTIARCH)
+PYTHON_CROSS_VARS += _PYTHON_HOST_PLATFORM=$(DEB_HOST_ARCH_OS)-$(DEB_HOST_GNU_CPU)
+PYTHON_CROSS_VARS += CC=$(CXX)
+PYTHON_CROSS_VARS += CXX=$(CXX)
 
 override_dh_auto_build:
 	dh_auto_build
 	(cd java; mvn --settings settings.xml package)
+	cp -rv python python3
+	set -e; cd python3 && for pv in $(shell py3versions -vr); do \
+		$(PYTHON_CROSS_VARS) python$$pv setup.py build --cpp_implementation; \
+	done
+
+override_dh_auto_test:
+	dh_auto_test
+	# Python3 test.
+	set -e; \
+	export LD_LIBRARY_PATH=$(CURDIR)/src/.libs; \
+	cd python3 && for PYTHON in $(shell py3versions -r); do \
+		$$PYTHON setup.py test --cpp_implementation; \
+	done
+
+override_dh_auto_clean:
+	dh_auto_clean
+	set -e; \
+	cd python && for python in $(shell pyversions -r); do \
+		$$python setup.py clean --all; \
+	done
+	rm -rf python3
+
+override_dh_auto_install:
+	dh_auto_install
+	set -e; \
+	cd python3 && for pv in $(shell py3versions -vr); do \
+		$(PYTHON_CROSS_VARS) python$$pv setup.py install --cpp_implementation \
+			--install-layout=deb --no-compile \
+			--root=$(CURDIR)/debian/python3-protobuf; \
+	done
+	find $(CURDIR)/debian/python3-protobuf -name 'protobuf-*-nspkg.pth' -delete
 
 override_dh_install:
 	dh_install
