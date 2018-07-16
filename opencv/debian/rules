@@ -1,0 +1,112 @@
+#!/usr/bin/make -f
+
+OCV_BASE_VERSION = 3.4
+OCV_LIBPKG_LIST = libopencv-core libopencv-ml libopencv-dnn libopencv-imgproc \
+	libopencv-imgcodecs libopencv-video libopencv-videoio \
+	libopencv-objdetect libopencv-highgui \
+	libopencv-calib3d libopencv-flann \
+	libopencv-features2d libopencv-photo \
+	libopencv-videostab libopencv-stitching \
+	libopencv-shape libopencv-superres \
+	libopencv-viz libopencv-photo \
+
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all,-pie,+fortify
+export JAVA_HOME=/usr/lib/jvm/java-10-openjdk-amd64
+
+CMAKE_FLAGS = \
+-DBUILD_EXAMPLES=OFF \
+-DBUILD_TESTS=OFF \
+-DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_C_FLAGS_RELEASE="$(CFLAGS)" \
+-DCMAKE_CXX_FLAGS_RELEASE="$(CXXFLAGS)" \
+-DCMAKE_EXE_LINKER_FLAGS_RELEASE="$(LDFLAGS)" \
+-DCMAKE_INSTALL_LIBDIR="lib/$(DEB_HOST_MULTIARCH)" \
+-DCMAKE_INSTALL_PREFIX=/usr \
+-DCMAKE_SKIP_RPATH=ON \
+-DCMAKE_VERBOSE_MAKEFILE=ON \
+-DCUDA_ARCH_BIN="3.0 3.5 3.7 5.0 5.2 6.0 6.1" \
+-DCUDA_ARCH_PTX="3.0 3.5 3.7 5.0 5.2 6.0 6.1" \
+-DCUDA_USE_STATIC_CUDA_RUNTIME=OFF \
+-DENABLE_CXX11=ON \
+-DENABLE_PRECOMPILED_HEADERS=OFF \
+-DENABLE_SSE2=ON \
+-DENABLE_SSE3=OFF \
+-DENABLE_SSE=ON \
+-DINSTALL_C_EXAMPLES=OFF \
+-DINSTALL_PYTHON_EXAMPLES=OFF	\
+-DJAVA_INCLUDE_PATH=/usr/lib/jvm/java-10-openjdk-amd64/include \
+-DWITH_1394=ON \
+-DWITH_CUBLAS=ON \
+-DWITH_CUDA=ON \
+-DWITH_GTK=OFF \
+-DWITH_NVCUVID=OFF \
+-DWITH_OPENGL=ON \
+-DWITH_QT=ON \
+-DWITH_TBB=ON \
+-DWITH_V4L=ON
+
+%:
+	dh $@ --buildsystem=cmake --with python2,python3 --with javahelper --parallel
+
+override_dh_clean:
+	rm -rf modules/python/src2/hdr_parser.pyc
+	rm -rf modules/java/generator/rst_parser.pyc
+	rm -rf modules/refman.rst
+
+	dh_clean -O--buildsystem=cmake
+	-rm -rf obj-$(BUILDDIR_ARCH)
+	-rm -rf obj-$(BUILDDIR_ARCH)-static
+	-rm -rf modules/python/src2/__pycache__/hdr_parser.cpython-34.pyc
+
+override_dh_auto_configure: configure_dyn configure_static
+configure_dyn:
+	dh_auto_configure -B obj-$(BUILDDIR_ARCH) \
+		-- $(CMAKE_FLAGS) \
+		-DCMAKE_SHARED_LINKER_FLAGS_RELEASE="$(LDFLAGS)" \
+		-DBUILD_SHARED_LIBS=ON -DBUILD_DOCS=ON
+
+configure_static:
+	dh_auto_configure -B obj-$(BUILDDIR_ARCH)-static \
+		-- $(CMAKE_FLAGS) \
+		-DBUILD_SHARED_LIBS=OFF -DBUILD_DOCS=OFF
+
+override_dh_auto_build: build_dyn build_static
+	
+build_dyn:
+	dh_auto_build -B obj-$(BUILDDIR_ARCH)
+	dh_auto_build -B obj-$(BUILDDIR_ARCH) -- doxygen
+
+build_static:
+	dh_auto_build -B obj-$(BUILDDIR_ARCH)-static
+
+override_dh_auto_test:
+
+override_dh_install:
+	-rm --verbose -rf debian/tmp/usr/share/opencv/samples/octave
+	-rm --verbose -rf debian/tmp/usr/share/opencv/samples/c/cvsample.dsp
+	-rm --verbose -rf debian/tmp/usr/share/OpenCV/doc/license.txt
+
+	# change install path of java library
+	sed -i -e "s@share\/OpenCV\/java\/@lib\/jni\/@g" \
+		debian/tmp/usr/share/OpenCV/OpenCVModules-release.cmake
+
+	for f in $$(ls obj-*/lib/libopencv_*.a); do \
+		cp --verbose --preserve=mode $$f debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/; done
+
+	rm -rf debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/*_pch_dephelp.a
+
+	dh_install -O--buildsystem=cmake --list-missing
+
+override_dh_fixperms-indep:
+	dh_fixperms
+	#chmod 644 $(CURDIR)/debian/opencv-doc/usr/share/doc/opencv-doc/examples/python/*.py
+	#chmod 644 $(CURDIR)/debian/opencv-doc/usr/share/doc/opencv-doc/examples/python2/*.py
+
+override_dh_strip:
+	for p in $$OCV_LIBPKG_LIST ; do \
+		dh_strip -p$$p$$OCV_BASE_VERSION --dbg-package=$$p-dbg ; done
+	dh_strip
+
+override_dh_shlibdeps:
+	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+
