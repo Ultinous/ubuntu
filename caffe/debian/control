@@ -51,7 +51,6 @@ Build-Depends: bc,
                python3-yaml,
 # The above part is synced with main/caffe
 # The following part is CUDA related B-D
-               nvidia-cuda-toolkit (>= 7.5.18) [amd64 ppc64el],
                clang-3.8,
 Standards-Version: 4.0.0
 Homepage: http://caffe.berkeleyvision.org
