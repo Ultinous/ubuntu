@@ -1,0 +1,4 @@
+package-name-doesnt-match-sonames
+
+# [lintian I] let's get rid of the symbols control file of a C++ shared library
+no-symbols-control-file

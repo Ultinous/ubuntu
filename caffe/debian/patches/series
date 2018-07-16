@@ -1,0 +1,5 @@
+cmake-using-basic-blas
+cmake-fix-python-module-installdir
+fix-more-float-comparison-precision-issue2
+cmake-link-correct-python-lib.patch
+cmake-change-static-lib-name.patch

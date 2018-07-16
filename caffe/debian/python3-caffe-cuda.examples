@@ -1,0 +1,3 @@
+debian/tmp/usr/python/detect.py
+debian/tmp/usr/python/draw_net.py
+debian/tmp/usr/python/classify.py

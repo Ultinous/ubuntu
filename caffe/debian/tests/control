@@ -1,0 +1,7 @@
+Tests: simply.run
+
+Tests: test.forward.backward.lenet
+
+Tests: test.python3.import
+
+Tests: test.python3.simple.forward

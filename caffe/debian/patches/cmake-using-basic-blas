@@ -1,0 +1,20 @@
+due to Debian feature `update-alternatives`,
+we link libcaffe against libblas.so.3 instead
+of directly openblas or atlas.
+
+Forwarded: yes
+https://github.com/BVLC/caffe/pull/4238
+
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -113,6 +113,10 @@ if(NOT APPLE)
+     find_package(Atlas REQUIRED)
+     list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${Atlas_INCLUDE_DIR})
+     list(APPEND Caffe_LINKER_LIBS PUBLIC ${Atlas_LIBRARIES})
++  elseif(BLAS STREQUAL "Generic")
++    set(BLA_VENDOR "Generic")
++    find_package(BLAS REQUIRED)
++    list(APPEND Caffe_LINKER_LIBS ${BLAS_LIBRARIES})
+   elseif(BLAS STREQUAL "Open" OR BLAS STREQUAL "open")
+     find_package(OpenBLAS REQUIRED)
+     list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${OpenBLAS_INCLUDE_DIR})

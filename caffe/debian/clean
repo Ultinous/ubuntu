@@ -1,0 +1,2 @@
+debian/libcaffe-cuda-dev.install
+debian/libcaffe-cuda1.install

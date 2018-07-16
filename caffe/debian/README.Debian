@@ -1,0 +1,105 @@
+
+                Caffe Package Manual for Debian
+
+                            Zhou Mo
+                      cdluminate@gmail.com
+
+                   Last update: Nov. 28 2016
+
+Package Scheme
+==============
+
+Caffe supports 2 modes: CPU_ONLY mode and CUDA mode, and actually the caffe
+instance compiled in CUDA mode can run in CPU_ONLY mode. Both versions are
+provided. You can find the CPU_ONLY version at main/science section of Debian
+archive and the CUDA version at contrib/science section. However the two
+versions cannot co-exist, users need to make a choice according to their need.
+
+ * source package "caffe" compiles the CPU_ONLY version.
+ * source package "caffe-contrib" compiles the CUDA version.
+
+Both of the sources are hosted on Alioth, maintained by debian-science team.
+Here are what binary packages will be built from the sources:
+
+ * CPU_ONLY version from source "caffe"
+   - caffe-cpu          -- metapackage, pulls tools and python3 interface
+   - caffe-tools-cpu    -- command line utilities
+   - libcaffe-cpu*      -- core library
+   - libcaffe-cpu-dev   -- development files
+   - python3-caffe-cpu   -- python3 interface
+
+ * CUDA version from source "caffe-contrib"
+   - caffe-cuda         -- ...
+   - caffe-tools-cuda   -- ...
+   - libcaffe-cuda*     -- ...
+   - libcaffe-cuda-dev  -- ...
+   - python3-caffe-cuda -- ...
+
+If both of them don't meet your need, then you should consider building
+the packages by your self (which is also recommended for users pursuing high
+performance). Anyway, happy hacking!
+
+
+Performance Note
+================
+
+I'd kindly point out that, please at least recompile your BLAS library and
+your Caffe in scientific/production environment for sake of performance.
+If you decided to recompile them from Debian source tarball, this hacky way
+may be helpful to you:
+
+  * Make sure you have the Build-Dependencies satisfied (See debian/control).
+    $ sudo apt build-dep caffe-cpu
+  * Edit debian/rules, append some flags to DEB_*_MAINT_APPEND variable,
+    e.g. -march=native, -mtune=native, etc.
+  * Update changelog
+    $ dch -n "Local rebuild for $(uname -a)"
+  * Build package and install
+    $ dpkg-buildpackage -us -uc ; sudo debi
+
+
+Why do We Link Caffe Against libblas.so.3 ?
+===========================================
+
+Well this is neither accidental nor awkward. This is due to a
+Debian feature called `alternatives`. (So does Ubuntu)
+
+`libblas.so.3` is a symbol link, you can make it point to
+either `atlas` or `openblas` without rebuilding Caffe.
+
+See what's your current selection of libblas.so.3 :
+
+  $ sudo update-alternatives --get-selections | grep libblas
+
+If you want to switch the BLAS lib from basic BLAS library
+to atlas or openblas, first install your favorate one
+
+  $ sudo apt install libopenblas-dev
+  OR $ sudo apt install libatlas-dev
+
+then update the alternatives:
+
+  $ sudo update-alternatives --config libblas.so.3
+  $ sudo update-alternatives --config libblas.so
+
+Finally you run Caffe again. Is it faster as you expected?
+For more detail pleese see update-alternatives(8).
+
+
+Notes for Package Maintainer
+============================
+
+1. Testing whether the program works, apart from the gtest test programs?
+
+   $ caffe time -model examples/mnist/lenet.prototxt
+
+   or with gpu
+
+   $ caffe time -model examples/mnist/lenet.prototxt -gpu 0
+
+   Well, testing caffe in this way (using deploy version of network)
+   requires no dataset, which may be useful for some maintainers
+   who are not familiar with Caffe.
+
+   If you want to test Caffe on some real dataset e.g. MNIST, you can take
+   a closer look at `examples/mnist/readme.md`.

@@ -1,0 +1,4 @@
+version=3
+
+opts="uversionmangle=s/^rc/v.1.0.0~rc/;s/v.//;s/rc./rc/,filenamemangle=s/(?:.*)?(v|rc)?(\d[\d\.]*)\.tar\.gz/caffe-$1.tar.gz/" \
+  https://github.com/BVLC/caffe/tags (?:.*/)?(v|rc)?(\d[\d\.]*)\.tar\.gz

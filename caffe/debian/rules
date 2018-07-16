@@ -1,0 +1,86 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE = 1
+
+# Hardening Caffe according to https://wiki.debian.org/Hardening
+export DEB_BUILD_MAINT_OPTIONS   = hardening=+all
+export DEB_CFLAGS_MAINT_APPEND   = -Wall #-pedantic
+export DEB_CXXFLAGS_MAINT_APPEND = -Wall #-pedantic
+export DEB_LDFLAGS_MAINT_APPEND  = -Wl,--as-needed
+
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+RULES         := debian/rules
+ORIG_SOURCE   := "https://github.com/Ultinous/caffe/archive/un-9.tar.gz"
+CAFFE_SOVER   := 1.0.0
+BUILDDIR      := "caffe_cuda_build"
+
+TEMPLATES     := $(wildcard debian/*.in)
+AUTOGEN       := $(patsubst %.in,%,$(TEMPLATES))
+
+## CMake Configuration Template.
+## Should sync this with the caffe CPU_ONLY version.
+ULTINOUS_CMAKE_CONFIGURE_TEMPLATE = \
+	-DBLAS=Open \
+	-DBUILD_docs=OFF \
+	-DCMAKE_BUILD_TYPE=RELEASE \
+	-DCMAKE_INSTALL_PREFIX=/usr/local \
+	-DCUDA_ARCH_NAME=All \
+	-DCUDA_USE_STATIC_CUDA_RUNTIME=OFF \
+	-DUSE_CUDNN=ON
+
+%:: %.in
+	perl -p \
+	-e 's{#CAFFE_CONFIGURE#}{caffe_cuda}g;' \
+	-e 's{#CAFFE_SOVER#}{$(CAFFE_SOVER)}g;' \
+	-e 's{#DEB_HOST_MULTIARCH#}{$(DEB_HOST_MULTIARCH)}g;' \
+	< $< > $@
+
+%:
+	dh $@ \
+		--parallel \
+		--buildsystem=cmake \
+		--with python3,bash-completion
+
+override_dh_auto_configure: $(AUTOGEN)
+	dh_auto_configure --builddirectory=$(BUILDDIR) \
+		-- $(ULTINOUS_CMAKE_CONFIGURE_TEMPLATE)
+
+override_dh_auto_clean:
+	dh_auto_clean --builddirectory=$(BUILDDIR)
+	-$(RM) -rf python/caffe/proto/ doxygen
+	-$(RM) python/caffe/_caffe.so
+	-find . -type d -name '__pycache__' -exec rm -rf '{}' +
+
+override_dh_auto_build:
+	dh_auto_build --builddirectory=$(BUILDDIR) \
+		-- caffe pycaffe test.testbin all
+
+# In the test phase, we need to set LD_LIBRARY_PATH properly
+# for those test ELFs linked with libcaffe.so.X
+override_dh_auto_test: 
+	# the i386/amd64 build machine may have no CUDA-capable
+	# video card. Hence heading with a dash.
+	-dh_auto_test --builddirectory=$(BUILDDIR) \
+		-- runtest pytest LD_LIBRARY_PATH=$(shell pwd)/$(BUILDDIR)/lib/ 
+
+override_dh_python3:
+	dh_python3 --requires=python/requirements.txt
+	dh_numpy3
+
+override_dh_install:
+	dh_install --list-missing
+
+override_dh_auto_install:
+	dh_auto_install --builddirectory=$(BUILDDIR) -- install
+
+override_dh_makeshlibs:
+	dh_makeshlibs --package=python3-caffe-cuda -X/usr/lib/python
+	dh_makeshlibs --remaining-packages
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod -x debian/tmp/usr/lib/python3/dist-packages/caffe/proto/caffe_pb2.py
+	chmod -x debian/tmp/usr/lib/python3/dist-packages/caffe/proto/__init__.py
+
+get-orig-source:
+	wget -c $(ORIG_SOURCE) -O caffe_1.0.0.orig.tar.gz

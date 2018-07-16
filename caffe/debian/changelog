@@ -1,0 +1,154 @@
+caffe-contrib (1.0.0-3build1) artful; urgency=medium
+
+  * No-change rebuild for python3.6.
+
+ -- Matthias Klose <doko@ubuntu.com>  Mon, 24 Jul 2017 20:50:06 +0200
+
+caffe-contrib (1.0.0-3) unstable; urgency=medium
+
+  * Upload to unstable.
+  * Set multi-arch of the dev package to same.
+  * Bump Standards Version to 4.0.0 (needs no change).
+
+ -- Zhou Mo <cdluminate@gmail.com>  Tue, 04 Jul 2017 09:47:52 +0000
+
+caffe-contrib (1.0.0-2) experimental; urgency=medium
+
+  * Rename static library libproto.a -> libcaffeproto.a and add it back
+    to the -dev package. (Closes: #862528)
+
+ -- Zhou Mo <cdluminate@gmail.com>  Mon, 15 May 2017 02:12:33 +0000
+
+caffe-contrib (1.0.0-1) experimental; urgency=medium
+
+  * New upstream release. (packaging synchronized with src:caffe)
+  * Patchset update:
+    - Remove post_rc5_upstream_updates.patch (included in upstream).
+    - Remove cmake-using-gnuinstalldirs (merged).
+    - Remove fix-more-float-comparison-precision-issue (merged).
+  * Rules: update CAFFE_SOLVER and get-orig-source accordingly.
+  * Control:
+    + Add new dependency: python3-pydotplus .
+    + Update description: upstream Lab renamed from BVLC to BAIR.
+
+ -- Zhou Mo <cdluminate@gmail.com>  Mon, 01 May 2017 01:32:29 +0000
+
+caffe-contrib (1.0.0~rc5-1) experimental; urgency=medium
+
+  * New upstream RC release.
+  * Update CAFFE_SOLVER and get-orig-source target in rules.
+  * Update patchset (synchronized from src:caffe package):
+    - Remove cmake-avoid-argument-missing, cmake-bump-soversion-to-rc4.patch .
+    - Refresh the other patches.
+    - Cherry-pick upstream updates to rc5: post_rc5_upstream_updates.patch .
+
+ -- Zhou Mo <cdluminate@gmail.com>  Sun, 09 Apr 2017 14:51:50 +0000
+
+caffe-contrib (1.0.0~rc4-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Rules: update URL for get-orig-source target.
+  * Bump debhelper compat to 10.
+  * Patch: add cmake-bump-soversion-to-rc4.patch to fix upstream soversion.
+  * Rules: now CAFFE_SOVER is `1.0.0-rc4`.
+  * Get rid of symbols control file to avoid endless FTBFS bugs caused
+    by symbol changes.
+  * Don't miss the pytest target on the dh_auto_test phase.
+  * Rules: update LD_LIBRARY_PATH for dh_auto_test.
+  * Rules: Remove all `__pycache__` directories on clean.
+  * Refresh lintian overrides.
+  * Remove patch: 0001-Add-Pascal-to-all-cuda-architectures.patch,
+    which is included in this release.
+
+ -- Zhou Mo <cdluminate@gmail.com>  Sun, 22 Jan 2017 02:34:16 +0000
+
+caffe-contrib (1.0.0~rc3+20161127-g24d2f67-4) unstable; urgency=medium
+
+  * Add patch: cmake-link-correct-python-lib.patch from src:caffe to fix
+    the FTBFS (See #850989).
+
+ -- Zhou Mo <cdluminate@gmail.com>  Thu, 12 Jan 2017 04:45:21 +0000
+
+caffe-contrib (1.0.0~rc3+20161127-g24d2f67-3) unstable; urgency=medium
+
+  * Avoid autopkgtest failure by fixing stderr redirection.
+  * Remove deprecated autopkgtest scripts.
+  * Cherry-pick upstream commit 8cd5c3df98734f4c43e1b7f43c05401fda0a94ac:
+    "Add Pascal to all cuda architectures", to better support Pascal cards.
+
+ -- Zhou Mo <cdluminate@gmail.com>  Fri, 09 Dec 2016 02:17:17 +0000
+
+caffe-contrib (1.0.0~rc3+20161127-g24d2f67-2) unstable; urgency=medium
+
+  * Refresh symbols control file for amd64.
+  * Redirect all autopkgtest scripts's stderr output to stdout.
+  * Upload to unstable.
+
+ -- Zhou Mo <cdluminate@gmail.com>  Tue, 29 Nov 2016 01:27:45 +0000
+
+caffe-contrib (1.0.0~rc3+20161127-g24d2f67-1) experimental; urgency=medium
+
+  * Import upstream snapshot.
+  * Import patch: fix-more-float-comparison-precision-issue2 from cpu version.
+  * Refresh symbols control file.
+
+ -- Zhou Mo <cdluminate@gmail.com>  Mon, 28 Nov 2016 11:40:07 +0000
+
+caffe-contrib (1.0.0~rc3+20160930-ga7f950b-2) experimental; urgency=medium
+
+  * Change compiler from GCC-5 to Clang-3.8 .
+  * Replace GCC-5 with Clang-3.8 in B-D list.
+  * Remove NVCC flag "-D_FORCE_INLINES" (CUDA 7.5 workaround).
+  * Refresh symbols control file for amd64.
+  * Import changes from «src:caffe_1.0.0~rc3+20160930-ga7f950b-3» :
+    + autopkgtest files : general update
+    + README.Debian : general update
+    + control : add python3-protobuf to B-D; force the use of optimized BLAS.
+    + rules: fix more permissions
+    + patches: patch descriptions
+
+ -- Zhou Mo <cdluminate@gmail.com>  Mon, 28 Nov 2016 02:49:21 +0000
+
+caffe-contrib (1.0.0~rc3+20160930-ga7f950b-1) experimental; urgency=medium
+
+  * Import upstream snapshot (ga7f950b). (Closes: #838789)
+  * Suggest OpenBLAS/Atlas library for metapackage caffe-cuda.
+  * Add git and libboost-dev to make cmake happy.
+  * Update package description.
+  * Update txt2man template d/man/caffe.txt and its corresponding manpage.
+  * Import several patches from source package "caffe" :
+    + cmake-avoid-argument-missing
+    + cmake-fix-python-module-installdir
+    + fix-more-float-comparison-precision-issue
+  * Remove following merged patches:
+    - fix-spelling-error
+  * Remove cherry-picked changes that are already present in this snapshot.
+    - upstream-dont-set-map-size-1TB-in-db-lmdb.patch
+    - upstream-print-to-stderr-for-example-LMDB-code.patch
+    - upstream-update-MNIST-example-to-use-new-DB-classes.patch
+  * Disable -pedantic compiler option to reduce build log size.
+  * Add --list-missing option to dh_install.
+  * Import updated bash completion script d/script/caffe from src:caffe.
+  * Refresh symbols control file.
+  * Synchronize packaging with src:caffe (1.0.0~rc3+20160930-ga7f950b-1).
+
+ -- Zhou Mo <cdluminate@gmail.com>  Sun, 02 Oct 2016 15:08:56 +0000
+
+caffe-contrib (1.0.0~rc3-2) experimental; urgency=medium
+
+  * Add NVCC flag "-D_FORCE_INLINES".
+  * Cherry-pick upstream fixes for map size issue.
+    - dont-set-map-size-1TB-in-db-lmdb
+    - print-to-stderr-for-example-LMDB-code
+    - update-MNIST-example-to-use-new-DB-classes
+  * Synchronize packaging with src:caffe (1.0.0~rc3-4).
+    + Import README.Debian from src:caffe.
+  * Update symbols control file.
+
+ -- Zhou Mo <cdluminate@gmail.com>  Thu, 28 Jul 2016 02:58:40 +0000
+
+caffe-contrib (1.0.0~rc3-1) experimental; urgency=low
+
+  * Initial release. (Closes: #823308)
+
+ -- Zhou Mo <cdluminate@gmail.com>  Mon, 04 Jul 2016 14:37:52 +0000

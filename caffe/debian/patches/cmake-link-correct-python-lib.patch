@@ -1,0 +1,14 @@
+Description: fix BTBFS bug #850989
+Forward: keep it here.
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -166,7 +166,8 @@
+       endif()
+     endwhile()
+     if(NOT Boost_PYTHON_FOUND)
+-      find_package(Boost 1.46 COMPONENTS python)
++      find_package(Boost 1.46 COMPONENTS python-py35)
++      set(Boost_PYTHON_FOUND ${Boost_PYTHON-PY35_FOUND})
+     endif()
+   else()
+     # disable Python 3 search
