@@ -94,6 +94,7 @@ override_dh_install:
 	for f in $$(ls obj-*/lib/libopencv_*.a); do \
 		cp --verbose --preserve=mode $$f debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/; done
 
+	find debian/tmp -type d -empty -delete
 	rm -rf debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/*_pch_dephelp.a
 
 	dh_install -O--buildsystem=cmake --list-missing
