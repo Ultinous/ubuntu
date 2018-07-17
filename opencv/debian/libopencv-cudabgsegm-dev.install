@@ -1,0 +1,3 @@
+usr/include/opencv2/cudabgsegm.hpp
+usr/lib/*/libopencv_cudabgsegm.a
+usr/lib/*/libopencv_cudabgsegm.so

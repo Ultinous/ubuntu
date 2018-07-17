@@ -1,14 +1,36 @@
 #!/usr/bin/make -f
 
 OCV_BASE_VERSION = 3.4
-OCV_LIBPKG_LIST = libopencv-core libopencv-ml libopencv-dnn libopencv-imgproc \
-	libopencv-imgcodecs libopencv-video libopencv-videoio \
-	libopencv-objdetect libopencv-highgui \
-	libopencv-calib3d libopencv-flann \
-	libopencv-features2d libopencv-photo \
-	libopencv-videostab libopencv-stitching \
-	libopencv-shape libopencv-superres \
-	libopencv-viz libopencv-photo \
+OCV_LIBPKG_LIST = \
+libopencv-calib3d \
+libopencv-core \
+libopencv-cudaarithm \
+libopencv-cudabgsegm \
+libopencv-cudacodec \
+libopencv-cudafeatures2d \
+libopencv-cudafilters \
+libopencv-cudaimgproc \
+libopencv-cudalegacy \
+libopencv-cudaobjdetect \
+libopencv-cudaoptflow \
+libopencv-cudastereo \
+libopencv-cudawarping \
+libopencv-dnn \
+libopencv-features2d \
+libopencv-flann \
+libopencv-highgui \
+libopencv-imgcodecs \
+libopencv-imgproc \
+libopencv-ml \
+libopencv-objdetect \
+libopencv-photo \
+libopencv-photo \
+libopencv-shape \
+libopencv-stitching \
+libopencv-superres \
+libopencv-video \
+libopencv-videoio \
+libopencv-videostab \
 
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all,-pie,+fortify
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
