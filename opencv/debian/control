@@ -6,6 +6,7 @@ Uploaders: Sam Hocevar (Debian packages) <sam+deb@zoy.org>,
 		Nobuhiro Iwamatsu <iwamatsu@debian.org>
 Build-Depends: debhelper (>= 9),
  cmake (>= 2.8.7),
+ libqt5opengl5-dev,
  libavcodec-dev, libavformat-dev, libswscale-dev, libgtk2.0-dev, libgtkglext1-dev,
  libgl1-mesa-dev, libglu1-mesa-dev,
  libjpeg-dev,
@@ -21,7 +22,6 @@ Build-Depends: debhelper (>= 9),
  libtbb-dev [i386 amd64 ia64 powerpc ppc64 ppc64el],
  libeigen3-dev,
  libgdal-dev,
- libvtk6-dev,
  ocl-icd-opencl-dev,
  python-dev,
  python3-dev,
@@ -29,7 +29,7 @@ Build-Depends: debhelper (>= 9),
  python-numpy,
  python3-numpy,
  doxygen,
- ant, default-jdk, javahelper
+ ant, javahelper
 Standards-Version: 3.9.6
 Vcs-Git: https://anonscm.debian.org/git/debian-science/packages/opencv.git
 Vcs-Browser: https://anonscm.debian.org/git/debian-science/packages/opencv.git
