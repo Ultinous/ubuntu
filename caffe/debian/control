@@ -1,62 +1,37 @@
 Source: caffe-contrib
 Section: contrib/science
 Priority: optional
-Maintainer: Debian Science Maintainers <debian-science-maintainers@lists.alioth.debian.org>
-Uploaders: Zhou Mo <cdluminate@gmail.com>
-Build-Depends: bc,
-               cmake,
-               bash-completion,
-               debhelper (>=9),
-               dh-python,
-               git,
-# libboost-all-dev (>= 1.55) - we merely pull partial boost stack, the really needed part.
-               libboost-dev,
-               libboost-filesystem-dev,
-               libboost-system-dev,
-               libboost-thread-dev,
-               libboost-python-dev,
-               libgflags-dev,
-               libgoogle-glog-dev,
-               libhdf5-dev,
-               libleveldb-dev,
-               liblmdb-dev,
-# switch libblas.so.3 between Atlas and OpenBLAS with update-alternatives
-               libblas-dev | libblas.so,
-               libopencv-dev (>= 2.4),
-               libprotobuf-dev,
-               libprotoc-dev,
-               libsnappy-dev,
-               protobuf-compiler,
-# python3 depssome of them are not B-D but we need them as runtime-deps to pass the testsuite
-               python3-dev,
-               python3-numpy,
-               cython3,
-               ipython3,
-               python3,
-               python3-skimage,
-               python3-protobuf,
-               python3-dateutil,
-               python3-gflags,
-               python3-h5py,
-               python3-leveldb,
-               python3-matplotlib,
-               python3-networkx,
-               python3-nose,
-#              python3-opencv, # this is recommended if available but it doesn't block
-               python3-pandas,
-               python3-pil,
-               python3-pydotplus,
-               python3-scipy,
-               python3-six,
-               python3-yaml,
-# The above part is synced with main/caffe
-# The following part is CUDA related B-D
-               clang-3.8,
+Maintainer: ULTINOUS LTD <sysadmins@ultinous.com>
+Uploaders: Zsolt Salamon <zsolt.salamon@ultinous.com>
+Build-Depends: 
+cmake,
+git,
+libboost-filesystem-dev,
+libboost-python-dev,
+libboost-system-dev,
+libboost-thread-dev,
+libgflags-dev,
+libgoogle-glog-dev,
+libgtest-dev,
+libhdf5-dev,
+libleveldb-dev,
+liblmdb-dev,
+libopenblas-dev,
+libopencv-dev,
+libopencv-shape3.4,
+libprotobuf-dev(>=3.5.1-2),
+libsnappy-dev,
+protobuf-compiler(>=3.5.1-2),
+python3,
+python3-dev,
+python3-numpy,
+python3-opencv
+
 Standards-Version: 4.0.0
 Homepage: http://caffe.berkeleyvision.org
-Vcs-Browser: https://anonscm.debian.org/cgit/debian-science/packages/caffe-contrib.git
-Vcs-Git: https://anonscm.debian.org/git/debian-science/packages/caffe-contrib.git
-X-Python-Version: >= 3.3
+Vcs-Git: git@github.com:ultinous/ubuntu.git
+Vcs-Browser: https://github.com:ultinous/ubuntu.git
+X-Python-Version: >= 3.5
 
 Package: caffe-cuda
 Section: contrib/metapackages

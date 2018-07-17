@@ -1,3 +1,9 @@
+caffe-contrib (1.0.0-ultinous) xenial; urgency=medium
+
+  * Custom release
+
+ -- Zsolt Salamon <zsolt.salamon@ultinous.com>  Mon, 16 Jul 2018 12:35:44 +0100
+
 caffe-contrib (1.0.0-3build1) artful; urgency=medium
 
   * No-change rebuild for python3.6.
