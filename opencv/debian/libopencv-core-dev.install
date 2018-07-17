@@ -1,8 +1,8 @@
 # header files
-usr/include/opencv2/core/*
-usr/include/opencv2/core.hpp
-usr/include/opencv2/opencv.hpp
-usr/include/opencv2/opencv_modules.hpp
+usr/include/opencv/core/*
+usr/include/opencv/core.hpp
+usr/include/opencv/opencv.hpp
+usr/include/opencv/opencv_modules.hpp
 # libraries
 usr/lib/*/libopencv_core.a
 usr/lib/*/libopencv_core.so

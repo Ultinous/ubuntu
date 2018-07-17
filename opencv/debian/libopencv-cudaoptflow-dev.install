@@ -1,3 +1,3 @@
-usr/include/opencv2/cudaoptflow.hpp
+usr/include/opencv/cudaoptflow.hpp
 usr/lib/*/libopencv_cudaoptflow.a
 usr/lib/*/libopencv_cudaoptflow.so

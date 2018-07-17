@@ -1,4 +1,4 @@
-usr/include/opencv2/imgproc/*
-usr/include/opencv2/imgproc.hpp
+usr/include/opencv/imgproc/*
+usr/include/opencv/imgproc.hpp
 usr/lib/*/libopencv_imgproc.a
 usr/lib/*/libopencv_imgproc.so

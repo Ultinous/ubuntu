@@ -1,3 +1,3 @@
-usr/include/opencv2/cudastereo.hpp
+usr/include/opencv/cudastereo.hpp
 usr/lib/*/libopencv_cudastereo.a
 usr/lib/*/libopencv_cudastereo.so
