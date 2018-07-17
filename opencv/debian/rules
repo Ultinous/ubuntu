@@ -11,6 +11,10 @@ OCV_LIBPKG_LIST = libopencv-core libopencv-ml libopencv-dnn libopencv-imgproc \
 	libopencv-viz libopencv-photo \
 
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all,-pie,+fortify
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+DEB_HOST_ARCH_OS ?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
+BUILDDIR_ARCH = $(DEB_HOST_MULTIARCH)
 export JAVA_HOME=/usr/lib/jvm/java-10-openjdk-amd64
 
 CMAKE_FLAGS = \
