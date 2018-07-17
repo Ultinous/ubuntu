@@ -25,7 +25,6 @@ libopencv-imgproc \
 libopencv-ml \
 libopencv-objdetect \
 libopencv-photo \
-libopencv-photo \
 libopencv-shape \
 libopencv-stitching \
 libopencv-superres \
@@ -99,7 +98,6 @@ override_dh_auto_build: build_dyn build_static
 	
 build_dyn:
 	dh_auto_build -B obj-$(BUILDDIR_ARCH)
-	dh_auto_build -B obj-$(BUILDDIR_ARCH) -- doxygen
 
 build_static:
 	dh_auto_build -B obj-$(BUILDDIR_ARCH)-static

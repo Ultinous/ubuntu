@@ -6,21 +6,38 @@ This is because a user does not install an unnecessary
 unction. For example, the libopencv_video library is not
 necessary when Video function is not necessary.
 
- - libopencv-core*
- - libopencv-dnn*
- - libopencv-imgproc*
- - libopencv-flann*
- - libopencv-features2d*
  - libopencv-calib3d*
- - libopencv-objdetect*
- - libopencv-legacy*
- - libopencv-video*
- - libopencv-ml*
- - libopencv-gpu*
- - libopencv-superres*
- - libopencv-imgproc*
- - libopencv-highgui*
  - libopencv-contrib*
+ - libopencv-core*
+ - libopencv-cudaarithm*
+ - libopencv-cudabgsegm*
+ - libopencv-cudacodec*
+ - libopencv-cudafeatures2d*
+ - libopencv-cudafilters*
+ - libopencv-cudaimgproc*
+ - libopencv-cudalegacy*
+ - libopencv-cudaobjdetect*
+ - libopencv-cudaoptflow*
+ - libopencv-cudastereo*
+ - libopencv-cudawarping*
+ - libopencv-cudev*
+ - libopencv-dnn*
+ - libopencv-features2d*
+ - libopencv-flann*
+ - libopencv-gpu*
+ - libopencv-highgui*
+ - libopencv-imgcodecs*
+ - libopencv-imgproc*
+ - libopencv-legacy*
+ - libopencv-ml*
+ - libopencv-objdetect*
+ - libopencv-photo*
+ - libopencv-shape*
+ - libopencv-stitching*
+ - libopencv-superres*
+ - libopencv-video*
+ - libopencv-videoio*
+ - libopencv-videostab*
  - python-opencv
  - and transition packages.
 
@@ -35,8 +52,4 @@ pkg-config or cmake config file.
 When you build it and do not Build-Depends, please be careful
 because it becomes the build error.
 
-We ask an up stream to divide opencv.pc into every function.[0]
-
-  [0]: https://code.ros.org/trac/opencv/ticket/332
-
--- Nobuhiro Iwamatsu <iwamatsu@debian.org> Thu, 02 Feb 2012 04:18:49 +0900
+ -- Zsolt Salamon <zsolt.salamon@ultinous.com>  Mon, 16 Jul 2018 12:35:44 +0100
