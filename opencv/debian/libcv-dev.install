@@ -1,9 +1,9 @@
 # header files
-usr/include/opencv2/cv.h
-usr/include/opencv2/cv.hpp
-usr/include/opencv2/cvwimage.h
-usr/include/opencv2/cxcore.h
-usr/include/opencv2/cxcore.hpp
-usr/include/opencv2/cxeigen.hpp
-usr/include/opencv2/cxmisc.h
-usr/include/opencv2/ml.h
+usr/include/opencv/cv.h
+usr/include/opencv/cv.hpp
+usr/include/opencv/cvwimage.h
+usr/include/opencv/cxcore.h
+usr/include/opencv/cxcore.hpp
+usr/include/opencv/cxeigen.hpp
+usr/include/opencv/cxmisc.h
+usr/include/opencv/ml.h
