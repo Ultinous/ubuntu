@@ -1,4 +1,4 @@
-usr/include/opencv/shape/*
-usr/include/opencv/shape.hpp
+usr/include/opencv2/shape/*
+usr/include/opencv2/shape.hpp
 usr/lib/*/libopencv_shape.a
 usr/lib/*/libopencv_shape.so

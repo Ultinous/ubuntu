@@ -1,4 +1,4 @@
-usr/include/opencv/imgcodecs.hpp
-usr/include/opencv/imgcodecs/*
+usr/include/opencv2/imgcodecs.hpp
+usr/include/opencv2/imgcodecs/*
 usr/lib/*/libopencv_imgcodecs.a
 usr/lib/*/libopencv_imgcodecs.so

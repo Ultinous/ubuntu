@@ -1,4 +1,4 @@
-usr/include/opencv/ml/*
-usr/include/opencv/ml.hpp
+usr/include/opencv2/ml/*
+usr/include/opencv2/ml.hpp
 usr/lib/*/libopencv_ml.a
 usr/lib/*/libopencv_ml.so
