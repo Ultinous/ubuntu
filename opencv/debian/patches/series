@@ -1,1 +1,2 @@
 add_GNUInstallDirs
+correct_cmake_include
