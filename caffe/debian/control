@@ -25,7 +25,6 @@ Build-Depends: cmake,
   python3-dev,
   python3-numpy,
   python3-opencv
-
 Standards-Version: 4.0.0
 Homepage: http://caffe.berkeleyvision.org
 Vcs-Git: git@github.com:ultinous/ubuntu.git
