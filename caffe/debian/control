@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: ULTINOUS LTD <sysadmins@ultinous.com>
 Uploaders: Zsolt Salamon <zsolt.salamon@ultinous.com>
 Build-Depends: cmake,
+  debhelper (>=9),
   git,
   libboost-filesystem-dev,
   libboost-python-dev,
