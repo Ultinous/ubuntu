@@ -3,8 +3,7 @@ Section: contrib/science
 Priority: optional
 Maintainer: ULTINOUS LTD <sysadmins@ultinous.com>
 Uploaders: Zsolt Salamon <zsolt.salamon@ultinous.com>
-Build-Depends: 
-cmake,
+Build-Depends: cmake,
 git,
 libboost-filesystem-dev,
 libboost-python-dev,
