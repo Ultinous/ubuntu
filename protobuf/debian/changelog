@@ -1,9 +1,3 @@
-protobuf (3.5.1-2) xenial; urgency=medium
-
-  * Added python library packages
-
- -- Lengyel Zsolt <zsolt@ultinous.com>  Mon, 16 Jul 2018 12:25:12 +0200
-
 protobuf (3.5.1-1) xenial; urgency=medium
 
   * New upstream release 3.5.1
