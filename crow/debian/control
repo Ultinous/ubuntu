@@ -1,0 +1,20 @@
+Source: crow
+Section: devel
+Priority: optional
+Maintainer: Szabó Attila <attila@ultinous.com>
+Build-Depends:
+ debhelper (>= 9),
+ cmake (>= 2.8),
+ libboost-system-dev (>= 1.52),
+ python,
+Standards-Version: 4.1.2
+Homepage: https://github.com/Ultinous/crow
+Vcs-Git: git@github.com:ultinous/ubuntu.git
+Vcs-Browser: https://github.com:ultinous/ubuntu.git
+
+Package: libcrow-dev
+Architecture: all
+Depends:
+ ${misc:Depends},
+ libboost-system-dev (>= 1.52),
+Description: C++ microframework for web (inspired by Python Flask)
