@@ -1,0 +1,71 @@
+Description: fix undefined path_max
+ Hello,
+ .
+ libuv1 currently FTBFS on hurd-i386 because it unconditionally uses
+ PATH_MAX. The attached patch fixes this.
+ .
+ Also, the symbols file is only accurate for the Linux port, here is a
+ fix for that too.  Some symbols are really Linux-only in the source
+ code, they pose problem on kfreebsd as seen in buildd logs, so the patch
+ should fix the build there too.
+ .
+ Samuel
+Bug-Debian: https://bugs.debian.org/897061
+Author: Samuel Thibault <sthibault@debian.org>
+--- a/src/unix/fs.c
++++ b/src/unix/fs.c
+@@ -416,6 +416,7 @@
+ }
+ 
+ 
++#if _POSIX_VERSION < 200809L
+ static ssize_t uv__fs_pathmax_size(const char* path) {
+   ssize_t pathmax;
+ 
+@@ -431,12 +432,19 @@
+ 
+   return pathmax;
+ }
++#endif
+ 
+ static ssize_t uv__fs_readlink(uv_fs_t* req) {
+   ssize_t len;
+   char* buf;
++  struct stat st;
++  int ret;
+ 
+-  len = uv__fs_pathmax_size(req->path);
++  ret = lstat(req->path, &st);
++  if (ret != 0) {
++    return -1;
++  }
++  len = st.st_size;
+   buf = uv__malloc(len + 1);
+ 
+   if (buf == NULL) {
+@@ -463,9 +471,16 @@
+ }
+ 
+ static ssize_t uv__fs_realpath(uv_fs_t* req) {
+-  ssize_t len;
+   char* buf;
+ 
++#if _POSIX_VERSION >= 200809L
++  buf = realpath(req->path, NULL);
++  if (buf == NULL) {
++    return -1;
++  }
++#else
++  ssize_t len;
++
+   len = uv__fs_pathmax_size(req->path);
+   buf = uv__malloc(len + 1);
+ 
+@@ -478,6 +493,7 @@
+     uv__free(buf);
+     return -1;
+   }
++#endif
+ 
+   req->ptr = buf;
+ 
