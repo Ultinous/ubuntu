@@ -1,0 +1,107 @@
+Index: b/make/mapfiles/libfontmanager/mapfile-vers
+===================================================================
+--- a/make/mapfiles/libfontmanager/mapfile-vers
++++ b/make/mapfiles/libfontmanager/mapfile-vers
+@@ -29,6 +29,7 @@
+ 
+ SUNWprivate_1.1 {
+ 	global:
++                JNI_OnLoad;
+                 getSunFontIDs;
+                 newLayoutTableCache;
+                 freeLayoutTableCache;
+Index: b/src/java.desktop/share/native/libfontmanager/freetypeScaler.c
+===================================================================
+--- a/src/java.desktop/share/native/libfontmanager/freetypeScaler.c
++++ b/src/java.desktop/share/native/libfontmanager/freetypeScaler.c
+@@ -48,16 +48,6 @@
+ #define  ROUND(x) ((int) (x+0.5))
+ 
+ typedef struct {
+-    /* Important note:
+-         JNI forbids sharing same env between different threads.
+-         We are safe, because pointer is overwritten every time we get into
+-         JNI call (see setupFTContext).
+-
+-         Pointer is used by font data reading callbacks
+-         such as ReadTTFontFileFunc.
+-
+-         NB: We may consider switching to JNI_GetEnv. */
+-    JNIEnv* env;
+     FT_Library library;
+     FT_Face face;
+     FT_Stream faceStream;
+@@ -91,6 +81,13 @@ int z_verbose;
+ void z_error(char *s) {}
+ #endif
+ 
++static JavaVM* jvm = NULL;
++
++JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
++    jvm = vm;
++    return JNI_VERSION_1_2;
++}
++
+ /**************** Error handling utilities *****************/
+ 
+ static jmethodID invalidateScalerMID;
+@@ -114,6 +111,10 @@ static void freeNativeResources(JNIEnv *
+     FT_Done_Face(scalerInfo->face);
+     FT_Done_FreeType(scalerInfo->library);
+ 
++    if (scalerInfo->font2D != NULL) {
++        (*env)->DeleteGlobalRef(env, scalerInfo->font2D);
++    }
++
+     if (scalerInfo->directBuffer != NULL) {
+         (*env)->DeleteGlobalRef(env, scalerInfo->directBuffer);
+     }
+@@ -145,8 +146,8 @@ static unsigned long ReadTTFontFileFunc(
+                                         unsigned char* destBuffer,
+                                         unsigned long numBytes)
+ {
++    JNIEnv* env = (JNIEnv*) JNU_GetEnv(jvm, JNI_VERSION_1_2);
+     FTScalerInfo *scalerInfo = (FTScalerInfo *) stream->pathname.pointer;
+-    JNIEnv* env = scalerInfo->env;
+     jobject bBuffer;
+     int bread = 0;
+ 
+@@ -222,8 +223,7 @@ Java_sun_font_FreetypeFontScaler_initNat
+     if (scalerInfo == NULL)
+         return 0;
+ 
+-    scalerInfo->env = env;
+-    scalerInfo->font2D = font2D;
++    scalerInfo->font2D = (*env)->NewGlobalRef(env, font2D);
+     scalerInfo->fontDataOffset = 0;
+     scalerInfo->fontDataLength = 0;
+     scalerInfo->fileSize = filesize;
+@@ -240,6 +240,7 @@ Java_sun_font_FreetypeFontScaler_initNat
+     */
+     error = FT_Init_FreeType(&scalerInfo->library);
+     if (error) {
++        (*env)->DeleteGlobalRef(env, scalerInfo->font2D);
+         free(scalerInfo);
+         return 0;
+     }
+@@ -313,6 +314,7 @@ Java_sun_font_FreetypeFontScaler_initNat
+         }
+         if (scalerInfo->fontData != NULL)
+             free(scalerInfo->fontData);
++        (*env)->DeleteGlobalRef(env, scalerInfo->font2D);
+         free(scalerInfo);
+         return 0;
+     }
+@@ -373,8 +375,10 @@ static int setupFTContext(JNIEnv *env,
+                           FTScalerContext *context) {
+     int errCode = 0;
+ 
+-    scalerInfo->env = env;
+-    scalerInfo->font2D = font2D;
++    if (scalerInfo->font2D != NULL) {
++        (*env)->DeleteGlobalRef(env, scalerInfo->font2D);
++    }
++    scalerInfo->font2D = (*env)->NewGlobalRef(env, font2D);
+ 
+     if (context != NULL) {
+         FT_Set_Transform(scalerInfo->face, &context->transform, NULL);
