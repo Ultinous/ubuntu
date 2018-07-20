@@ -1,0 +1,41 @@
+Source: maven-repo-helper
+Section: java
+Priority: optional
+Maintainer: Debian Java Maintainers <pkg-java-maintainers@lists.alioth.debian.org>
+Uploaders:
+ Ludovic Claude <ludovic.claude@laposte.net>,
+ Thomas Koch <thomas@koch.ro>,
+ Emmanuel Bourg <ebourg@apache.org>
+Build-Depends:
+ ant,
+ ant-optional,
+ cdbs,
+ debhelper (>= 10),
+ default-jdk,
+ help2man,
+ junit4,
+ libcommons-io-java,
+ libxmlunit-java,
+ python-docutils
+Standards-Version: 4.1.4
+Vcs-Git: git@github.com:ultinous/ubuntu.git
+Vcs-Browser: https://github.com:ultinous/ubuntu.git
+Homepage: https://wiki.debian.org/Java/MavenRepoSpec
+
+Package: maven-repo-helper
+Architecture: all
+Depends: ${misc:Depends}, default-jre-headless (>= 1:1.6) | java6-runtime-headless
+Recommends: debhelper (>= 10)
+Suggests: maven-debian-helper
+Breaks: maven-debian-helper (<= 1.6.6)
+Description: Helper tools for including Maven metadata in Debian packages
+ This package enables Debian packages which are not using Maven in their
+ build process to provide and install Maven POMs and libraries in the
+ repository located in /usr/share/maven-repo.
+ .
+ Packages built with Maven (using maven-debian-helper) will benefit as
+ many of their dependencies are already packaged in Debian but they are
+ missing the necessary metadata (Maven POM) which is required by Maven
+ when it is using dependencies.
+ .
+ A tutorial is available at /usr/share/doc/maven-repo-helper/tutorial.html
