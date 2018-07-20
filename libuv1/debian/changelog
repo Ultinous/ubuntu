@@ -1,4 +1,4 @@
-libuv1 (1.22.0-ultinous) xenial; urgency=medium
+libuv1 (1.22.0-ultinous) bionic; urgency=medium
 
   * Custom release
 

@@ -3,7 +3,7 @@ Maintainer: Dominique Dumont <dod@debian.org>
 Uploaders: Luca Bruno <lucab@debian.org>
 Section: libs
 Priority: optional
-Build-Depends: debhelper (>= 9),
+Build-Depends: debhelper (>= 9.20160114),
                dh-autoreconf,
                dh-exec,
                libkvm-dev [kfreebsd-any],

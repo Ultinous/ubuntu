@@ -3,7 +3,7 @@ Section: java
 Priority: optional
 Maintainer: Debian Java Maintainers <pkg-java-maintainers@lists.alioth.debian.org>
 Uploaders: Guillaume Mazoyer <respawneral@gmail.com>
-Build-Depends: debhelper (>= 9), javahelper, help2man
+Build-Depends: debhelper (>= 10), javahelper, help2man
 Build-Depends-Indep: default-jdk,
                      libjtharness-java,
                      ant,
@@ -11,8 +11,8 @@ Build-Depends-Indep: default-jdk,
                      libxalan2-java,
                      testng
 Standards-Version: 4.1.1
-Vcs-Git: https://anonscm.debian.org/git/pkg-java/jtreg.git
-Vcs-Browser: https://anonscm.debian.org/cgit/pkg-java/jtreg.git
+Vcs-Git: git@github.com:ultinous/ubuntu.git
+Vcs-Browser: https://github.com:ultinous/ubuntu.git
 Homepage: http://openjdk.java.net/jtreg
 
 Package: jtreg

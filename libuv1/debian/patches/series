@@ -1,5 +1,7 @@
 path_max
 mips-epoll_pwait.diff
 sparc-skip-tcp_oob.diff
+#iovec_rw_fix.patch
 disable_ipv6_test.patch
 hurd-port.diff
+0006-unix-win-change-position-of-uv_fs_lchown.patch
