@@ -1,0 +1,15 @@
+Description: Workaround for a Qdox regression
+Author: Emmanuel Bourg <ebourg@apache.org>
+Bug-Debian: https://bugs.debian.org/866767
+Bug: https://github.com/paul-hammant/qdox/issues/21
+--- a/maven-core/src/main/java/org/apache/maven/toolchain/DefaultToolchain.java
++++ b/maven-core/src/main/java/org/apache/maven/toolchain/DefaultToolchain.java
+@@ -34,7 +34,7 @@
+  * @author mkleint
+  * @since 2.0.9
+  */
+-public abstract class DefaultToolchain // should have been AbstractToolchain...
++public abstract class DefaultToolchain
+     implements Toolchain, ToolchainPrivate
+ {
+ 
