@@ -1,4 +1,4 @@
-cmake (3.12.0-ultinous) xenial; urgency=medium
+cmake (3.12.0-ultinous) bionic; urgency=medium
 
   * Custom release
 
