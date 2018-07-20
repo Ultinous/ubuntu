@@ -1,3 +1,9 @@
+maven (3.5.4-ultinous) bionic; urgency=medium
+
+  * Custom release
+
+ -- Zsolt Salamon <zsolt.salamon@ultinous.com>  Mon, 16 Jul 2018 12:35:44 +0100
+
 maven (3.5.3-1) unstable; urgency=medium
 
   * Team upload.

@@ -34,8 +34,8 @@ Build-Depends-Indep: junit4,
                      libwagon-provider-api-java,
                      libxmlunit-java
 Standards-Version: 4.1.4
-Vcs-Git: https://salsa.debian.org/java-team/maven.git
-Vcs-Browser: https://salsa.debian.org/java-team/maven
+Vcs-Git: git@github.com:ultinous/ubuntu.git
+Vcs-Browser: https://github.com:ultinous/ubuntu.git
 Homepage: http://maven.apache.org
 
 Package: libmaven3-core-java
