@@ -16,7 +16,7 @@ export DEB_LDFLAGS_MAINT_STRIP=-Wl,-Bsymbolic-functions
 
 # Package name for the extra flavor.
 EXTRA_PKGS := $(shell sed -nr 's/^Package:[[:space:]]*(.*extra[0-9]+)[[:space:]]*$$/\1/p' debian/control)
-FLAVORS = standard extra static
+FLAVORS = standard
 
 # Enable as many features as possible, as long as the result is still GPLv2+ (a GPLv3+ variant is built as libavcodec-extra/libavfilter-extra flavor).
 # The following flags (and build-dependencies) are not added, because they would require a libavformat-extra flavor:
@@ -73,10 +73,18 @@ FLAVORS = standard extra static
 	--optflags='-O3 -fstack-protector-strong'
 
 # The standard configuration only uses the shared CONFIG.
-CONFIG_standard = 
+CONFIG_standard = --enable-shared
 
 # With these enabled, resulting binaries are effectively licensed as GPLv3+.
-CONFIG_extra = 
+CONFIG_extra = --enable-shared \
+  --enable-version3 \
+  --disable-doc \
+  --disable-programs \
+  --enable-libopencore_amrnb \
+  --enable-libopencore_amrwb \
+  --enable-libtesseract \
+  --enable-libvo_amrwbenc
+
 # The static libraries should not be built with PIC.
 CONFIG_static = --disable-pic \
 	--disable-doc \
