@@ -1,0 +1,184 @@
+## Description: add some description
+## Origin/Author: add some origin or author
+## Bug: bug URL
+--- a/src/share/bin/jtdiff.sh
++++ b/src/share/bin/jtdiff.sh
+@@ -37,40 +37,6 @@
+ #
+ # jtdiff also provides an Ant task for direct invocation from Ant.
+ 
+-# Determine jtdiff/JavaTest installation directory
+-if [ -n "$JT_HOME" ]; then
+-    if [ ! -r $JT_HOME/lib/jtreg.jar ];then
+-        echo "Invalid JT_HOME=$JT_HOME. Cannot find or read $JT_HOME/lib/jtreg.jar"
+-       exit 1;
+-    fi
+-else
+-    # Deduce where script is installed
+-    # - should work on most derivatives of Bourne shell, like ash, bash, ksh,
+-    #   sh, zsh, etc, including on Windows, MKS (ksh) and Cygwin (ash or bash)
+-    if type -p type 1>/dev/null 2>&1 && test -z "`type -p type`" ; then
+-        myname=`type -p "$0"`
+-    elif type type 1>/dev/null 2>&1 ; then
+-        myname=`type "$0" | sed -e 's/^.* is a tracked alias for //' -e 's/^.* is //'`
+-    elif whence whence 1>/dev/null 2>&1 ; then
+-        myname=`whence "$0"`
+-    fi
+-    mydir=`dirname "$myname"`
+-    p=`cd "$mydir" ; pwd`
+-    while [ -n "$p" -a "$p" != "/" ]; do
+-        if [ -r "$p"/lib/jtreg.jar ]; then JT_HOME="$p" ; break; fi
+-        p=`dirname "$p"`
+-    done
+-    if [ -z "$JT_HOME" ]; then
+-        echo "Cannot determine JT_HOME; please set it explicitly"; exit 1
+-    fi
+-fi
+-
+-# Normalize JT_HOME if using Cygwin
+-case "`uname -s`" in
+-    CYGWIN* ) cygwin=1 ; JT_HOME=`cygpath -a -m "$JT_HOME"` ;;
+-esac
+-
+-
+ # Separate out -J* options for the JVM
+ # Unset IFS and use newline as arg separator to preserve spaces in args
+ DUALCASE=1  # for MKS: make case statement case-sensitive (6709498)
+@@ -88,36 +54,25 @@
+ done
+ unset DUALCASE
+ 
+-# Determine java for jtdiff, from JT_JAVA, JAVA_HOME, java
+-if [ -n "$JT_JAVA" ]; then
+-    if [ -d "$JT_JAVA" ]; then
+-        JT_JAVA="$JT_JAVA/bin/java"
+-    fi
+-elif [ -n "$JAVA_HOME" ]; then
+-    JT_JAVA="$JAVA_HOME/bin/java"
+-else
+-    JT_JAVA=java
++# Java home directory
++if [ -z "${JT_JAVA}" ]; then
++    JT_JAVA="/usr/lib/jvm/default-java"
+ fi
+ 
+-# Verify java version (1.)5 or newer used to run jtdiff
+-version=`"$JT_JAVA" -classpath "${JT_HOME}/lib/jtreg.jar" com.sun.javatest.regtest.agent.GetSystemProperty java.version 2>&1 |
+-        grep 'java.version=' | sed -e 's/^.*=//' -e 's/^1\.//' -e 's/\([1-9][0-9]*\).*/\1/'`
+-
+-if [ -z "$version" ]; then
+-    echo "Cannot determine version of java to run jtdiff"
+-    exit 1;
+-elif [ "$version" -lt 5 ]; then
+-    echo "java version 5 or later is required to run jtdiff"
+-    exit 1;
++if [ -z "${JT_HOME}" ] || [ ! -f "${JT_HOME}/jtreg.jar" ]; then
++    JT_HOME="/usr/share/java"
+ fi
+ 
++
+ # And finally ...
+ 
++JT_CLASSPATH="${JT_HOME}/jtreg.jar:/usr/share/java/javatest.jar:/usr/share/java/jh.jar:/usr/share/java/junit4.jar"
++
+ IFS=$nl
+ 
+-"${JT_JAVA:-${JAVA_HOME:+$JAVA_HOME/bin/}java}" \
++"${JT_JAVA}"/bin/java \
+     $javaOpts \
+     -Dprogram=`basename "$0"` \
+-    -cp "${JT_HOME}/lib/jtreg.jar" \
++    -cp "${JT_CLASSPATH}" \
+     com.sun.javatest.diff.Main \
+     $jtdiffOpts
+--- a/src/share/bin/jtreg.sh
++++ b/src/share/bin/jtreg.sh
+@@ -47,40 +47,6 @@
+ #
+ # jtreg also provides Ant tasks; see the documentation for details.
+ 
+-# Determine jtreg/JavaTest installation directory
+-if [ -n "$JT_HOME" ]; then
+-    if [ ! -r $JT_HOME/lib/jtreg.jar ];then
+-        echo "Invalid JT_HOME=$JT_HOME. Cannot find or read $JT_HOME/lib/jtreg.jar"
+-       exit 1;
+-    fi
+-else
+-    # Deduce where script is installed
+-    # - should work on most derivatives of Bourne shell, like ash, bash, ksh,
+-    #   sh, zsh, etc, including on Windows, MKS (ksh) and Cygwin (ash or bash)
+-    if type -p type 1>/dev/null 2>&1 && test -z "`type -p type`" ; then
+-        myname=`type -p "$0"`
+-    elif type type 1>/dev/null 2>&1 ; then
+-        myname=`type "$0" | sed -e 's/^.* is a tracked alias for //' -e 's/^.* is //'`
+-    elif whence whence 1>/dev/null 2>&1 ; then
+-        myname=`whence "$0"`
+-    fi
+-    mydir=`dirname "$myname"`
+-    p=`cd "$mydir" ; pwd`
+-    while [ -n "$p" -a "$p" != "/" ]; do
+-        if [ -r "$p"/lib/jtreg.jar ]; then JT_HOME="$p" ; break; fi
+-        p=`dirname "$p"`
+-    done
+-    if [ -z "$JT_HOME" ]; then
+-        echo "Cannot determine JT_HOME; please set it explicitly"; exit 1
+-    fi
+-fi
+-
+-# Normalize JT_HOME if using Cygwin
+-case "`uname -s`" in
+-    CYGWIN* ) cygwin=1 ; JT_HOME=`cygpath -a -m "$JT_HOME"` ;;
+-esac
+-
+-
+ # Separate out -J* options for the JVM
+ # Note jdk as possible default to run jtreg
+ # Unset IFS and use newline as arg separator to preserve spaces in args
+@@ -101,37 +67,24 @@
+ done
+ unset DUALCASE
+ 
+-# Determine java for jtreg, from JT_JAVA, JAVA_HOME, -jdk, java
+-if [ -n "$JT_JAVA" ]; then
+-    if [ -d "$JT_JAVA" ]; then
+-        JT_JAVA="$JT_JAVA/bin/java"
+-    fi
+-elif [ -n "$JAVA_HOME" ]; then
+-    JT_JAVA="$JAVA_HOME/bin/java"
+-elif [ -n "$jdk" ]; then
+-    JT_JAVA="$jdk/bin/java"
+-else
+-    JT_JAVA=java
++# Java home directory
++if [ -z "${JT_JAVA}" ]; then
++    JT_JAVA="/usr/lib/jvm/default-java"
+ fi
+ 
+-# Verify java version (1.)7 or newer used to run jtreg
+-version=`"$JT_JAVA" -classpath "${JT_HOME}/lib/jtreg.jar" com.sun.javatest.regtest.agent.GetSystemProperty java.version 2>&1 |
+-        grep 'java.version=' | sed -e 's/^.*=//' -e 's/^1\.//' -e 's/\([1-9][0-9]*\).*/\1/'`
+-
+-if [ -z "$version" ]; then
+-    echo "Cannot determine version of java to run jtreg"
+-    exit 1;
+-elif [ "$version" -lt 7 ]; then
+-    echo "java version 7 or later is required to run jtreg"
+-    exit 1;
++if [ -z "${JT_HOME}" ] || [ ! -f "${JT_HOME}/jtreg.jar" ]; then
++    JT_HOME="/usr/share/java"
+ fi
+ 
+ # And finally ...
+ 
++JT_CLASSPATH="${JT_HOME}/jtreg.jar:/usr/share/java/javatest.jar:/usr/share/java/jh.jar:/usr/share/java/junit4.jar"
++
+ IFS=$nl
+ 
+-"${JT_JAVA}" \
++"${JT_JAVA}"/bin/java \
+     $javaOpts \
+     -Dprogram=`basename "$0"` \
+-    -jar "${JT_HOME}/lib/jtreg.jar" \
++    -cp "${JT_CLASSPATH}" \
++    com.sun.javatest.regtest.Main \
+     $jtregOpts
