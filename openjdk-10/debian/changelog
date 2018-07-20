@@ -1,3 +1,9 @@
+openjdk-10 (10.0.2+13-ultinous) xenial; urgency=high
+
+  * Custom release
+
+ -- Zsolt Salamon <zsolt.salamon@ultinous.com>  Mon, 16 Jul 2018 12:35:44 +0100
+
 openjdk-10 (10.0.2+13-1) unstable; urgency=high
 
   * OpenJDK 10.0.2+13 release.
