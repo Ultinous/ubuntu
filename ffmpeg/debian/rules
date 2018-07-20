@@ -16,7 +16,7 @@ export DEB_LDFLAGS_MAINT_STRIP=-Wl,-Bsymbolic-functions
 
 # Package name for the extra flavor.
 EXTRA_PKGS := $(shell sed -nr 's/^Package:[[:space:]]*(.*extra[0-9]+)[[:space:]]*$$/\1/p' debian/control)
-FLAVORS = standard
+FLAVORS = standard extra static
 
 # Enable as many features as possible, as long as the result is still GPLv2+ (a GPLv3+ variant is built as libavcodec-extra/libavfilter-extra flavor).
 # The following flags (and build-dependencies) are not added, because they would require a libavformat-extra flavor:
@@ -47,43 +47,78 @@ FLAVORS = standard
 	--libdir=/usr/lib/$(DEB_HOST_MULTIARCH) \
 	--incdir=/usr/include/$(DEB_HOST_MULTIARCH) \
 	--disable-static \
+	--disable-stripping \
 	--enable-avfilter \
+	--enable-avisynth \
 	--enable-avresample \
 	--enable-bzlib \
 	--enable-ffplay \
+	--enable-gnutls \
 	--enable-gpl \
 	--enable-iconv \
+	--enable-ladspa \
+	--enable-libass \
+	--enable-libbluray \
+	--enable-libbs2b \
+	--enable-libcaca \
+	--enable-libcdio \
+	--enable-libebur128 \
+	--enable-libflite \
+	--enable-libfontconfig \
 	--enable-libfreetype \
+	--enable-libfribidi \
+	--enable-libgme \
+	--enable-libgsm \
+	--enable-libmp3lame \
+	--enable-libopenjpeg \
+	--enable-libopenmpt \
+	--enable-libopus \
 	--enable-libpulse \
+	--enable-librubberband \
+	--enable-libshine \
+	--enable-libsnappy \
+	--enable-libsoxr \
+	--enable-libspeex \
+	--enable-libssh \
+	--enable-libtheora \
+	--enable-libtwolame \
 	--enable-libvorbis \
+	--enable-libvpx \
+	--enable-libwavpack \
+	--enable-libwebp \
 	--enable-libx264 \
 	--enable-libx265 \
 	--enable-libxcb \
 	--enable-libxcb-shm \
 	--enable-libxcb-xfixes \
 	--enable-libxvid \
+	--enable-libzmq \
+	--enable-libzvbi \
 	--enable-network \
 	--enable-nvenc \
+	--enable-omx \
+	--enable-openal \
 	--enable-opengl \
 	--enable-postproc \
+	--enable-sdl2 \
 	--enable-shared \
 	--enable-version3 \
 	--enable-xlib \
 	--enable-zlib \
 	--optflags='-O3 -fstack-protector-strong'
-
+	
 # The standard configuration only uses the shared CONFIG.
 CONFIG_standard = --enable-shared
 
 # With these enabled, resulting binaries are effectively licensed as GPLv3+.
 CONFIG_extra = --enable-shared \
-  --enable-version3 \
-  --disable-doc \
-  --disable-programs \
-  --enable-libopencore_amrnb \
-  --enable-libopencore_amrwb \
-  --enable-libtesseract \
-  --enable-libvo_amrwbenc
+	--enable-version3 \
+	--disable-doc \
+	--disable-programs \
+	--enable-libopencore_amrnb \
+	--enable-libopencore_amrwb \
+	--enable-libtesseract \
+	--enable-libvo_amrwbenc
 
 # The static libraries should not be built with PIC.
 CONFIG_static = --disable-pic \
@@ -125,6 +160,7 @@ ifneq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
 else
 	CONFIG += --enable-chromaprint \
 		--enable-frei0r \
+		--enable-libopencv \
 		--enable-libx264
 endif
 
@@ -218,11 +254,23 @@ override_dh_auto_test-indep:
 
 override_dh_auto_install-arch:
 	dh_auto_install -a --sourcedirectory=debian/standard
+ifeq ($(DEB_HOST_ARCH),powerpc)
+	install -d debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/altivec
+	install -m 644 debian/altivec/*/*.so.* debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/altivec
+endif
+	dh_auto_install -a --sourcedirectory=debian/extra --destdir=debian/tmp/extra
+ifeq ($(DEB_HOST_ARCH),powerpc)
+	install -d debian/tmp/extra/usr/lib/$(DEB_HOST_MULTIARCH)/altivec
+	install -m 644 debian/altivec-extra/*/*.so.* debian/tmp/extra/usr/lib/$(DEB_HOST_MULTIARCH)/altivec
+endif
+	# Use the static libraries from the --disable-pic build
+	install -m 644 debian/static/*/lib*.a debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
 
 override_dh_auto_install-indep:
 	dh_auto_install -i --sourcedirectory=debian/standard
 
 override_dh_install:
+	dh_install $(addprefix -p,$(EXTRA_PKGS)) --sourcedir=debian/tmp/extra
 	dh_install --remaining-packages
 
 override_dh_makeshlibs:
