@@ -1,4 +1,4 @@
-openjdk-10 (10.0.2+13-ultinous) xenial; urgency=high
+openjdk-10 (10.0.2+13-ultinous) bionic; urgency=high
 
   * Custom release
 
