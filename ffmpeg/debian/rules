@@ -70,7 +70,6 @@ CONFIG := --prefix=/usr \
 	--enable-libopenjpeg \
 	--enable-libopenmpt \
 	--enable-libopus \
-	--enable-librsvg \
 	--enable-librubberband \
 	--enable-libshine \
 	--enable-libsnappy \
