@@ -44,8 +44,8 @@ Build-Depends:
  libcrystalhd-dev [amd64 i386],
 # --enable-libdc1394
  libdc1394-22-dev [linux-any],
-# --enable-libdrm
- libdrm-dev [linux-any],
+# --enable-libebur128
+ libebur128-dev,
 # --enable-libfontconfig
  libfontconfig1-dev,
 # --enable-libfreetype
@@ -72,8 +72,8 @@ Build-Depends:
  liblzma-dev,
 # --enable-libmp3lame
  libmp3lame-dev,
-# --enable-libmysofa
- libmysofa-dev,
+# --enable-netcdf
+ libnetcdf-dev [!powerpcspe],
 # --enable-openal
  libopenal-dev,
 # --enable-omx
@@ -82,8 +82,6 @@ Build-Depends:
  libopencore-amrnb-dev,
 # --enable-libopencore_amrwb
  libopencore-amrwb-dev,
-# --enable-libopencv
-#libopencv-imgproc-dev <!stage1>,
 # --enable-libopenjpeg
  libopenjp2-7-dev,
 # --enable-libopenmpt
@@ -94,8 +92,6 @@ Build-Depends:
  libpulse-dev,
 # --enable-librubberband
  librubberband-dev,
-# --enable-librsvg
- librsvg2-dev,
 # autodetected: protocol 'sctp'
  libsctp-dev [linux-any],
 # --enable-sdl2
@@ -143,8 +139,6 @@ Build-Depends:
  libxcb-shm0-dev,
 # autodetected libxcb-xfixes
  libxcb-xfixes0-dev,
-# --enable-libxml2
- libxml2-dev,
 # autodetected xlib
  libxv-dev,
 # --enable-libxvid
@@ -238,6 +232,7 @@ Description: FFmpeg library with de/encoders for audio/video codecs - runtime fi
 Package: libavcodec-extra57
 Architecture: any
 Section: libs
+Priority: extra
 Multi-Arch: same
 Conflicts: libavcodec57
 Provides: libavcodec-extra
@@ -274,6 +269,7 @@ Description: FFmpeg library with additional de/encoders for audio/video codecs
 Package: libavcodec-extra
 Architecture: all
 Section: metapackages
+Priority: extra
 Multi-Arch: foreign
 Depends:
  libavcodec-extra57,
@@ -385,6 +381,7 @@ Description: FFmpeg library containing media filters - runtime files
 Package: libavfilter-extra6
 Architecture: any
 Section: libs
+Priority: extra
 Multi-Arch: same
 Conflicts: libavfilter6
 Provides: libavfilter-extra
@@ -415,6 +412,7 @@ Description: FFmpeg library with extra media filters - runtime files
 Package: libavfilter-extra
 Architecture: all
 Section: metapackages
+Priority: extra
 Multi-Arch: foreign
 Depends:
  libavfilter-extra6,
@@ -547,11 +545,6 @@ Pre-Depends:
 Depends:
  ${shlibs:Depends},
  ${misc:Depends}
-Breaks:
- libavcodec57 (<< 7:3.4),
- libavcodec-extra57 (<< 7:3.4),
- libavfilter6 (<< 7:3.4),
- libavfilter-extra6 (<< 7:3.4)
 Description: FFmpeg library with functions for simplifying programming - runtime files
  FFmpeg is the leading multimedia framework, able to decode, encode, transcode,
  mux, demux, stream, filter and play pretty much anything that humans and
@@ -755,3 +748,27 @@ Description: FFmpeg library for image scaling and various conversions - developm
     source and destination colorspaces differ.
  .
  This package contains the development files.
+
+Package: libav-tools
+Architecture: all
+Section: oldlibs
+Priority: extra
+Multi-Arch: foreign
+Breaks:
+ libav-tools-links (<< 7:2.7.2-2~),
+ vokoscreen (<< 2.2.0)
+Replaces: libav-tools-links (<< 7:2.7.2-2~)
+Depends:
+ ffmpeg,
+ ${misc:Depends}
+Description: Compatibility links for libav-tools (transitional package)
+ FFmpeg is the leading multimedia framework, able to decode, encode, transcode,
+ mux, demux, stream, filter and play pretty much anything that humans and
+ machines have created. It supports the most obscure ancient formats up to the
+ cutting edge.
+ .
+ This is a transitional package that provides the following links:
+  * avconv  -> ffmpeg
+  * avplay  -> ffplay
+  * avprobe -> ffprobe
+ This package can be removed, when nothing uses the av* program names anymore.
