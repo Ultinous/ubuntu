@@ -1,0 +1,234 @@
+#!/bin/sh
+set -e
+
+# This script checks whether NVIDIA GPUs that are only supported by a
+# previous legacy driver are present in the system.
+# Unfortunately, there were several reports that this does not work
+# on some systems because lspci hangs. That seems to be a hardware
+# dependent issue. See e.g. #819869 for details.
+#
+# A possible workaround is to reboot with 'acpi=off' added to the
+# kernel boot options in the GRUB configuration.
+#
+# Alternatively this check can be disabled by preseeding:
+#   echo "nvidia-driver/check-for-unsupported-gpu boolean false" | debconf-set-selections
+
+
+. /usr/share/debconf/confmodule
+
+LEGACY_DRIVER="nvidia-legacy-390xx-driver"
+LEGACY_PCIIDS="
+10DE06C0
+10DE06C4
+10DE06CA
+10DE06CD
+10DE06D1
+10DE06D2
+10DE06D8
+10DE06D9
+10DE06DA
+10DE06DC
+10DE06DD
+10DE06DE
+10DE06DF
+10DE0DC0
+10DE0DC4
+10DE0DC5
+10DE0DC6
+10DE0DCD
+10DE0DCE
+10DE0DD1
+10DE0DD2
+10DE0DD3
+10DE0DD6
+10DE0DD8
+10DE0DDA
+10DE0DE0
+10DE0DE1
+10DE0DE2
+10DE0DE3
+10DE0DE4
+10DE0DE5
+10DE0DE7
+10DE0DE8
+10DE0DE9
+10DE0DEA
+10DE0DEB
+10DE0DEC
+10DE0DED
+10DE0DEE
+10DE0DEF
+10DE0DF0
+10DE0DF1
+10DE0DF2
+10DE0DF3
+10DE0DF4
+10DE0DF5
+10DE0DF6
+10DE0DF7
+10DE0DF8
+10DE0DF9
+10DE0DFA
+10DE0DFC
+10DE0E22
+10DE0E23
+10DE0E24
+10DE0E30
+10DE0E31
+10DE0E3A
+10DE0E3B
+10DE0F00
+10DE0F01
+10DE0F02
+10DE0F03
+10DE1040
+10DE1042
+10DE1048
+10DE1049
+10DE104A
+10DE104B
+10DE104C
+10DE1050
+10DE1051
+10DE1052
+10DE1054
+10DE1055
+10DE1056
+10DE1057
+10DE1058
+10DE1059
+10DE105A
+10DE105B
+10DE107C
+10DE107D
+10DE1080
+10DE1081
+10DE1082
+10DE1084
+10DE1086
+10DE1087
+10DE1088
+10DE1089
+10DE108B
+10DE1091
+10DE1094
+10DE1096
+10DE109A
+10DE109B
+10DE1140
+10DE1200
+10DE1201
+10DE1203
+10DE1205
+10DE1206
+10DE1207
+10DE1208
+10DE1210
+10DE1211
+10DE1212
+10DE1213
+10DE1241
+10DE1243
+10DE1244
+10DE1245
+10DE1246
+10DE1247
+10DE1248
+10DE1249
+10DE124B
+10DE124D
+10DE1251
+"
+
+if [ "$DEBUG_NVIDIA_LEGACY_CHECK" = "yes" ]; then
+	set -x
+fi
+
+find_unsupported_gpus()
+{
+	if [ -n "$OVERRIDE_NVIDIA_LEGACY_CHECK_UNSUPPORTED_DEVICES" ]; then
+		echo "$OVERRIDE_NVIDIA_LEGACY_CHECK_UNSUPPORTED_DEVICES"
+		return
+	fi
+
+	# Check for GPUs that are only supported up to $LEGACY_DRIVER
+	if lspci --version > /dev/null 2>&1; then
+		lspci -mn \
+		| awk '{ gsub("\"",""); if ($2 == "0300") { print $1 " " $3$4 } }' \
+		| tr '[:lower:]' '[:upper:]' \
+		| while read dev id
+		do
+			for x in $LEGACY_PCIIDS
+			do
+				if [ "$x" = "$id" ]; then
+					echo "$dev"
+					break
+				fi
+			done
+		done
+	fi
+}
+
+
+check_for_unsupported_gpus()
+{
+	# allow to disable the check via preseeding
+	db_get nvidia-driver/check-for-unsupported-gpu
+	test "$RET" = "true" || return 0
+
+	(
+		sleep 30 &
+		sleeppid=$!
+		trap 'kill $sleeppid 2>/dev/null || true' TERM
+		trap ':' EXIT
+		wait $sleeppid
+		echo "Checking for legacy NVIDIA GPUs appears to hang, try rebooting with 'acpi=off'" >&2
+		echo "added to the kernel boot options in the GRUB configuration." >&2
+	) &
+	msgpid=$!
+
+	UNSUPPORTED_DEVICES="$(find_unsupported_gpus)"
+	UNSUPPORTED="$(for dev in $UNSUPPORTED_DEVICES ; do lspci -nn -s "$dev" ; done)"
+
+	kill $msgpid 2>/dev/null || true
+
+	test -n "$UNSUPPORTED_DEVICES" || return 0
+
+	db_subst nvidia-driver/install-even-if-unsupported-gpu-exists vendor "NVIDIA"
+	db_subst nvidia-driver/install-even-if-unsupported-gpu-exists driver "#NVIDIA#-driver"
+	db_subst nvidia-driver/install-even-if-unsupported-gpu-exists legacy_driver "$LEGACY_DRIVER"
+	db_subst nvidia-driver/install-even-if-unsupported-gpu-exists free_name "Nouveau"
+	db_subst nvidia-driver/install-even-if-unsupported-gpu-exists free_driver "xserver-xorg-video-nouveau"
+	db_subst nvidia-driver/install-even-if-unsupported-gpu-exists unsupported-device "$(echo "$UNSUPPORTED" | sed -r 's/$/; /' | tr -d '\n' | sed -r 's/; $//')"
+
+	# ensure the question is asked again unless it was accepted previously for the same $LEGACY_DRIVER
+	db_get nvidia-driver/supported-in-legacy-driver-name
+	if [ "$RET" != "$LEGACY_DRIVER" ]; then
+		db_reset nvidia-driver/install-even-if-unsupported-gpu-exists
+		db_fset nvidia-driver/install-even-if-unsupported-gpu-exists seen false
+	fi
+
+	db_input high nvidia-driver/install-even-if-unsupported-gpu-exists || true
+	db_go
+
+	echo "*** The following unsupported devices are present in the machine:"
+	echo "$UNSUPPORTED"
+
+	db_get nvidia-driver/install-even-if-unsupported-gpu-exists
+	if [ "$RET" = "false" ]; then
+		echo "Aborting nvidia driver installation."
+		exit 1
+	fi
+
+	# remember the answer until $LEGACY_DRIVER changes
+	db_set nvidia-driver/supported-in-legacy-driver-name "$LEGACY_DRIVER"
+}
+
+
+if [ "$1" = "install" ] || [ "$1" = "upgrade" ]; then
+
+	check_for_unsupported_gpus
+
+fi
+
+#DEBHELPER#
