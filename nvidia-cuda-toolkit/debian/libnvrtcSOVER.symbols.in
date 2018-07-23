@@ -1,0 +1,4 @@
+libnvrtc-builtins.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnvrtc-builtins.so.#SOVERSION# 0
+libnvrtc.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnvrtc.so.#SOVERSION# 0

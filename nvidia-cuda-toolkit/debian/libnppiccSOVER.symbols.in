@@ -1,0 +1,2 @@
+libnppicc.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnppicc.so.#SOVERSION# 0

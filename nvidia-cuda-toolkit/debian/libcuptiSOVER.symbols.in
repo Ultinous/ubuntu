@@ -1,0 +1,2 @@
+libcupti.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libcupti.so.#SOVERSION# 0

@@ -1,0 +1,2 @@
+libcusolver.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libcusolver.so.#SOVERSION# 0

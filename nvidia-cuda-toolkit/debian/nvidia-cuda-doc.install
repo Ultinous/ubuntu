@@ -1,0 +1,3 @@
+usr/src/*			usr/share/doc/nvidia-cuda-doc/examples/
+usr/nvvm/libnvvm-samples/*	usr/share/doc/nvidia-cuda-doc/examples/libnvvm/
+usr/nvml/example/*		usr/share/doc/nvidia-cuda-doc/examples/nvml/

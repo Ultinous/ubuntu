@@ -1,0 +1,2 @@
+libnpps.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnpps.so.#SOVERSION# 0

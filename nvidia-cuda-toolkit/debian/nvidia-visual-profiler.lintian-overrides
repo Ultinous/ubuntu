@@ -1,0 +1,16 @@
+no-upstream-changelog
+# The NVIDIA license does not allow any form of modification.
+hardening-no-bindnow
+hardening-no-fortify-functions
+hardening-no-pie
+[amd64]: hardening-no-relro
+unstripped-binary-or-object
+
+# Bundled eclipse components ...
+codeless-jar
+extra-license-file usr/share/*/plugins/org.apache.ant_*/about_files/LICENSE
+package-contains-empty-directory usr/share/nvidia-visual-profiler/*/
+script-not-executable usr/share/*/plugins/org.apache.ant_*/bin/*
+
+# The content differs between the architectures.
+[amd64 ppc64el]: arch-dep-package-has-big-usr-share

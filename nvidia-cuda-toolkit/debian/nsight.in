@@ -1,0 +1,6 @@
+#!/bin/sh
+
+JAVA_HOME=#CUDA_JAVA_HOME#
+PATH=$JAVA_HOME/bin:$PATH
+
+exec /usr/lib/nvidia-nsight/nsight "$@"

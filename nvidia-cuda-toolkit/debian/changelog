@@ -1,0 +1,793 @@
+nvidia-cuda-toolkit (9.2.148-1) experimental; urgency=medium
+
+  * New upstream release 9.2 Update 1 (amd64 only).
+  * nvidia-opencl-dev: Add Breaks: nvidia-libopencl1 for a smoother transition
+    to ocl-icd-opencl-dev.
+  * Bump Standards-Version to 4.1.5 (no changes needed).
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 18 Jul 2018 21:42:36 +0200
+
+nvidia-cuda-toolkit (9.2.88-1) experimental; urgency=medium
+
+  * New upstream release 9.2 (May 2018).  (Closes: #899343, #900183)
+  * d/copyright: Synchronize with updated EULA.txt.
+  * SOVERSION bump: 9.1 => 9.2, rename all library packages.
+  * Refresh patches.
+  * Update Lintian overrides.
+  * Bump Standards-Version to 4.1.4 (no changes needed).
+  * Add gcc-7 and clang-5.0 as supported compiler alternatives.
+    (Closes: #892415)
+  * d/rules: Simplify shifting around the unpacked contents.
+  * Upload to experimental.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 15 Jun 2018 18:07:24 +0200
+
+nvidia-cuda-toolkit (9.1.85-4) unstable; urgency=medium
+
+  * Visual Profiler and Nsight do not work with default-jre,
+    so let nvidia-visual-profiler and nvidia-nsight packages depend on
+    openjdk-8-jre and set JAVA_HOME in the nvvp and nsight wrappers
+    (LP: #1766948)
+  * Let nvidia-profiler depend on libaccinj64-${cuda:SoVersion}
+
+ -- Graham Inggs <ginggs@debian.org>  Wed, 02 May 2018 12:46:27 +0000
+
+nvidia-cuda-toolkit (9.1.85-3) unstable; urgency=medium
+
+  [ Graham Inggs ]
+  * Drop libOpenCL.so symlink from nvidia-opencl-dev
+
+  [ Andreas Beckmann ]
+  * Switch Vcs-* URLs to salsa.debian.org.
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Mon, 12 Mar 2018 07:01:23 +0100
+
+nvidia-cuda-toolkit (9.1.85-2) experimental; urgency=medium
+
+  * Let nvidia-opencl-dev depend on ocl-icd-opencl-dev.
+    nvidia-libopencl1 only supports up to OpenCL 2.0 and therefore requires
+    (no longer available) opencl-c-headers (<< 2.1~) or applications that
+    don't use features newer than OpenCL 2.0 (even if the headers declare
+    support for newer standards.)  (Closes: #889287)
+  * Build the libthrust-dev package. The embedded copy is newer than the last
+    release on github.
+  * Add clang-4.0 as a supported compiler alternative.
+  * Update Lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Mon, 26 Feb 2018 17:27:30 +0100
+
+nvidia-cuda-toolkit (9.1.85-1) experimental; urgency=medium
+
+  * New upstream release 9.1 (Dec 2017).  (Closes: #887701)
+  * debian/copyright: Synchronize with updated EULA.txt.
+  * SOVERSION bump: 9.0 => 9.1, rename all library packages.
+  * Refresh patches.
+  * Place the documentation in /usr/share/doc/nvidia-cuda-toolkit/.
+  * Require libopencl-2.0-1 as alternative.
+  * Update Lintian overrides.
+  * Upload to experimental.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sat, 20 Jan 2018 17:26:32 +0100
+
+nvidia-cuda-toolkit (9.0.176-2) unstable; urgency=medium
+
+  * Bump Standards-Version to 4.1.3 (no changes needed).
+  * Switch to debhelper compat level 11.
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Thu, 11 Jan 2018 15:01:38 +0100
+
+nvidia-cuda-toolkit (9.0.176-1) experimental; urgency=medium
+
+  * New upstream release 9.0 (Sept 2017).  (Closes: #862522)
+  * debian/copyright: Synchronize with updated EULA.txt.
+  * Remove libnppi8.0. The full sized library was split up into multiple
+    libraries in 8.0 and is now deprecated by upstream.
+  * SOVERSION bump: 8.0 => 9.0, rename all library packages.
+  * libaccinj64-9.0: New package for the 64-bit ACCINJ library.
+  * Update installation paths.
+  * Simplify symbols control files and use wildcard matching on symbol
+    versions now that upstream uses versioned symbols.
+  * Update symbols control files.
+  * Refresh patches.
+  * man-typos.patch: Fix more misspellings.
+  * Fix packaging for ppc64el.
+  * Use gcc-6/g++-6 as preferred compiler and clang-3.9 as alternative.
+    (Closes: #873468, #864840)
+  * Update Lintian overrides.
+  * Upload to experimental.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 24 Nov 2017 00:26:06 +0100
+
+nvidia-cuda-toolkit (8.0.61-3) unstable; urgency=medium
+
+  * Use dpkg makefile snippets instead of manual changelog parsing.
+  * Add monolithic cuda tree shim in /usr/lib/cuda/.
+    Use for 'clang++ --cuda-path=/usr/lib/cuda'.  (LP: #1706326)
+  * Update Lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Thu, 23 Nov 2017 05:23:45 +0100
+
+nvidia-cuda-toolkit (8.0.61-2) unstable; urgency=medium
+
+  * Set Priority to optional.
+  * Switch from dh_install --list-missing to dh_missing.
+  * Ship some overlooked files and drop some removed docs.
+  * Factor out a build-stamp target and prepare the tree in build/.
+  * Convert packaging repository from SVN to GIT.
+  * Add gbp.conf to enable overlay mode.
+  * Add get-tarball-dir target to checkout the tarball archive from SVN.
+  * Set Rules-Requires-Root: no.
+  * Use https:// URLs where possible.
+  * nvidia-profiler: Add Suggests: nvidia-cuda-toolkit for the
+    cuda-binaries(1) manpage.  (Closes: #854900)
+
+ -- Andreas Beckmann <anbe@debian.org>  Tue, 07 Nov 2017 14:28:50 +0100
+
+nvidia-cuda-toolkit (8.0.61-1) unstable; urgency=medium
+
+  [ Andreas Beckmann ]
+  * New upstream release 8.0 GA2 (Feb 2017).
+  * Update symbols control files.
+  * Bump Standards-Version to 4.1.1.
+  * Update Lintian overrides.
+
+  [ Russ Allbery ]
+  * Remove myself from Uploaders.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 04 Oct 2017 15:15:32 +0200
+
+nvidia-cuda-toolkit (8.0.44-4) unstable; urgency=medium
+
+  [ Zhou Mo ]
+  * README.Debian: Discuss adding nvcc options regarding PIE when mixing GCC
+    and CLANG generated objects, since the defaults differ between the
+    compilers.  (Closes: #861878)
+
+ -- Andreas Beckmann <anbe@debian.org>  Mon, 29 May 2017 20:48:54 +0200
+
+nvidia-cuda-toolkit (8.0.44-3) unstable; urgency=medium
+
+  [ Zhou Mo ]
+  * Depend on clang-3.8 as default compiler alternative, since CUDA does not
+    support GCC-6.  (Closes: #835940)
+    Use 'nvcc -ccbin clang-3.8' to compile your CUDA applications.
+  * Add NEWS entry for this change.
+
+  [ Andreas Beckmann ]
+  * Switch to debhelper compat level 10.
+  * Generate debian/g++ from debian/gcc.
+  * gcc/g++ wrappers: Report if clang-3.8 could be used instead of gcc/g++.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 20 Jan 2017 20:25:17 +0100
+
+nvidia-cuda-toolkit (8.0.44-2) unstable; urgency=medium
+
+  * Overhaul installation of examples.
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Thu, 27 Oct 2016 04:05:12 +0200
+
+nvidia-cuda-toolkit (8.0.44-1) experimental; urgency=medium
+
+  [ Andreas Beckmann ]
+  * New upstream release 8.0 GA1 (Sept 2016).  (Closes: #822434, #695304)
+  * Use gzip to compress orig tarballs containing already compressed files.
+  * Revert the -D_FORCE_INLINES workaround.
+  * gcc-support.patch: Remove, fixed upstream.
+  * man-sections.patch, man-typos.patch, man-hyphenation.patch: Refresh.
+  * Fix more typos found by Lintian.
+  * Update Lintian overrides.
+  * Upload to experimental.
+
+  [ Zhou Mo ]
+  * SOVERSION bump: 7.5 => 8.0, rename all library packages.
+  * Update symbols control files.
+  * Ship new binary: gpu-library-advisor.
+  * New packages for nppi sub-library series:
+    + libnppial8.0: New package for image arithmetic and logic
+    + libnppicc8.0: New package for image color conversion
+    + libnppicom8.0: New package for image compression
+    + libnppidei8.0: New package for image data exchange and initialization
+    + libnppif8.0: New package for image filters
+    + libnppig8.0: New package for image geometry transforms
+    + libnppim8.0: New package for image morphological operations
+    + libnppist8.0: New package for image statistics
+    + libnppisu8.0: New package for image support
+    + libnppitc8.0: New package for image threshold and compare
+  * libnvgraph8.0: New package for the nvGRAPH library.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 21 Oct 2016 18:34:36 +0200
+
+nvidia-cuda-toolkit (7.5.18-4) unstable; urgency=medium
+
+  * [ppc64el] Use the no-libcuda1 virtual package on Debian, too, since there
+    is no current driver available for ppc64el.
+  * Fix more typos found by Lintian.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 07 Sep 2016 13:53:33 +0200
+
+nvidia-cuda-toolkit (7.5.18-3) unstable; urgency=medium
+
+  * d/rules: Add missing build-arch/build-indep targets.  (Closes: #832589)
+  * nvcc.profile: Add -D_FORCE_INLINES for better glibc 2.23 support.
+    (Closes: #822783)
+  * Fix more typos found by Lintian.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sun, 31 Jul 2016 15:50:16 +0200
+
+nvidia-cuda-toolkit (7.5.18-2) unstable; urgency=medium
+
+  * man-typos.patch: Fix more typos.
+  * Update Lintian overrides.
+  * Bump Standards-Version to 3.9.8 (no changes needed).
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Tue, 03 May 2016 02:18:58 +0200
+
+nvidia-cuda-toolkit (7.5.18-1) experimental; urgency=medium
+
+  [ Zhou Mo ]
+  * New upstream release 7.5 (Sept 2015).  (Closes: #807579)
+  * SOVERSION bump: 7.0 => 7.5, rename all library packages.
+  * Update symbols control files.
+  * [ppc64el] Adjust location of nvvm/lib.
+  * Update Lintian overrides.
+
+  [ Andreas Beckmann ]
+  * Refresh man-sections.patch.
+  * debian/copyright: Synchronize with updated EULA.txt.
+  * Use multiarch substitution in nvcc.profile.
+  * gcc-support.patch: New, allow usage of GCC 5.
+  * Use gcc-5/g++-5 as preferred compiler.
+  * Update documentation regarding the CUDA Code Samples.
+  * [ppc64el] Use the no-libcuda1 virtual package on Ubuntu.
+  * Upload to experimental.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 09 Mar 2016 02:12:57 +0100
+
+nvidia-cuda-toolkit (7.0.28-4) unstable; urgency=medium
+
+  * [ppc64el] Enable the nvidia-opencl-dev package.
+  * Ship nvprune manpage.
+  * rules: Enforce that arch:all documentation packages are built on amd64 only.
+  * get-orig-source: Exclude driver and GPU Deployment Kit.
+  * Drop Conflicts/Breaks/Replaces targeting pre-jessie versions.
+  * Add Conflicts with the CUDA repo packages from NVIDIA for Ubuntu.
+  * man-typos.patch: Fix more misspellings.
+  * Bump Standards-Version to 3.9.7 (no changes needed).
+  * Update Lintian overrides.  (Closes: #815822)
+
+ -- Andreas Beckmann <anbe@debian.org>  Sun, 28 Feb 2016 14:02:08 +0100
+
+nvidia-cuda-toolkit (7.0.28-3) unstable; urgency=medium
+
+  [ Andreas Beckmann ]
+  * Drop Build-Depends on libcuda1 and always use the libcuda.so stub (with
+    some postprocessing) for dependency resolution.
+  * Revert the no-libcuda1 virtual package hack.
+
+  [ Graham Inggs ]
+  * [ppc64el] Add Build-Depends on libexpat1.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 17 Feb 2016 08:33:34 +0100
+
+nvidia-cuda-toolkit (7.0.28-2) unstable; urgency=medium
+
+  * Merge changes from 6.5.19-3.
+  * get-orig-source: Generate an additional .orig-ppc64el tarball by repacking
+    cuda-repo-ubuntuAABB-X-Y-local_*_ppc64el.deb.
+  * Add preliminary support for building ppc64el packages.
+  * Work around libcuda1 not being available on ppc64el:
+    - Use the stub library shipped with the library for dependency resolution.
+    - libcudart7.0:ppc64el: Provide virtual package no-libcuda1 and use that
+      as alternative dependency.
+  * [ppc64el] Strip RPATH from cuda-gdb.
+  * Apply the patches over the nvidia-cuda symlink.
+  * Update Lintian overrides.
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 03 Feb 2016 09:43:31 +0100
+
+nvidia-cuda-toolkit (7.0.28-1) experimental; urgency=medium
+
+  [ Zhou Mo ]
+  * New upstream release 7.0 (March 2015).  (Closes: #783770)
+  * Drop i386 support for all remaining packages, removed upstream.
+  * SOVERSION bump: 6.5 => 7.0, rename all library packages and
+    bump alternate virtual B-D to libcuda-7.0-1.
+  * libnvvm SOVERSION bump: 2 => 3, rename libnvvm2 to libnvvm3.
+  * Update symbols control files.
+  * Do not ship open64 binaries, no longer provided upstream.
+    (Closes: #774297)
+  * Ship new headers and nvprune binary.
+  * libcusolver7.0: New package for the cuSOLVER library.
+  * libnvrtc7.0: New package for the NVRTC library.
+
+  [ Andreas Beckmann ]
+  * Refresh man-sections.patch and man-typos.patch.
+  * debian/copyright: Synchronize with updated EULA.txt.
+  * nvidia-cuda-dev: Ship the library stubs, downgrade Depends: libcuda1 to
+    Recommends.
+  * Remove compatibility symlink for thrust includes.
+  * Update documentation regarding the CUDA Code Samples.
+  * nvidia-visual-profiler, nvidia-nsight: Disable more tracking scripts.
+  * Update Lintian overrides.
+  * Upload to experimental.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sat, 28 Nov 2015 07:35:39 +0100
+
+nvidia-cuda-toolkit (6.5.19-3) unstable; urgency=medium
+
+  * Do not run dh_strip_nondeterminism, it may perform modifications not
+    permitted by the NVIDIA license.
+  * get-orig-source: Generate tarball reproducibly.
+  * Add Zhou Mo to Uploaders.
+  * Update Lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 20 Jan 2016 03:11:45 +0100
+
+nvidia-cuda-toolkit (6.5.19-2) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 13 Nov 2015 19:46:02 +0100
+
+nvidia-cuda-toolkit (6.5.19-1) experimental; urgency=medium
+
+  * New upstream release 6.5 (September 2014).
+    - Adding support for GTX9xx GPUs. (Needs a 343.xx or newer driver.)
+  * Refresh man-sections.patch.
+  * Update symbols control files.
+  * Update Lintian overrides.
+  * nvidia-cuda-toolkit: Suggest nvidia-driver and mention in the long
+    description that an NVIDIA GPU and the NVIDIA driver kernel module are
+    required to run CUDA applications.  (Closes: #795262)
+  * Upload to experimental.
+
+ -- Andreas Beckmann <anbe@debian.org>  Mon, 05 Oct 2015 23:26:43 +0200
+
+nvidia-cuda-toolkit (6.5.14-2) unstable; urgency=medium
+
+  [ Andreas Beckmann ]
+  * Add B-D: libncurses5.  (Closes: #789090)
+  * Update Lintian overrides.
+  * Upload to unstable.
+
+  [ Graham Inggs ]
+  * Update my email address.
+  * Re-enable the gcc/g++ wrappers, depend on gcc/g++ 4.9 | 4.8.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 30 Sep 2015 17:26:21 +0200
+
+nvidia-cuda-toolkit (6.5.14-1) experimental; urgency=medium
+
+  [ Graham Inggs ]
+  * New upstream release 6.5 (August 2014).
+  * SOVERSION bump: 6.0 => 6.5, rename all library packages and
+    bump alternate virtual B-D to libcuda-6.5-1.
+  * Update symbols control files.
+  * Use SOVERSION substitution in nvidia-cuda-toolkit.manpages.
+  * debian/copyright: Synchronize with updated EULA.txt.
+  * Remove nvvp, nsight and various libs no longer shipped for i386.
+  * Remove workaround to create symlinks for libnvvm.
+  * Allow documentation packages to build on i386.
+  * Refresh all postunpack patches.
+  * Rebase postunpack patches against non-symlinked directory
+    for compatibility with patch >= 2.7.3-1.
+  * nvidia-profiler: Update compat symlinks as nvprof now looks for
+    libcuinj{32,64}.so without the SOVERSION.
+  * Update Lintian overrides.
+
+  [ Andreas Beckmann ]
+  * nvidia-opencl-dev: Recommends: nvidia-opencl-icd.
+  * d/watch, get-orig-source: Include the arm64 .run installer.
+  * Upload to experimental.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 25 Feb 2015 21:51:04 +0100
+
+nvidia-cuda-toolkit (6.0.37-5) unstable; urgency=medium
+
+  * nvidia-opencl-dev: Bump Breaks/Replaces on nvidia-libopencl1 from
+    (<< 304.88-7~) to (<< 305~) to cover all versions that could end up in
+    wheezy. New nvidia-graphics-drivers upstream releases from the 304.xx
+    legacy series fixing security bugs have been uploaded to stable
+    previously. The package in wheezy (current version: 304.117-1) still
+    contains libOpenCL.so while the package in sid stopped shipping this
+    symbolic link in 304.88-7.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 21 Nov 2014 18:53:52 +0100
+
+nvidia-cuda-toolkit (6.0.37-4) unstable; urgency=medium
+
+  * libnvblas6.0 is only available on amd64.
+  * nvidia-cuda-dev: Add Recommends: libnvcuvid1.
+  * nvidia-cuda-dev: Remove some header file workaround symlinks.
+  * Update documentation regarding downloading, installing and building the
+    CUDA Code Samples.
+  * Update library package descriptions from cuda-libraries(7).
+
+ -- Andreas Beckmann <anbe@debian.org>  Sun, 12 Oct 2014 21:47:11 +0200
+
+nvidia-cuda-toolkit (6.0.37-3) unstable; urgency=medium
+
+  * Bump Standards-Version to 3.9.6 (no changes needed).
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 10 Oct 2014 09:27:22 +0200
+
+nvidia-cuda-toolkit (6.0.37-2) experimental; urgency=medium
+
+  [ Graham Inggs ]
+  * Add missing Breaks/Replaces on libcuinj{32,64}-5.5.  (Closes: #763177)
+
+  [ Andreas Beckmann ]
+  * Add wrapper script for nvprof due to its insane library search behavior.
+  * Add compat symlinks for libcuinj{32,64}.so.6.0 to the real nvprof's
+    bindir.  (Closes: #761363)
+  * nvidia-cuda-doc: Remove more tracking scripts.
+  * Ship the new upstream manpages.
+  * Fix typos, hyphenation, and sections in the manpages.
+  * Implement minimal quilt based patch system that is activated after
+    unpacking the .run files.
+  * libnvblas6.0: New package for the NVBLAS runtime library.
+  * Update lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Tue, 30 Sep 2014 16:23:39 +0200
+
+nvidia-cuda-toolkit (6.0.37-1) experimental; urgency=medium
+
+  * New upstream release 6.0 (April 2014).  (Closes: #751522)
+  * Upload to experimental.
+  * debian/copyright: Synchronize with updated EULA.txt.
+  * SOVERSION bump: 5.5 => 6.0, rename all library packages.
+  * Update symbols control files.
+
+ -- Andreas Beckmann <anbe@debian.org>  Mon, 08 Sep 2014 14:49:21 +0200
+
+nvidia-cuda-toolkit (5.5.22-6) unstable; urgency=medium
+
+  [ Andreas Beckmann ]
+  * Move libcuinj{32,64}-5.5 dependency from nvidia-visual-profiler to
+    nvidia-profiler.
+  * Move libcuinj{32,64}.so back to nvidia-cuda-dev, nvprof now dlopen()s the
+    proper soname.  (Closes: #763177)
+  * nvidia-cuda-dev: Upgrade libcuda.so dependency from Recommends to Depends.
+  * nvidia-cuda-doc: Remove tracking scripts and images.
+  * Update lintian overrides.
+
+  [ Graham Inggs]
+  * New package descriptions to satisfy lintian description-is-pkg-name.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sun, 28 Sep 2014 18:31:12 +0200
+
+nvidia-cuda-toolkit (5.5.22-5) unstable; urgency=medium
+
+  [ Andreas Beckmann ]
+  * Add Graham Inggs to Uploaders.
+
+  [ Graham Inggs ]
+  * Do not prevent the use of GCC 4.9.  (Closes: #757961)
+  * Add missing Breaks/Replaces to nvidia-opencl-dev for a clean takeover of
+    the libOpenCL.so symlink from {amd,nvidia,ocl-icd}-libopencl1.
+    (Closes: #760554)
+
+ -- Graham Inggs <graham@nerve.org.za>  Mon, 08 Sep 2014 17:00:27 +0200
+
+nvidia-cuda-toolkit (5.5.22-4) unstable; urgency=low
+
+  * Bump the alternate virtual libcuda dependency to libcuda-5.5-1.
+  * Remove alternate (Build-)Depends on nvidia-current.  (Closes: #745149)
+  * Add libopencl-1.1-1 as alternate virtual libopencl1 dependency.
+  * Update lintian overrides.
+  * Remove switch for non-multiarch builds.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sun, 25 May 2014 01:27:03 +0200
+
+nvidia-cuda-toolkit (5.5.22-3) unstable; urgency=low
+
+  * Bump the alternate virtual B-D to libcuda-5.5-1.
+  * Bump Standards-Version to 3.9.5 (no changes needed).
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Thu, 07 Nov 2013 01:19:29 +0100
+
+nvidia-cuda-toolkit (5.5.22-2) experimental; urgency=low
+
+  * Add missing Breaks/Replaces to libcuinj{32,64}-5.5 for a clean takeover of
+    the libcuinj{32,64}.so symlink from libcuinj{32,64}-5.0.
+  * nvcc.profile: Add missing NVVMIR_LIBRARY_DIR setting.  (Closes: #725649)
+  * nvcc.profile: Add -L/usr/lib/<triplet> to make nvlink multiarch aware.
+  * Drop the gcc/g++ wrappers, all versions up to 4.8 are supported.
+
+ -- Andreas Beckmann <anbe@debian.org>  Tue, 22 Oct 2013 13:39:10 +0200
+
+nvidia-cuda-toolkit (5.5.22-1) experimental; urgency=low
+
+  * New upstream release 5.5 (July 2013).
+  * Upload to experimental.
+  * Update watch file.
+  * debian/copyright: Synchronize with reformatted and updated EULA.txt.
+  * SOVERSION bump: 5.0 => 5.5, rename all library packages.
+  * libnpp[cis]5.5: New packages replacing the split libnpp5.0 library.
+  * libnvtoolsext1: Renamed from libnvtoolsext5.0, upstream soname change.
+  * libnvvm2: New package for the NVCC runtime library.
+  * libcufftw5.5: New package for CUDA FFT library with FFTW interface.
+  * Ship new binaries and auxiliary files.
+  * Update symbols control files.
+  * Update lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sun, 22 Sep 2013 14:17:57 +0200
+
+nvidia-cuda-toolkit (5.0.35-8) unstable; urgency=low
+
+  * Simplify renaming control files on SOVERSION change.
+  * Update lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sat, 19 Oct 2013 20:58:39 +0200
+
+nvidia-cuda-toolkit (5.0.35-7) unstable; urgency=low
+
+  * nvidia-opencl-dev: Provides/Conflicts/Replaces: opencl-dev.
+  * nvidia-opencl-dev: Set Multi-Arch: same.
+    - Ship libOpenCL.so symlink previously in nvidia-libopencl1.
+      (Closes: #719833)
+    - Tighten the dependency on nvidia-libopencl1.
+  * nvidia-cuda-toolkit: Allow opencl-dev as an alternative to
+    nvidia-opencl-dev. (Closes: #719834)
+
+ -- Andreas Beckmann <anbe@debian.org>  Sat, 17 Aug 2013 06:48:53 +0200
+
+nvidia-cuda-toolkit (5.0.35-6) unstable; urgency=low
+
+  [ Graham Inggs ]
+  * Dependency updates for Ubuntu Saucy: nvidia-* now provides libcuda-5.0-1
+    and libopencl1 virtual packages. Use these instead of enumerating all
+    packaged driver versions.  (Closes: #710820)
+
+  [ Andreas Beckmann ]
+  * nvidia-cuda-dev: Add Breaks against too old libcuda1 versions.
+  * Update lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Tue, 16 Jul 2013 11:37:43 +0200
+
+nvidia-cuda-toolkit (5.0.35-5) unstable; urgency=low
+
+  * Use canonical Vcs-* URLs.
+  * Update lintian overrides.
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sun, 05 May 2013 11:59:50 +0200
+
+nvidia-cuda-toolkit (5.0.35-4ubuntu1) raring; urgency=low
+
+  * Ubuntu: Build-Depend/Depend on nvidia-304*, nvidia-310* and
+    nvidia-313*.  (LP: #1162945)
+
+ -- Graham Inggs <graham@nerve.org.za>  Tue, 02 Apr 2013 13:24:16 +0200
+
+nvidia-cuda-toolkit (5.0.35-4) experimental; urgency=low
+
+  [ Graham Inggs ]
+  * Ubuntu: Build-Depend/Depend on nvidia-experimental-*.  (LP: #1092259)
+
+  [ Andreas Beckmann ]
+  * Ubuntu: Override libcuda.so.1 dependencies via shlibs.local to support
+    installing with nvidia-experimental-* while building against
+    nvidia-current.  (Closes: #700621)
+
+ -- Andreas Beckmann <anbe@debian.org>  Sat, 16 Feb 2013 15:58:28 +0100
+
+nvidia-cuda-toolkit (5.0.35-3) experimental; urgency=low
+
+  * nvidia-profiler: New package (split from nvidia-cuda-toolkit) that ships
+    the nvprof binary which supports both CUDA and OpenCL.
+  * nvidia-visual-profiler: Depend on nvidia-profiler for the nvprof binary.
+    (Closes: #695493)
+  * nvcc.profile: Enable the 'LIBRARIES =+ -lcudart' setting to not deviate
+    from upstream behavior.  (Closes: #697730)
+  * Update my email address and remove DMUA.
+  * Switch to Standards-Version: 3.9.4 (no changes needed).
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 25 Jan 2013 19:27:19 +0100
+
+nvidia-cuda-toolkit (5.0.35-2) experimental; urgency=low
+
+  * debian/copyright: Synchronize with reformatted EULA.txt.
+  * Drop hardcoded java path from nvvp.ini and nsight.ini.  (Closes: #693703)
+  * nvidia-nsight: Add /usr/share/nvidia-nsight/configuration ->
+    /usr/lib/nvidia-nsight/configuration symlink.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Sat, 24 Nov 2012 15:57:03 +0100
+
+nvidia-cuda-toolkit (5.0.35-1) experimental; urgency=low
+
+  * New upstream release 5.0 (October 2012).
+  * debian/{control,rules}: Use substvars for the names of the libcuda1 and
+    nvidia-libopencl1 packages.
+  * Ubuntu: Build-Depend/Depend on nvidia-current | nvidia-current-updates
+    instead of libcuda1 and nvidia-libopencl1.
+  * Update lintian overrides.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Sun, 21 Oct 2012 17:06:18 +0200
+
+nvidia-cuda-toolkit (5.0.24-1) experimental; urgency=low
+
+  * New upstream release candidate 5.0 RC.  (Closes: #686560)
+  * Upload to experimental.
+  * watch: simplify and switch to the release candidate page.
+  * Only extract the .run file for the current architecture.
+  * Drop B-D: libqt*, since 4.1 the profiler uses eclipse instead of Qt.
+  * get-orig-source: skip downloading if cached files are in ../.cache/
+  * get-orig-source: extract and repack run-in-run archives.
+  * SOVERSION bump: 4 => 5.0, rename all library packages.
+  * libcuinj.so.4 has changed the SONAME to libcuinj{32,64}.so.5.0: rename and
+    clone package accordingly.
+  * Update symbols files.
+  * Update lintian overrides and override hardening warnings.
+  * nvidia-visual-profiler: Generalize installation and linking to
+    automatically pickup new files and forget removed ones.
+  * nvidia-nsight: new package for NVIDIA Nsight Eclipse Edition.
+  * libnvtoolsext5.0: new package for the NVIDIA Tools Extension (runtime).
+  * Update .install lists for added files.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Wed, 12 Sep 2012 01:44:29 +0200
+
+nvidia-cuda-toolkit (4.2.9-2) unstable; urgency=low
+
+  * nvcc.profile: Enable the 'LIBRARIES =+ -lcudart' setting to not deviate
+    from upstream behavior.  (Closes: #697730)
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Thu, 10 Jan 2013 01:19:06 +0100
+
+nvidia-cuda-toolkit (4.2.9-1) unstable; urgency=low
+
+  * New upstream release 4.2 (April 2012).
+  * New download URL: https://developer.nvidia.com/cuda-downloads
+  * Update symbols files.
+  * debian/copyright: Update NVIDIA license.
+  * The toolkit now supports GCC 4.6 (but nothing newer).  Add g++-4.6 and
+    gcc-4.6 as preferred alternative dependencies.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Fri, 11 May 2012 10:32:07 +0200
+
+nvidia-cuda-toolkit (4.1.28-2) unstable; urgency=low
+
+  * nvidia-visual-profiler: Add dependency on libcuinj4. (Closes: #665931)
+  * Move libcuinj.so to libcuinj4 as this gets dlopen()ed.
+  * Switch to Standards-Version: 3.9.3 (no changes needed).
+  * Use the final copyright-format/1.0 URL.
+  * Drop biarch lib32* packages, there were no users of these packages.
+    Multi-arch is the way to go.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Thu, 12 Apr 2012 21:09:27 +0200
+
+nvidia-cuda-toolkit (4.1.28-1) unstable; urgency=low
+
+  * New upstream release 4.1 (January 2012).
+  * Upload to unstable.
+  * Update symbols files.
+  * Ship cicc and ci_include.h in the nvidia-cuda-toolkit package.  GPUs
+    pre-dating the Fermi architecture still need the pre-LLVM compiler.
+    Thanks to Tomasz Rybak for testing this.
+  * Do not compress examples.
+  * The toolkit now supports GCC 4.5 (but nothing newer).  Add g++-4.5 and
+    gcc-4.5 as preferred alternative dependencies.
+  * nvidia-cuda-toolkit: Add wrapper scripts (used internally by nvcc) for
+    gcc/g++ that execute the newest of gcc-4.5/g++-4.5 or gcc-4.4/g++-4.4,
+    even if /usr/bin/gcc and /usr/bin/g++ point to a newer version.
+  * nvidia-visual-profiler: Ship the copy of Eclipse 3.6 that was included in
+    the upstream archive.  I can't get nvvp working properly with the Debian
+    Eclipse 3.7.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Wed, 22 Feb 2012 15:10:50 +0100
+
+nvidia-cuda-toolkit (4.1.21-1) experimental; urgency=low
+
+  * New upstream release candidate 4.1 RC2.
+  * Upload to experimental.
+  * Rename package nvidia-compute-profiler to nvidia-visual-profiler, this is
+    now a cross-platform application based on eclipse.
+  * libcuinj4: New package for the INJ library.
+  * libcupti{4,-dev,-doc}: New packages for the NVIDIA CUDA Profiler Tools
+    Interface (CUPTI).
+  * Update install lists and symbols files.
+  * debian/copyright: Update to dep5.mdwn?revision=202.  Add LLVM license.
+  * Bump debhelper dependency to 9.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Thu, 16 Feb 2012 17:08:36 +0100
+
+nvidia-cuda-toolkit (4.0.17-3) unstable; urgency=low
+
+  [ Russ Allbery ]
+  * Add DM-Upload-Allowed: yes to debian/control.
+
+  [ Andreas Beckmann ]
+  * Add compatibility symlink for thrust because nvcc refuses kernels from
+    system include directories.  (Closes: #644844)
+  * Add a README entry how to install the GPU Computing SDK (code examples).
+  * Update lintian overrides.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Mon, 10 Oct 2011 20:56:23 +0200
+
+nvidia-cuda-toolkit (4.0.17-2) unstable; urgency=low
+
+  * Upload to unstable.
+  * Add XS-Autobuild: yes to debian/control.  See instructions in #602838.
+  * Add Depends: libthrust-dev. Thrust has been packaged separately in contrib
+    as it is available under the Apache-2.0 license.
+  * nvidia-opencl-dev now Provides: opencl-dev.
+  * Drop lintian-overrides for shlib-calls-exit (no longer emitted in 2.5.1).
+  * Enable multiarch build.
+    - Add and use #LIBDIR# substitution.
+    - Add misc:Pre-Depends and Multi-Arch: same.
+    - Add conflicts with biarch libraries.
+    - Use compat level 9.
+  * Set Maintainer to Debian NVIDIA Maintainers and move myself to Uploaders.
+  * Add Russ Allbery to Uploaders.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Sat, 25 Jun 2011 18:20:19 +0200
+
+nvidia-cuda-toolkit (4.0.17-1) experimental; urgency=low
+
+  * New upstream release 4.0.
+  * Upload to experimental.
+  * Detect license changes by comparing debian/copyright with upstream
+    EULA.txt during build.
+  * Refresh debian/copyright from the updated EULA.txt in 4.0.
+  * Switch to arch tagged overrides (lintian 2.5.0).
+  * Add dependency on gcc-4.4/g++-4.4, add gcc/g++ compatibility symlinks.
+    The CUDA toolkit does not work with 4.5 or newer compilers.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Fri, 27 May 2011 15:00:56 +0200
+
+nvidia-cuda-toolkit (4.0.13-1) experimental; urgency=low
+
+  * New upstream release candidate 4.0 RC2.
+    - The OpenCL API 1.1 is now implemented.
+  * Upload to experimental.
+  * Upstream has bumped the SOVERSION from 3 to 4, rename the packages
+    accordingly.
+  * Update install lists and symbols files.
+  * Add lintian-overrides for shlib-calls-exit.
+  * Add packages libnpp4 and lib32npp4 for the NVIDIA Performance Primitives
+    library.
+  * Allow libopencl1 as an alternative to nvidia-libopencl1.
+  * Add Breaks: nvidia-libopencl1 (<< 195.36.31-90) because the older version
+    from squeeze doesn't contain the libOpenCL.so symlink.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Sun, 15 May 2011 18:12:01 -0700
+
+nvidia-cuda-toolkit (3.2.16-2) unstable; urgency=low
+
+  * Upload to unstable.
+  * Use dpkg-parsechangelog to extract the upstream version number from
+    debian/changelog, simplifying debian/rules.defs even more.
+  * Generate watch file in the clean target.  The watch file is now limited to
+    updates to the current release as NVIDIA no longer provides a page
+    redirecting to the current release.
+  * Switch to Standards-Version: 3.9.2 (no changes needed).
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Tue, 26 Apr 2011 18:56:41 -0700
+
+nvidia-cuda-toolkit (3.2.16-1) experimental; urgency=low
+
+  * New upstream release 3.2.
+  * Upload to experimental.
+  * Upstream no longer ships the manual pages.
+  * Create new packages libcusparse3 and libcurand3 (and their 32-bit
+    variants) for the libraries added by NVIDIA.
+  * Update symbols files and install lists.
+  * Update lintian overrides.
+  * Switch to source format 3.0 (quilt).
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Sat, 20 Nov 2010 19:20:46 -0800
+
+nvidia-cuda-toolkit (3.1-1) experimental; urgency=low
+
+  * New upstream release 3.1.
+  * Initial release.  (Closes: #581184)
+  * Upload to experimental.
+
+ -- Andreas Beckmann <debian@abeckmann.de>  Mon, 11 Oct 2010 15:15:18 +0200

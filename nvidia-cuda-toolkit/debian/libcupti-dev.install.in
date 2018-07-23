@@ -1,0 +1,3 @@
+usr/extras/CUPTI/include/*.h		usr/include/
+usr/extras/CUPTI/include/openacc/cupti_openacc.h	usr/include/openacc/
+usr/extras/CUPTI/lib64/libcupti.so	#LIBDIR#/

@@ -1,0 +1,6 @@
+debian/tmp/usr/doc/man/man1/cuda-binaries.1
+debian/tmp/usr/doc/man/man1/cuda-memcheck.1
+debian/tmp/usr/doc/man/man1/cuobjdump.1
+debian/tmp/usr/doc/man/man1/nvcc.1
+debian/tmp/usr/doc/man/man1/nvdisasm.1
+debian/tmp/usr/doc/man/man1/nvprune.1

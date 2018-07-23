@@ -1,0 +1,2 @@
+libnppig.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnppig.so.#SOVERSION# 0

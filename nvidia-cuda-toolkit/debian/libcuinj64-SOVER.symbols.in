@@ -1,0 +1,2 @@
+libcuinj64.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libcuinj64.so.#SOVERSION# 0

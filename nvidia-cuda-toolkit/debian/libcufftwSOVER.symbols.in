@@ -1,0 +1,2 @@
+libcufftw.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libcufftw.so.#SOVERSION# 0

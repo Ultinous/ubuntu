@@ -1,0 +1,2 @@
+libaccinj64.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libaccinj64.so.#SOVERSION# 0

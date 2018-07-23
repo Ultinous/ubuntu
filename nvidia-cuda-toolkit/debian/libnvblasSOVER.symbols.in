@@ -1,0 +1,2 @@
+libnvblas.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnvblas.so.#SOVERSION# 0

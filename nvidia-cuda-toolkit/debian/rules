@@ -1,0 +1,308 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/pkg-info.mk
+
+VENDOR			?= $(call dpkg_late_eval,VENDOR,dpkg-vendor --derives-from Ubuntu && echo Ubuntu || echo Debian)
+
+
+include debian/rules.defs
+CUDA_VERSION_TOOLKIT	?= $(DEB_VERSION_UPSTREAM)
+CUDA_VERSION_MAJOR	?= $(word 1,$(subst ., ,$(CUDA_VERSION_TOOLKIT)))
+CUDA_VERSION_MINOR	?= $(word 2,$(subst ., ,$(CUDA_VERSION_TOOLKIT)))
+version_driver		 = $(CUDA_VERSION_DRIVER.$(DEB_HOST_ARCH))
+watch_url		 = $(if $(CUDA_BETA),$(CUDA_WATCH_URL_BETA),$(CUDA_WATCH_URL))
+THRUST_VERSION		?= $(shell perl -ne 'if (/define\s+THRUST_VERSION\s+(\d*)/) { printf "%d.%d.%d\n", $$1 / 100000, $$1 / 100 % 1000, $$1 % 100; }' nvidia-cuda/include/thrust/version.h)
+CUDA_JAVA_HOME		?= /usr/lib/jvm/java-8-openjdk-$(DEB_HOST_ARCH)
+
+package_libcuda1 \
+	= libcuda1 (>= $${nvidia:MinVersion}) \
+	| libcuda-$${cuda:SoVersion}-1
+#ifeq ($(VENDOR),Ubuntu)
+package_libcuda1	+= | no-libcuda1 [ppc64el]
+#endif
+
+# system libdir
+libdir			 = usr/lib/$(DEB_HOST_MULTIARCH)
+
+TEMPLATES	:= $(wildcard debian/*.in debian/patches/*.in)
+SOVERTEMPLATES	:= $(wildcard debian/*SOVER*)
+AUTOGEN         += $(patsubst %.in,%,$(TEMPLATES))
+AUTOGEN		+= $(subst SOVER,$(CUDA_SOVERSION),$(sort $(patsubst %.in,%,$(SOVERTEMPLATES))))
+AUTOGEN		+= debian/g++
+AUTOKEEP	 = debian/watch
+AUTOCLEAN	 = $(filter-out $(AUTOKEEP),$(AUTOGEN))
+AUTOCLEAN	+= debian/shlibs.local
+
+
+.PHONY: autogen prepare
+autogen: $(AUTOGEN)
+prepare: autogen unpack-stamp compare-copyright-license
+
+
+nvidia-cuda-amd64: debian/rules
+	dh_testdir
+	$(RM) -r $@ $@.tmp
+	sh $(CUDA_FILENAME.amd64) --noexec --keep --target $@.tmp
+	$(RM) -r $@.tmp/jre
+	mv $@.tmp $@
+
+nvidia-cuda-ppc64el: debian/rules
+	dh_testdir
+	$(RM) -r $@ $@.tmp
+	mkdir $@.tmp
+	@set -e -x ; for deb in ppc64el/cuda*.deb ; do dpkg -x $$deb $@.tmp/ubuntutree ; done
+	mv $@.tmp/ubuntutree/usr/local/cuda*/* $@.tmp/
+	$(RM) -r $@.tmp/ubuntutree/usr/lib/pkgconfig
+	$(RM) -r $@.tmp/ubuntutree/usr/share/doc
+	$(RM) -r $@.tmp/ubuntutree/usr/share/lintian
+	$(RM) -v $@.tmp/ubuntutree/etc/ld.so.conf.d/cuda-$(subst .,-,$(CUDA_SOVERSION)).conf
+	$(RM) -v $@.tmp/bin/computeprof
+	$(RM) -v $@.tmp/LICENSE
+	$(RM) -v $@.tmp/README
+	mv $@.tmp/doc/EULA.txt $@.tmp/
+	$(RM) $@.tmp/include $@.tmp/lib64
+	mv $@.tmp/targets/ppc64le-linux/include $@.tmp/include
+	mv $@.tmp/targets/ppc64le-linux/lib $@.tmp/lib64
+	mv $@.tmp $@
+
+unpack-stamp: $(filter debian/patches%,$(AUTOGEN))
+unpack-stamp: nvidia-cuda-$(DEB_HOST_ARCH)
+	ln -s nvidia-cuda-$(DEB_HOST_ARCH) nvidia-cuda
+	QUILT_PATCHES=debian/patches QUILT_SERIES=series-postunpack quilt --quiltrc /dev/null push -a || test $$? = 2
+	touch $@
+
+# Reformat the EULA to the format needed for debian/copyright.
+nvidia-cuda/EULA.txt: unpack-stamp
+EULA.fmt: nvidia-cuda/EULA.txt
+	cat $<  | fromdos | fromdos | expand \
+		| iconv -f UTF-8 -t latin1//TRANSLIT \
+		| fold -s -w 80 \
+		| sed -e 's/ *$$//;s/^$$/./;s/^/ /;' \
+		> $@
+
+# Compare the license in debian/copyright with the EULA shipped in the archive.
+compare-copyright-license: EULA.fmt
+	sed -e '1,/^License: other-NVIDIA-CUDA-TOOLKIT/d; /^$$/,$$d; /^ .$$/d' debian/copyright > copyright.tmp
+	sed -e '/^ .$$/d' EULA.fmt > EULA.tmp
+	diff -w copyright.tmp EULA.tmp
+	rm -f copyright.tmp EULA.tmp
+
+
+.PHONY: binary binary-arch binary-indep build build-arch build-indep clean install
+binary-arch build build-arch build-indep clean install:
+	dh $@
+
+binary binary-indep:
+	# the documentation packages must be built on amd64 (otherwise some parts are missing)
+	test "$(DEB_HOST_ARCH)" = "amd64"
+	dh $@
+
+override_dh_auto_configure: $(AUTOGEN) unpack-stamp
+
+build-stamp: unpack-stamp
+	$(RM) -r build
+	cp -al nvidia-cuda-$(DEB_HOST_ARCH)/ build
+	test -f build/version.txt || echo "CUDA Version $(CUDA_VERSION_TOOLKIT)" > build/version.txt
+	chmod -x build/libnvvp/*.xpm
+	chmod -x build/libnsight/*.xpm
+	sed -i '/^-vm$$/ d; /^..\/jre\/bin\/java$$/ d' build/libnvvp/nvvp.ini build/libnsight/nsight.ini
+	chmod -x build/bin/crt/link.stub
+	chmod -x build/bin/crt/prelink.stub
+	chmod -x build/nvvm/include/*.h
+	chmod -x build/nvvm/libnvvm-samples/build.bat
+	# reduce 'dh_missing --list-missing' noise
+	$(RM) -r build/lib32
+	$(RM) -r build/*/lib32
+	# remove tracking scripts
+	$(RM) -rv build/doc/html/common/scripts
+	# remove tracking images
+	find build/doc/html -name '*.html' -exec sed -r -i \
+		-e '\,http://omniture.nvidia.com/b/ss/nvidiacudadocs/1/H.17--NS/0, { s,(<noscript>),<!-- \1,; s,img src,img DISABLED,; s,(</noscript>),\1 -->, }' \
+		-e 's,(<script type="text/javascript" )src(="http://w.sharethis.com/button/buttons.js"[^>]*></script>),<!-- \1DISABLED\2 -->,' \
+		-e 's,(<script type="text/javascript" charset="utf-8" )src(="//assets.adobedtm.com/b92787824f2e0e9b68dc2e993f9bd995339fe417/satelliteLib-7ba51e58dc61bcb0e9311aadd02a0108ab24cc6c.js"[^>]*></script>),<!-- \1DISABLED\2 -->,' \
+		{} +
+	find build/libnsight build/libnvvp -name 'license.html' -exec sed -r -i \
+		-e 's,(<script type="text/javascript" )src(="http://w.sharethis.com/button/buttons.js"[^>]*></script>),<!-- \1DISABLED\2 -->,' \
+		{} +
+	# split arch and indep eclipse plugins
+	mkdir build/libnsight/plugins-arch
+	mv build/libnsight/plugins/org.eclipse.equinox.launcher.gtk.linux.* build/libnsight/plugins-arch/
+	mkdir build/libnvvp/plugins-arch
+	mv build/libnvvp/plugins/org.eclipse.equinox.launcher.gtk.linux.* build/libnvvp/plugins-arch/
+	touch $@
+
+override_dh_auto_build: build-stamp
+
+override_dh_auto_install:
+	mkdir debian/tmp
+	cp -al build/ debian/tmp/usr
+
+override_dh_installdocs-indep:
+	dh_installdocs -pnvidia-cuda-doc --doc-main-package=nvidia-cuda-toolkit
+	dh_installdocs --remaining-packages
+
+override_dh_installman:
+	dh_installman --language=C
+
+override_dh_missing:
+	dh_missing --fail-missing
+
+override_dh_makeshlibs:
+	dh_makeshlibs -X/stubs/
+
+override_dh_shlibdeps:
+	mkdir libcuda
+	ln -s ../nvidia-cuda/lib64/stubs/libcuda.so libcuda/libcuda.so.1
+	echo 'libcuda 1 XXXlibcuda1XXX' > debian/shlibs.local
+	dh_shlibdeps -X/stubs/ -- -llibcuda
+	$(RM) -r libcuda debian/shlibs.local
+	sed -i -r 's/XXXlibcuda1XXX/$${package:libcuda1}/g' debian/*.substvars
+
+# running dh_strip is not permitted by the NVIDIA license
+override_dh_strip:
+override_dh_strip_nondeterminism:
+
+override_dh_compress:
+	dh_compress -Xusr/share/doc/nvidia-cuda-doc/examples -Xusr/share/doc/libcupti-doc/examples
+
+override_dh_gencontrol-indep:
+	dh_gencontrol -plibthrust-dev -- -v$(THRUST_VERSION)~$(DEB_VERSION)
+	dh_gencontrol --remaining-packages
+
+override_dh_gencontrol-arch:
+	dh_gencontrol -- \
+		-V'package:libcuda1=$(package_libcuda1)' \
+		-V'cuda:SoVersion=$(CUDA_SOVERSION)' \
+		-V'nvidia:MinVersion=$(version_driver)'
+
+override_dh_auto_clean:
+	$(RM) -r .pc
+	$(RM) nvidia-cuda
+	$(RM) -r nvidia-cuda-amd64
+	$(RM) -r nvidia-cuda-ppc64el
+	$(RM) -r build
+	$(RM) EULA.fmt EULA.tmp copyright.tmp
+
+override_dh_clean:
+	dh_clean
+	$(RM) $(AUTOCLEAN)
+	$(MAKE) -f debian/rules $(AUTOKEEP)
+
+
+# Generating control files
+%:: %.in debian/rules debian/rules.defs
+	perl -p \
+	-e 's{#VERSION_TOOLKIT#}{$(CUDA_VERSION_TOOLKIT)}g;' \
+	-e 's{#SOVERSION#}{$(CUDA_SOVERSION)}g;' \
+	-e 's{#CUDA_DOWNLOAD_URL#}{$(watch_url)}g;' \
+	-e 's{#LIBDIR#}{$(libdir)}g;' \
+	-e 's{#MAN_DATE#}{$(CUDA_MAN_DATE.$(DEB_HOST_ARCH))}g;' \
+	-e 's{#!ppc64el#}{$(if $(filter ppc64el,$(DEB_HOST_ARCH)),#)}g;' \
+	-e 's{#CUDA_JAVA_HOME#}{$(CUDA_JAVA_HOME)}g;' \
+	< $< > $@
+
+lib%$(CUDA_SOVERSION).install:: lib%SOVER.install
+	cp $< $@
+
+lib%$(CUDA_SOVERSION).links:: lib%SOVER.links
+	cp $< $@
+
+lib%$(CUDA_SOVERSION).lintian-overrides:: lib%SOVER.lintian-overrides
+	cp $< $@
+
+lib%$(CUDA_SOVERSION).symbols:: lib%SOVER.symbols
+	cp $< $@
+
+debian/g++: debian/gcc
+	sed '/prog=/s/gcc-/g++-/g' < $< > $@
+	chmod 0755 $@
+
+# only invoked manually
+check-whitespace:
+	grep -r --exclude-dir=.svn --exclude-dir=.git --exclude '*.patch' -E '\s$$' debian || true
+
+############################################################################
+
+CACHE			?= ../.cache
+ORIGDIR			?= nvidia-cuda-toolkit-$(CUDA_VERSION_TOOLKIT).orig
+TARBALL_BASE		?= nvidia-cuda-toolkit_$(CUDA_VERSION_TOOLKIT).orig
+TARBALL_SUFFIX		?= .tar.gz
+TARBALL			?= $(TARBALL_BASE)$(TARBALL_SUFFIX)
+ORIGDIR.amd64		?= $(ORIGDIR)
+TARBALL.amd64		?= $(TARBALL)
+ORIGDIR.ppc64el		?= $(ORIGDIR)-ppc64el
+TARBALL.ppc64el		?= $(TARBALL_BASE)-ppc64el$(TARBALL_SUFFIX)
+
+CUDA_DL_FILENAME.amd64		?= ???
+CUDA_DL_FILENAME.ppc64el	?= ???
+
+CUDA_URL_FILENAME.amd64		?= $(CUDA_DL_FILENAME.amd64)
+CUDA_URL_FILENAME.ppc64el	?= $(CUDA_DL_FILENAME.ppc64el)
+
+get-orig-source-prepare:
+	$(RM) $(TARBALL)
+	$(RM) $(TARBALL.amd64)
+	$(RM) $(TARBALL.ppc64el)
+	$(RM) -r get-orig-source || true
+	mkdir get-orig-source
+
+get-orig-source-download-%: get-orig-source-prepare
+	ln -v $(CACHE)/$(CUDA_DL_FILENAME.$*) get-orig-source/ 2>/dev/null || \
+		wget $(CUDA_DL_URL_BASE)/$(CUDA_URL_FILENAME.$*) -O get-orig-source/$(CUDA_DL_FILENAME.$*)
+	if [ -d $(CACHE) ] && [ ! -f $(CACHE)/$(CUDA_DL_FILENAME.$*) ]; then \
+		ln -v get-orig-source/$(CUDA_DL_FILENAME.$*) $(CACHE) ; fi
+
+# unpack the all-in-one .run cuda installer containing toolkit, driver and samples
+get-orig-source-run-unpack-%: get-orig-source-download-%
+	@set -e -x ; \
+	    cd get-orig-source ; \
+	    mkdir $(ORIGDIR.$*) ; \
+	    sh $(CUDA_DL_FILENAME.$*) --noexec --keep --target tmp ; \
+	    find tmp -ls ; \
+	    if [ -d tmp/run_files ]; then \
+	        mv -f tmp/run_files/cuda-linux*.run tmp/run_files/EULA.txt $(ORIGDIR.$*)/ ; \
+	    else \
+	        mv "$(CUDA_DL_FILENAME.$*)" $(ORIGDIR.$*)/ ; \
+	    fi ; \
+	    rm -rf tmp ; \
+	    chmod 0755 $(ORIGDIR.$*)/*.run
+
+# unpack the all-in-one .deb local-repo installer
+get-orig-source-deb-unpack-%: get-orig-source-download-%
+	@set -e -x ; \
+	    cd get-orig-source ; \
+	    mkdir $(ORIGDIR.$*) ; \
+	    dpkg -X $(CUDA_DL_FILENAME.$*) tmp.$* ; \
+	    mv tmp.$*/var/cuda-repo-$(CUDA_VERSION_MAJOR)-$(CUDA_VERSION_MINOR)-local*/*.deb $(ORIGDIR.$*) ; \
+	    rm -rf tmp.$* ; \
+	    : "# Remove undistributable files:" ; \
+	    rm -fv $(ORIGDIR.$*)/cuda-samples-$(CUDA_VERSION_MAJOR)-$(CUDA_VERSION_MINOR)_*.deb ; \
+	    : "# Remove driver:" ; \
+	    rm -fv $(ORIGDIR.$*)/*_$(CUDA_VERSION_DRIVER.$*)-*_*.deb ; \
+	    chmod 0644 $(ORIGDIR.$*)/*.deb
+
+get-orig-source-unpack-amd64: get-orig-source-run-unpack-amd64
+get-orig-source-unpack-ppc64el: get-orig-source-deb-unpack-ppc64el
+
+get-orig-source-pack-%: get-orig-source-unpack-%
+	@set -e -x ; \
+	    cd get-orig-source ; \
+	    latestfile=$$(ls -tr $$(find $(ORIGDIR.$*) -type f) | tail -n 1) ; \
+	    tar cfv - \
+	        --clamp-mtime --mtime="./$$latestfile" \
+		--sort=name \
+		--owner=root --group=src \
+		$(ORIGDIR.$*) \
+		| gzip -n9 > $(TARBALL.$*); \
+	    touch $(TARBALL.$*) -r $$latestfile
+	mv get-orig-source/$(TARBALL.$*) .
+
+get-orig-source-pack-main: get-orig-source-pack-amd64
+
+.PHONY: get-orig-source
+get-orig-source: get-orig-source-pack-main #get-orig-source-pack-ppc64el
+	rm -rf get-orig-source

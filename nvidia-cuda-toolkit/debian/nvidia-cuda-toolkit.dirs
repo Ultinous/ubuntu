@@ -1,0 +1,4 @@
+# monolithic installation tree shim for clang++ --cuda-path=/usr/lib/cuda
+usr/lib/cuda/bin
+usr/lib/cuda/include
+usr/lib/cuda/lib64

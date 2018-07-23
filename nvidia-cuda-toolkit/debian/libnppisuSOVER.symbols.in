@@ -1,0 +1,2 @@
+libnppisu.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnppisu.so.#SOVERSION# 0

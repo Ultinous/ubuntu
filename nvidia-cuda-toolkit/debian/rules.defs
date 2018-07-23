@@ -1,0 +1,26 @@
+#CUDA_BETA			 =
+CUDA_SOVERSION			 = 9.2
+CUDA_VERSION_DRIVER.amd64	 = 396.37
+CUDA_VERSION_DRIVER.ppc64el	 = 396.26
+CUDA_DL_URL_PROD		 = Prod2
+
+CUDA_VERSION_TOOLKIT_FILENAME	 = $(CUDA_VERSION_TOOLKIT)
+
+CUDA_WATCH_URL			 = https://developer.nvidia.com/cuda-downloads
+CUDA_WATCH_URL_BETA		 = http://developer.nvidia.com/cuda/cuda-pre-production
+
+CUDA_DL_URL_BASE		 = https://developer.nvidia.com/compute/cuda/$(CUDA_VERSION_MAJOR).$(CUDA_VERSION_MINOR)/$(CUDA_DL_URL_PROD)/local_installers
+
+CUDA_DL_UBUNTU_VERSION.ppc64el	 = 1604
+
+CUDA_DL_FILENAME.amd64		 = cuda_$(CUDA_VERSION_TOOLKIT)_$(CUDA_VERSION_DRIVER.amd64)_linux.run
+CUDA_DL_FILENAME.ppc64el	 = cuda-repo-ubuntu$(CUDA_DL_UBUNTU_VERSION.ppc64el)-$(CUDA_VERSION_MAJOR)-$(CUDA_VERSION_MINOR)-local_$(CUDA_VERSION_TOOLKIT)-1_ppc64el.deb
+
+CUDA_URL_FILENAME.amd64		 = $(CUDA_DL_FILENAME.amd64:.run=)
+CUDA_URL_FILENAME.ppc64el	 = $(CUDA_DL_FILENAME.ppc64el:.deb=)
+
+CUDA_VERSION_APPENDIX.amd64	 = -24330188
+CUDA_FILENAME.amd64		 = cuda-linux.${CUDA_VERSION_TOOLKIT_FILENAME}${CUDA_VERSION_APPENDIX.amd64}.run
+
+CUDA_MAN_DATE.amd64		 = 12 Jun 2018
+CUDA_MAN_DATE.ppc64el		 = $(CUDA_MAN_DATE.amd64)

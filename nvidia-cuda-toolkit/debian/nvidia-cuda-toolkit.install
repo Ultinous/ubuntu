@@ -1,0 +1,24 @@
+usr/bin/bin2c
+usr/bin/crt/link.stub		usr/lib/nvidia-cuda-toolkit/bin/crt/
+usr/bin/crt/prelink.stub	usr/lib/nvidia-cuda-toolkit/bin/crt/
+usr/bin/cudafe++
+usr/bin/cuda-memcheck
+usr/bin/cuobjdump
+usr/bin/fatbinary
+usr/bin/gpu-library-advisor
+usr/bin/nvdisasm
+usr/bin/nvlink
+usr/bin/nvprune
+usr/bin/ptxas
+
+usr/bin/nvcc			usr/lib/nvidia-cuda-toolkit/bin/
+debian/nvcc			usr/bin/
+debian/nvcc.profile		etc/
+debian/gcc			usr/lib/nvidia-cuda-toolkit/bin/
+debian/g++			usr/lib/nvidia-cuda-toolkit/bin/
+
+usr/nvvm/bin/cicc		usr/lib/nvidia-cuda-toolkit/bin/
+usr/nvvm/include/nvvm.h		usr/include/
+usr/nvvm/libdevice/libdevice.10.bc	usr/lib/nvidia-cuda-toolkit/libdevice/
+
+usr/version.txt			usr/lib/cuda/

@@ -1,0 +1,32 @@
+Description: fix typos (on amd64 only)
+Author: Andreas Beckmann <anbe@debian.org>
+
+--- a/nvidia-cuda/include/cudaEGL.h
++++ b/nvidia-cuda/include/cudaEGL.h
+@@ -199,7 +199,7 @@ typedef struct CUeglStreamConnection_st*
+  * glFinish command on all GLcontexts (for OpenGL and likewise for other APIs).
+  * The application will be also responsible for ensuring that any pending operation on the
+  * registered CUDA resource has completed prior to executing subsequent commands in other APIs
+- * accesing the same memory objects.
++ * accessing the same memory objects.
+  * This can be accomplished by calling cuCtxSynchronize or cuEventSynchronize (preferably).
+  *
+  * The surface's intended usage is specified using \p flags, as follows:
+@@ -288,7 +288,7 @@ CUresult CUDAAPI cuEGLStreamConsumerConn
+  * The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one
+  * API to another.
+ 
+- * \param conn            - Conection to disconnect.
++ * \param conn            - Connection to disconnect.
+  *
+  * \return
+  * ::CUDA_SUCCESS,
+@@ -380,7 +380,7 @@ CUresult CUDAAPI cuEGLStreamProducerConn
+  * The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one
+  * API to another.
+ 
+- * \param conn            - Conection to disconnect.
++ * \param conn            - Connection to disconnect.
+  *
+  * \return
+  * ::CUDA_SUCCESS,

@@ -1,0 +1,2 @@
+libnppim.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnppim.so.#SOVERSION# 0

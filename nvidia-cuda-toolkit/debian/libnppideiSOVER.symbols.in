@@ -1,0 +1,2 @@
+libnppidei.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnppidei.so.#SOVERSION# 0

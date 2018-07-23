@@ -1,0 +1,2 @@
+libcusparse.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libcusparse.so.#SOVERSION# 0

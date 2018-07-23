@@ -1,0 +1,2 @@
+libcurand.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libcurand.so.#SOVERSION# 0

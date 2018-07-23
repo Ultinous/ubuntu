@@ -1,0 +1,101 @@
+Description: fix manpage-section-mismatch
+Author: Andreas Beckmann <anbe@debian.org>
+Author: Graham Inggs <graham@nerve.org.za>
+Last-Update: 2016-10-08
+
+--- a/nvidia-cuda/doc/man/man3/CUDA_D3D11.3
++++ b/nvidia-cuda/doc/man/man3/CUDA_D3D11.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 11 Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_11_Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDA_D3D10.3
++++ b/nvidia-cuda/doc/man/man3/CUDA_D3D10.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 10 Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_10_Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDA_D3D10_DEPRECATED.3
++++ b/nvidia-cuda/doc/man/man3/CUDA_D3D10_DEPRECATED.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 10 Interoperability [DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_10_Interoperability_[DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDA_D3D11_DEPRECATED.3
++++ b/nvidia-cuda/doc/man/man3/CUDA_D3D11_DEPRECATED.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 11 Interoperability [DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_11_Interoperability_[DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDA_D3D9.3
++++ b/nvidia-cuda/doc/man/man3/CUDA_D3D9.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 9 Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_9_Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDA_D3D9_DEPRECATED.3
++++ b/nvidia-cuda/doc/man/man3/CUDA_D3D9_DEPRECATED.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 9 Interoperability [DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_9_Interoperability_[DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDART_D3D10.3
++++ b/nvidia-cuda/doc/man/man3/CUDART_D3D10.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 10 Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_10_Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDART_D3D10_DEPRECATED.3
++++ b/nvidia-cuda/doc/man/man3/CUDART_D3D10_DEPRECATED.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 10 Interoperability [DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_10_Interoperability [DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDART_D3D11.3
++++ b/nvidia-cuda/doc/man/man3/CUDART_D3D11.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 11 Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_11_Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDART_D3D11_DEPRECATED.3
++++ b/nvidia-cuda/doc/man/man3/CUDART_D3D11_DEPRECATED.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 11 Interoperability [DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_11_Interoperability_[DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDART_D3D9.3
++++ b/nvidia-cuda/doc/man/man3/CUDART_D3D9.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 9 Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_9_Interoperability" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME
+--- a/nvidia-cuda/doc/man/man3/CUDART_D3D9_DEPRECATED.3
++++ b/nvidia-cuda/doc/man/man3/CUDART_D3D9_DEPRECATED.3
+@@ -1,4 +1,4 @@
+-.TH "Direct3D 9 Interoperability [DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
++.TH "Direct3D_9_Interoperability_[DEPRECATED]" 3 "#MAN_DATE#" "Version 6.0" "Doxygen" \" -*- nroff -*-
+ .ad l
+ .nh
+ .SH NAME

@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# Check for g++ to avoid using different versions of gcc and g++ on systems
+# with both g++-4.X and gcc-4.Y but not g++-4.Y installed.
+
+prog=false
+if g++-7 --version >/dev/null 2>&1; then
+	prog=gcc-7
+elif g++-6 --version >/dev/null 2>&1; then
+	prog=gcc-6
+elif g++-5 --version >/dev/null 2>&1; then
+	prog=gcc-5
+elif g++-4.9 --version >/dev/null 2>&1; then
+	prog=gcc-4.9
+elif g++-4.8 --version >/dev/null 2>&1; then
+	prog=gcc-4.8
+elif clang-5.0 --version >/dev/null 2>&1; then
+	echo "ERROR: No supported gcc/g++ host compiler found, but clang-5.0 is available." >&2
+	echo "       Use 'nvcc -ccbin clang-5.0' to use that instead." >&2
+	exit 1
+elif clang-4.0 --version >/dev/null 2>&1; then
+	echo "ERROR: No supported gcc/g++ host compiler found, but clang-4.0 is available." >&2
+	echo "       Use 'nvcc -ccbin clang-4.0' to use that instead." >&2
+	exit 1
+elif clang-3.9 --version >/dev/null 2>&1; then
+	echo "ERROR: No supported gcc/g++ host compiler found, but clang-3.9 is available." >&2
+	echo "       Use 'nvcc -ccbin clang-3.9' to use that instead." >&2
+	exit 1
+elif clang-3.8 --version >/dev/null 2>&1; then
+	echo "ERROR: No supported gcc/g++ host compiler found, but clang-3.8 is available." >&2
+	echo "       Use 'nvcc -ccbin clang-3.8' to use that instead." >&2
+	exit 1
+else
+	echo "ERROR: No supported gcc/g++ host compiler found." >&2
+	echo "       Use 'nvcc -ccbin <compiler>' to specify a host compiler." >&2
+	exit 1
+fi
+
+exec $prog "$@"

@@ -1,0 +1,2 @@
+libcudart.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libcudart.so.#SOVERSION# 0

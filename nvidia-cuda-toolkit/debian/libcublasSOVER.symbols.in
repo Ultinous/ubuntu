@@ -1,0 +1,2 @@
+libcublas.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libcublas.so.#SOVERSION# 0

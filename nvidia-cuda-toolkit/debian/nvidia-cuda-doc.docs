@@ -1,0 +1,4 @@
+debian/tmp/usr/*.txt
+debian/tmp/usr/doc/html
+debian/tmp/usr/doc/pdf
+debian/tmp/usr/tools/CUDA_Occupancy_Calculator.xls

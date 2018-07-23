@@ -1,0 +1,2 @@
+libnppc.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnppc.so.#SOVERSION# 0

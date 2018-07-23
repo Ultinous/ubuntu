@@ -1,0 +1,2 @@
+libcufft.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libcufft.so.#SOVERSION# 0

@@ -1,0 +1,2 @@
+libnvgraph.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnvgraph.so.#SOVERSION# 0

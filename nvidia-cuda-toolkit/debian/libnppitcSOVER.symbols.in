@@ -1,0 +1,2 @@
+libnppitc.so.#SOVERSION# #PACKAGE# #MINVER#
+ (symver)libnppitc.so.#SOVERSION# 0
