@@ -1,0 +1,1 @@
+rm_conffile /etc/modprobe.d/nvidia-graphics-drivers.conf 396.48-0ubuntu4~
