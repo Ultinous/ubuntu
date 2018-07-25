@@ -335,35 +335,70 @@ Description: NVENC Video Encoding runtime library
 
 Package: nvidia-384
 Architecture: amd64
-Depends: nvidia-driver-390
-Description: Transitional package for nvidia-driver-390
- This is a transitional package for nvidia-driver-390, and can be
+Depends: nvidia-driver-396
+Description: Transitional package for nvidia-driver-396
+ This is a transitional package for nvidia-driver-396, and can be
  safely removed after the installation is complete.
 
 Package: nvidia-384-dev
 Architecture: amd64
-Depends: nvidia-driver-390
-Description: Transitional package for nvidia-driver-390
- This is a transitional package for nvidia-driver-390, and can be
+Depends: nvidia-driver-396
+Description: Transitional package for nvidia-driver-396
+ This is a transitional package for nvidia-driver-396, and can be
  safely removed after the installation is complete.
 
 Package: nvidia-libopencl1-384
 Architecture: amd64
-Depends: nvidia-headless-390
-Description: Transitional package for nvidia-headless-390
- This is a transitional package for nvidia-headless-390, and can be
+Depends: nvidia-headless-396
+Description: Transitional package for nvidia-headless-396
+ This is a transitional package for nvidia-headless-396, and can be
  safely removed after the installation is complete.
 
 Package: nvidia-opencl-icd-384
 Architecture: amd64
-Depends: nvidia-headless-390
-Description: Transitional package for nvidia-headless-390
- This is a transitional package for nvidia-headless-390, and can be
+Depends: nvidia-headless-396
+Description: Transitional package for nvidia-headless-396
+ This is a transitional package for nvidia-headless-396, and can be
  safely removed after the installation is complete.
 
 Package: libcuda1-384
 Architecture: amd64
-Depends: nvidia-headless-390
-Description: Transitional package for nvidia-headless-390
- This is a transitional package for nvidia-headless-390, and can be
+Depends: nvidia-headless-396
+Description: Transitional package for nvidia-headless-396
+ This is a transitional package for nvidia-headless-396, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-396
+Architecture: amd64
+Depends: nvidia-driver-396
+Description: Transitional package for nvidia-driver-396
+ This is a transitional package for nvidia-driver-396, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-396-dev
+Architecture: amd64
+Depends: nvidia-driver-396
+Description: Transitional package for nvidia-driver-396
+ This is a transitional package for nvidia-driver-396, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-libopencl1-396
+Architecture: amd64
+Depends: nvidia-headless-396
+Description: Transitional package for nvidia-headless-396
+ This is a transitional package for nvidia-headless-396, and can be
+ safely removed after the installation is complete.
+
+Package: nvidia-opencl-icd-396
+Architecture: amd64
+Depends: nvidia-headless-396
+Description: Transitional package for nvidia-headless-396
+ This is a transitional package for nvidia-headless-396, and can be
+ safely removed after the installation is complete.
+
+Package: libcuda1-396
+Architecture: amd64
+Depends: nvidia-headless-396
+Description: Transitional package for nvidia-headless-396
+ This is a transitional package for nvidia-headless-396, and can be
  safely removed after the installation is complete.
