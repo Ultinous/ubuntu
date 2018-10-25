@@ -1,3 +1,21 @@
+grpc (1.15.1-1ultinous3) xenial; urgency=medium
+
+  * Included usr/include/grpcpp headers in package libgrpcxx-dev
+
+ -- Lengyel Zsolt <zsolt@kitty.lan.ultinous.com>  Wed, 24 Oct 2018 15:40:25 +0200
+
+grpc (1.15.1-1ultinous2) xenial; urgency=medium
+
+  * Included libaddress_sorting.so in package libgrpc4
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Wed, 24 Oct 2018 13:37:30 +0200
+
+grpc (1.15.1-1ultinous1) xenial; urgency=medium
+
+  * New upstream release 1.15.1
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Wed, 17 Oct 2018 16:18:06 +0200
+
 grpc (1.9.1-2) xenial; urgency=medium
 
   * Downgraded libgflags from 2.2.0 to 2.1.2
