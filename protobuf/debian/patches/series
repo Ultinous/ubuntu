@@ -1,1 +1,9 @@
+hurd.patch
+default_python_version
+#java-test-scope.patch
+#misleading-indentation.patch
+s390x.patch
+disable_local_gmock.patch
+fix_google_test_link.patch
+g++11
 mvn-settings
