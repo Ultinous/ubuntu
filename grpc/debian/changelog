@@ -1,83 +1,177 @@
-grpc (1.17.2-1ultinous1) xenial; urgency=medium
+grpc (1.17.2-1ultinous4) xenial; urgency=medium
 
-  * New upstream release 1.17.2
+  * Added libc-ares-dev as dependecy to libgrpc-dev
+  * Added libgrpcpp_* to install in libgrpc++1
 
- -- Lengyel Zsolt <zsolt@kitty.lan.ultinous.com>  Thu, 03 Jan 2019 11:18:48 +0100
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 11 Jan 2019 12:32:00 +0100
 
-grpc (1.9.1-2) xenial; urgency=medium
+grpc (1.17.2-1ultinous3) xenial; urgency=medium
 
-  * Downgraded libgflags from 2.2.0 to 2.1.2
+  * Ported to xenial
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 07 Sep 2018 09:51:15 +0200
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 11 Jan 2019 10:08:28 +0100
 
-grpc (1.9.1-1) xenial; urgency=medium
+grpc (1.17.2-1ultinous2) stretch; urgency=medium
 
-  * New upstream release 1.9.1
+  * New upstream release.
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Wed, 13 Sep 2017 21:39:01 +0200
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 10 Jan 2019 13:14:15 +0100
 
-grpc (1.6.0-7ubuntu1) xenial; urgency=medium
+grpc (1.14.1-1.1ultinous1) stretch; urgency=medium
 
-  * dummy version bump for attila 
+  * ultinous ported to stretch
 
- -- root <root@kitty.lan.ultinous.com>  Fri, 22 Sep 2017 12:28:29 +0200
+ -- Kristof Frank <oturw@ultinous.com>  Tue, 02 Oct 2018 12:59:19 +0000
 
-grpc (1.6.0-7) xenial; urgency=medium
+grpc (1.14.1-1) experimental; urgency=medium
 
-  * Patched cmake dependecies
+  * New upstream release.
+  * Update patches.
+  * Build with recent protobuf release.
+  * Update Standards-Version to 4.1.5 .
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Wed, 13 Sep 2017 21:39:01 +0200
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Wed, 15 Aug 2018 15:30:08 +0000
 
-grpc (1.6.0-6) xenial; urgency=medium
+grpc (1.13.0-1) experimental; urgency=medium
 
-  * Fixed dependecies of libgrpc-dev and libgrpcxx-dev packages 
+  * New major upstream release.
+  * Put ruby-grpc{,-tools} packages into section ruby.
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Tue, 12 Sep 2017 17:01:06 +0200
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 01 Jul 2018 22:44:30 +0000
 
-grpc (1.6.0-5) xenial; urgency=medium
+grpc (1.13.0~pre3-1) experimental; urgency=medium
 
-  * Included all .so files in libgrpc4
+  * New major upstream pre-release version.
+  * Append installed library directory to LD_LIBRARY_PATH for linking Ruby
+    bindings.
+  * Conflict libgrpc-dev with libgpr2-dev as well (closes: #901218).
+  * Ignore all Ruby test failures.
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Tue, 12 Sep 2017 10:25:34 +0200
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Wed, 27 Jun 2018 17:48:53 +0000
 
-grpc (1.6.0-4) xenial; urgency=medium
+grpc (1.13.0~pre2-1) experimental; urgency=medium
 
-  * Included some more .so files in libgrpc4
+  * New major upstream pre-release version.
+  * Conflict libgrpc-dev with libgpr1-dev due to library name collision
+    (closes: #901218).
+  * Add ruby-grpc{,-tools} packages.
+  * Add Ruby testing.
+  * Enable verbose build.
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 07 Sep 2017 14:09:43 +0200
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 17 Jun 2018 11:36:43 +0000
 
-grpc (1.6.0-3) xenial; urgency=medium
+grpc (1.12.0-1) experimental; urgency=medium
 
-  * Switched to buildsystem cmake
+  * New upstream release.
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 07 Sep 2017 10:10:35 +0200
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Sun, 27 May 2018 14:06:16 +0000
 
-grpc (1.6.0-2) xenial; urgency=medium
+grpc (1.11.0-1) experimental; urgency=medium
 
-  * Binary package file contents mixup fix
+  [ Pirate Praveen <praveen@debian.org> ]
+  * New upstream release (Closes: #875747)
+  * Refresh patches
+  * Tighten dependencies
+  * Bump standards version to 4.1.4
+  * Bump debhelper compat to 11
+  * Library transition from libgrpc3 to libgrpc6 .
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 01 Sep 2017 10:15:18 +0200
+  [ Laszlo Boszormenyi (GCS) ]
+  * Don't specify parallel to debhelper.
+  * Install new C++ headers.
+  * Install upstream NOTICE.txt to protobuf-compiler-grpc package.
+  * Update packaging bits.
+  * Add patch for multiarch library installation.
+  * Make the package multiarch.
+  * Update d/copyright to match source.
+  * Be the maintainer, Andrew seems to be MIA.
 
-grpc (1.6.0-1) xenial; urgency=medium
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Fri, 04 May 2018 17:04:13 +0000
+
+grpc (1.3.2-1) unstable; urgency=medium
+
+  [ Pirate Praveen <praveen@onenetbeyond.org> ]
+  * Patch to provide a wrapped memcpy for linking (closes: #867541).
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Mon, 14 Aug 2017 10:44:38 +0000
+
+grpc (1.3.2-0.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+    * fix-libgrpc++-soname.diff: Update to also fix the soname of
+      libgrpc++_error_details.so. (Closes: #863717)
+
+ -- Steinar H. Gunderson <sesse@debian.org>  Thu, 01 Jun 2017 18:11:56 +0200
+
+grpc (1.3.2-0.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * New upstream release.
+    * Refreshed all patches.
+    * Add Build-Dependency on libc-ares-dev.
+
+ -- Steinar H. Gunderson <sesse@debian.org>  Thu, 18 May 2017 18:09:28 +0200
+
+grpc (1.2.5-1+nmu1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Update debian/copyright with missing license information. (Closes: #861383)
+  * make-pkg-config-files-nonexecutable.diff: New patch, installs .pc files 
+    as nonexecutable. Fixes Lintian warning.
+
+ -- Steinar H. Gunderson <sesse@debian.org>  Fri, 28 Apr 2017 18:48:22 +0200
+
+grpc (1.2.5-1+nmu0) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * New upstream release.
+    * Fixes CVE-2017-7860 and CVE-2017-7861. (Closes: #860316)
+    * Build the C++ library in addition to the C library.
+      * New packages libgrpc++-dev and libgrpc++1.
+      * Make a new package protobuf-compiler-grpc. (Closes: #818327)
+    * Add build-dependency on libprotoc-dev.
+    * Disable running tests, as they depend on Google's benchmark library,
+      which does not exist in Debian yet (and we do not wish to vendor it).
+      (By extension, Closes: #812845)
+    * Soname bump from libgrpc0 to libgrpc3.
+  * openssl-1.1.0.diff: New patch, fixes FTBFS with OpenSSL 1.1.0.
+    (Closes: #828332)
+  * fix-libgrpc++-soname.diff: New patch, fixes the symlink of libgrpc++
+    to match the soname (fix for upstream bug #10299).
+  * Install libgrpc_unsecure.a.
+  * Install the pkg-config files.
+  * Upgrade to Standards-Version 3.9.8 (no changes needed).
+
+ -- Steinar H. Gunderson <sesse@debian.org>  Wed, 26 Apr 2017 19:11:42 +0200
+
+grpc (0.12.0-1) unstable; urgency=medium
 
   * New upstream release
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 01 Sep 2017 09:35:16 +0200
+ -- Andrew Pollock <apollock@debian.org>  Mon, 18 Jan 2016 10:16:06 +1000
 
-grpc (1.4.5-3) xenial; urgency=medium
+grpc (0.11.1-1) unstable; urgency=low
 
-  * Introduced grpc-plugins binary package with grpc_*_plugin binaries
+  * New upstream release
+  * debian/control: update maintainer with upstream address, add myself as
+    uploader
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 01 Sep 2017 09:07:19 +0200
+ -- Andrew Pollock <apollock@debian.org>  Thu, 24 Sep 2015 11:33:03 +1000
 
-grpc (1.4.5-2) xenial; urgency=medium
+grpc (0.11.0.0-1) unstable; urgency=low
 
-  * Split into multiple binary packages
+  * New upstream release
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 31 Aug 2017 15:43:04 +0200
+ -- Andrew Pollock <apollock@debian.org>  Wed, 09 Sep 2015 13:05:55 +1000
 
-grpc (1.4.5-1) xenial; urgency=medium
+grpc (0.10.2-1) unstable; urgency=medium
 
-  * Initial release
+  * New upstream release (closes: #795766)
 
- -- Lengyel Zsolt <zsolt@ultinous.com>  Wed, 30 Aug 2017 17:58:09 +0200
+ -- Andrew Pollock <apollock@debian.org>  Fri, 28 Aug 2015 09:26:25 +1000
+
+grpc (0.10.0-1) unstable; urgency=low
+
+  * Initial release (Closes: #786375)
+
+ -- Andrew Pollock <apollock@debian.org>  Thu, 07 May 2015 13:28:11 +1000
