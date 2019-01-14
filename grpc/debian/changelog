@@ -1,3 +1,15 @@
+grpc (1.17.2-1ultinous6) xenial; urgency=medium
+
+  * Rebuilt with googletest 1.8.1
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Mon, 14 Jan 2019 14:26:51 +0100
+
+grpc (1.17.2-1ultinous5) stretch; urgency=medium
+
+  * Ported to stretch
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 11 Jan 2019 13:45:15 +0100
+
 grpc (1.17.2-1ultinous4) xenial; urgency=medium
 
   * Added libc-ares-dev as dependecy to libgrpc-dev

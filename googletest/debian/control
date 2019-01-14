@@ -1,12 +1,13 @@
 Source: googletest
 Homepage: https://github.com/google/googletest
 Section: devel
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: Steve M. Robbins <smr@debian.org>
+Maintainer: Steve M. Robbins <smr@debian.org>
 Uploaders: Fredrik Hallenberg <hallon@debian.org>
+ , Kristof Frank <oturw@ultinous.com>
+ , Lengyel Zsolt <zsolt@ultinous.com>
 Priority: optional
 Build-Depends: debhelper (>= 9), cmake, python:native
-Standards-Version: 4.1.4
+Standards-Version: 3.7.9
 Vcs-Git: https://salsa.debian.org/debian/googletest.git
 Vcs-Browser: https://salsa.debian.org/debian/googletest
 
@@ -15,8 +16,8 @@ Architecture: any
 Multi-Arch: same
 Section: libdevel
 Depends: ${misc:Depends}
-Conflicts: libgtest-dev (<< 1.8.0), google-mock (<< 1.8.0)
-Replaces: libgtest-dev (<< 1.8.0), google-mock (<< 1.8.0)
+Conflicts: libgtest-dev (<< 1.8.1), google-mock (<< 1.8.1)
+Replaces: libgtest-dev (<< 1.8.1), google-mock (<< 1.8.1)
 Description: Google's C++ test framework sources
  This package provides sources for Google Test and Google Mock.
  .
@@ -58,8 +59,8 @@ Architecture: any
 Multi-Arch: same
 Section: libdevel
 Depends: ${misc:Depends}, python:any
-Conflicts: googletest (<= 1.8.0-8)
-Replaces: googletest (<= 1.8.0-8)
+Conflicts: googletest (<= 1.8.1-0)
+Replaces: googletest (<= 1.8.1-0)
 Description: Google's C++ test framework sources
  This package provides tools to be used with Google Test and/or Google
  Mock.
@@ -68,11 +69,10 @@ Package: libgtest-dev
 Architecture: any
 Multi-Arch: same
 Section: libdevel
-Priority: optional
 Depends: ${misc:Depends}, googletest (= ${binary:Version})
-Conflicts: googletest (<= 1.8.0-8)
-Replaces: googletest (<= 1.8.0-8)
-Description: Google's framework for writing C++ tests [source code]
+Conflicts: googletest (<= 1.8.1-0)
+Replaces: googletest (<= 1.8.1-0)
+Description: Google's framework for writing C++ tests
  Google's framework for writing C++ tests on a variety of platforms. Based on
  the xUnit architecture. Supports automatic test discovery, a rich set of
  assertions, user-defined assertions, death tests, fatal and non-fatal failures,
@@ -83,13 +83,12 @@ Package: libgmock-dev
 Architecture: any
 Multi-Arch: same
 Section: libdevel
-Priority: optional
 Depends: ${misc:Depends}, libgtest-dev (= ${binary:Version})
-Conflicts: googletest (<= 1.8.0-8)
-Replaces: googletest (<= 1.8.0-8)
-Description: Google's framework for writing C++ tests [source code]
- Inspired by jMock, EasyMock, and Hamcrest, and designed with C++'s 
- specifics in mind, it can help you derive better designs of your 
+Conflicts: googletest (<= 1.8.1-0)
+Replaces: googletest (<= 1.8.1-0)
+Description: Google's framework for writing C++ tests
+ Inspired by jMock, EasyMock, and Hamcrest, and designed with C++'s
+ specifics in mind, it can help you derive better designs of your
  system and write better tests.
  .
  Google Mock:
@@ -112,7 +111,6 @@ Package: google-mock
 Architecture: any
 Multi-Arch: same
 Section: oldlibs
-Priority: optional
 Depends: ${misc:Depends}, googletest (= ${binary:Version})
 Description: Google's framework for writing and using C++ mock classes
  NOTE: This is a transitional package, retained for backwards compatibility.

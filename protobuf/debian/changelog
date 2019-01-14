@@ -1,3 +1,9 @@
+protobuf (3.6.1-4ultinous2) xenial; urgency=medium
+
+  * Rebuilt with googletest 1.8.1
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Mon, 14 Jan 2019 13:05:55 +0100
+
 protobuf (3.6.1-4ultinous1) xenial; urgency=medium
 
   * Ported to xenial

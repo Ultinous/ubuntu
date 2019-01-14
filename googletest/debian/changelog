@@ -1,16 +1,40 @@
-googletest (1.8.0-10-ultinous) xenial; urgency=medium
+googletest (1.8.1-1.1ultinous3) xenial; urgency=medium
 
-  * Upstream release
+  * Ported to xenial
 
- -- Zsolt Salamon <zsolt.salamon@ultinous.com>  Mon, 16 Jul 2018 12:35:44 +0100
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Mon, 14 Jan 2019 12:25:14 +0100
 
-googletest (1.8.0-10ubuntu1) cosmic; urgency=medium
+googletest (1.8.1-1.1ultinous2) stretch; urgency=medium
 
-  * Build with -fPIC. There's nothing performance critical here which benefits
-    from position-dependent code, and building with -fPIC allows the pre-built
-    library to be linked into shared code. (LP: #1774011)
+  * ultinous ported to stretch for real for realzz
 
- -- Christopher James Halse Rogers <raof@ubuntu.com>  Wed, 06 Jun 2018 13:24:29 +1000
+ -- Kristof Frank <oturw@ultinous.com>  Tue, 16 Oct 2018 15:04:40 +0000
+
+googletest (1.8.1-1) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * d/copyright: Use https protocol in Format field
+  * d/control: Removing redundant Priority field in binary package
+  * d/control: Remove trailing whitespaces
+
+  [ Steve M. Robbins ]
+  * [e4d4dc9] New upstream version 1.8.1.  Closes: #909235.
+
+ -- Steve M. Robbins <smr@debian.org>  Tue, 02 Oct 2018 22:53:32 -0500
+
+googletest (1.8.0-10.1) unstable; urgency=medium
+
+  [ Steven Robbins ]
+  * Tweak both -dev package descriptions to clarify the source code is not
+    included.  Closes: #897920.
+
+  [ Christopher James Halse Rogers ]
+  * Rebuild with -fPIC (Closes: #904566).
+
+  [ Simon Quigley ]
+  * Non-maintainer upload.
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Wed, 25 Jul 2018 09:52:46 +0000
 
 googletest (1.8.0-10) unstable; urgency=medium
 

@@ -9,10 +9,10 @@ Fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=846254
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/googletest/src/gtest.cc b/googletest/src/gtest.cc
-index d882ab2..2bc72c2 100644
+index 96b07c6..f70fa9c 100644
 --- a/googletest/src/gtest.cc
 +++ b/googletest/src/gtest.cc
-@@ -36,7 +36,7 @@
+@@ -35,7 +35,7 @@
  #include "gtest/gtest-spi.h"
  
  #include <ctype.h>

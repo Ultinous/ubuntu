@@ -9,8 +9,8 @@ Build-Depends:
  , dh-autoreconf
 # C/C++
  , zlib1g-dev
- , libgmock-dev
- , libgtest-dev
+ , libgmock-dev (>= 1.8.1)
+ , libgtest-dev (>= 1.8.1)
 # Python
  , dh-python
  , python-all:any
