@@ -1,0 +1,3 @@
+---
+include/uv/android-ifaddrs.h:
+  override-license: BSD-1-clause
