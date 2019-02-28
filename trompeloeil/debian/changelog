@@ -1,0 +1,17 @@
+trompeloeil (33-1ultinous1) bionic; urgency=medium
+
+  * New upstream release v33.
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 28 Feb 2019 14:44:04 +0000
+
+trompeloeil (32+ultinous1) stretch; urgency=medium
+
+  * versionbump 
+
+ -- Kristof Frank <oturw@ultinous.com>  Thu, 04 Oct 2018 08:35:23 +0000
+
+trompeloeil (32) stretch; urgency=medium
+
+  * Initial release
+
+ -- Zsolt Salamon <zsolt.salamon@ultinous.com>  Wed, 06 Jun 2018 14:03:35 +0200
