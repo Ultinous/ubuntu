@@ -1,1 +1,2 @@
 googletest-dependency.patch
+rename_libsqlite3_cpp_so.patch

@@ -8,7 +8,7 @@ Standards-Version: 4.1.4
 Vcs-Git: https://github.com/SRombauts/SQLiteCpp.git
 Vcs-Browser: https://github.com/SRombauts/SQLiteCpp
 
-Package: libsqlite3-cpp
+Package: libsqlite3-cpp2
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: SQLiteC++ is a smart and easy to use C++ SQLite3 wrapper.
@@ -17,7 +17,7 @@ Description: SQLiteC++ is a smart and easy to use C++ SQLite3 wrapper.
 
 Package: libsqlite3-cpp-dev
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends} , libsqlite3-cpp (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends} , libsqlite3-cpp2 (= ${binary:Version})
 Description: SQLiteC++ is a smart and easy to use C++ SQLite3 wrapper dev package.
  SQLiteC++ offers an encapsulation around the native C APIs of SQLite, with a
  few intuitive and well documented C++ classes.
