@@ -1,0 +1,64 @@
+Source: librdkafka
+Priority: optional
+Maintainer: Faidon Liambotis <paravoid@debian.org>
+Uploaders: Christos Trochalakis <ctrochalakis@debian.org>,
+           Kristof Frank <oturw@ultinous.com>
+Build-Depends: debhelper (>= 10),
+               liblz4-dev (>= 0.0~r123),
+               libsasl2-dev,
+               libssl-dev,
+               python,
+               zlib1g-dev
+Standards-Version: 4.1.4
+Section: libs
+Homepage: https://github.com/edenhill/librdkafka
+Vcs-Git: https://salsa.debian.org/kafka-team/librdkafka.git
+Vcs-Browser: https://salsa.debian.org/kafka-team/librdkafka
+
+Package: librdkafka1
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: library implementing the Apache Kafka protocol
+ librdkafka is a C library implementation of the Apache Kafka protocol,
+ containing both Producer and Consumer support. It was designed with message
+ delivery reliability and high performance in mind, current figures exceed
+ 800000 msgs/second for the producer and 3 million msgs/second for the
+ consumer.
+ .
+ More information about Apache Kafka can be found at http://kafka.apache.org/
+ .
+ This package contains the C shared library.
+
+Package: librdkafka++1
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: library implementing the Apache Kafka protocol (C++ bindings)
+ librdkafka is a C library implementation of the Apache Kafka protocol,
+ containing both Producer and Consumer support. It was designed with message
+ delivery reliability and high performance in mind, current figures exceed
+ 800000 msgs/second for the producer and 3 million msgs/second for the
+ consumer.
+ .
+ More information about Apache Kafka can be found at http://kafka.apache.org/
+ .
+ This package contains the C++ shared library.
+
+Package: librdkafka-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: librdkafka++1 (= ${binary:Version}),
+         librdkafka1 (= ${binary:Version}),
+         ${misc:Depends}
+Description: library implementing the Apache Kafka protocol (development headers)
+ librdkafka is a C library implementation of the Apache Kafka protocol,
+ containing both Producer and Consumer support. It was designed with message
+ delivery reliability and high performance in mind, current figures exceed
+ 800000 msgs/second for the producer and 3 million msgs/second for the
+ consumer.
+ .
+ More information about Apache Kafka can be found at http://kafka.apache.org/
+ .
+ This package contains the development headers.

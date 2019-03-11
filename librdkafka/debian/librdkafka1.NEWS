@@ -1,0 +1,40 @@
+librdkafka (0.11.3-1) unstable; urgency=medium
+
+  librdkafka 0.11.3 introduced the following default configuration changes:
+
+  o queue.buffering.max.kbytes 
+    The default value of queue.buffering.max.kbytes was changed 
+    from 4000000kB to 1048576kB (1GB).
+
+  o queued.max.messages.kbytes 
+    The default value of queued.max.messages.kbytes was changed 
+    from 1000000kB to 1048576kB (1GB).
+
+ -- Mpampis Kostas <charkost.rb@gmail.com>  Tue, 12 Dec 2017 16:29:38 +0200
+
+librdkafka (0.11.0-1) unstable; urgency=medium
+
+  librdkafka 0.11.0 introduced a number of default configuration changes
+  that might affect its usage:
+
+  o api.version.request
+    The api.version.request property default value has changed from false to
+    true, meaning that librdkafka will make use of the latest protocol
+    features of the broker without the need to set the property to true
+    explicitly on the client.
+
+    WARNING: Due to a bug in Apache Kafka 0.9.0.x, the ApiVersionRequest (as
+    sent by the client when connecting to the broker) will be silently ignored
+    by the broker causing the request to time out after 10 seconds. This
+    causes client-broker connections to stall for 10 seconds during
+    connection-setup before librdkafka falls back on the
+    broker.version.fallback protocol features. The workaround is to explicitly
+    configure api.version.request to false on clients communicating with
+    <0.9.0.x brokers.
+
+  o Producer
+    The default value of queue.buffering.max.ms was changed from 1000ms to 0ms
+    (no delay). This property denotes the internal buffering time (and latency)
+    for messages produced.
+
+ -- Christos Trochalakis <ctrochalakis@debian.org>  Thu, 20 Jul 2017 15:27:15 +0300

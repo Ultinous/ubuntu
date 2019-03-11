@@ -1,0 +1,8 @@
+Upstream tarballs
+=================
+
+Since 0.9.5 the upstream tarball includes the lz4 library which is already
+packaged in Debian main (lz4). librdkafka does not build against the embedded
+library but instead it uses the proper liblz4-dev package. Since lz4 is DFSG
+compliant we prefer to use the upstream release tarball as-is.
+
