@@ -1,0 +1,3 @@
+01-rpath.patch
+20140507-ppc_lib64.patch
+fix-lzma-linking.patch
