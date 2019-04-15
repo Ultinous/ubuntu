@@ -1,0 +1,49 @@
+Tests: python-sphinx
+Depends: python-sphinx,
+         python-enum34,
+         python-html5lib,
+         python-pytest,
+         python-mock,
+         python-xapian,
+         python-whoosh,
+         python-sphinxcontrib.websupport,
+         python-sqlalchemy (>= 0.9),
+         python-stemmer,
+         texlive-latex-extra,
+         texlive-fonts-recommended,
+         texlive-luatex,
+         texlive-xetex,
+         texinfo,
+         dvipng,
+         imagemagick-6.q16,
+         librsvg2-bin,
+         graphviz
+
+Tests: python3-sphinx
+Depends: python3-sphinx,
+         python3-html5lib,
+         python3-pytest,
+         python3-mock,
+         python3-xapian,
+         python3-whoosh,
+         python3-sphinxcontrib.websupport,
+         python3-sqlalchemy (>= 0.9),
+         python3-stemmer,
+         texlive-latex-extra,
+         texlive-fonts-recommended,
+         texlive-luatex,
+         texlive-xetex,
+         texinfo,
+         dvipng,
+         imagemagick-6.q16,
+         librsvg2-bin,
+         graphviz
+
+Tests: sphinx-doc
+Depends: sphinx-doc,
+         python3-gi,
+         gir1.2-webkit2-4.0 (>= 2.10),
+         xauth,
+         xvfb
+Restrictions: allow-stderr, skippable
+
