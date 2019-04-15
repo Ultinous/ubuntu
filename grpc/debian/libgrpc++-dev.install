@@ -1,0 +1,4 @@
+usr/include/grpc++/
+usr/include/grpcpp/
+usr/lib/*/libgrpc++*.so
+usr/lib/*/libgrpcpp_channelz.so

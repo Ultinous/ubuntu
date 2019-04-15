@@ -1,37 +1,87 @@
 #!/usr/bin/make -f
-# See debhelper(7) (uncomment to enable)
+# -*- makefile -*-
+
 # output every command that modifies files on the build system.
-#export DH_VERBOSE = 1
+#DH_VERBOSE = 1
 
-# see FEATURE AREAS in dpkg-buildflags(1)
-#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/default.mk
 
-# see ENVIRONMENT in dpkg-buildflags(1)
+include /usr/share/dpkg/architecture.mk
+
+export PYBUILD_NAME = grpcio
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# Flags for Python build
+export GRPC_PYTHON_BUILD_WITH_CYTHON = 1
+export GRPC_PYTHON_BUILD_SYSTEM_ZLIB = 1
+export GRPC_PYTHON_BUILD_SYSTEM_CARES = 1
+export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL = 1
+export GRPC_PYTHON_ENABLE_DOCUMENTATION_BUILD = 1
+
 # package maintainers to append CFLAGS
 #export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
 # package maintainers to append LDFLAGS
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
-CONFIGURE_ARGS= \
- -DCMAKE_BUILD_TYPE=Release \
- -DBUILD_SHARED_LIBS=ON \
- -DgRPC_CARES_PROVIDER=pkgconfig \
- -DgRPC_ZLIB_PROVIDER=package \
- -DgRPC_SSL_PROVIDER=package \
- -DgRPC_PROTOBUF_PROVIDER=package \
- -DgRPC_GFLAGS_PROVIDER=package \
- -DgRPC_BUILD_TESTS=OFF \
+export V = 1
 
-%:
-	dh $@ --buildsystem=cmake
+LD_LIBRARY_PATH += :$(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
+
+CONFIGURE_ARGS = \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DBUILD_SHARED_LIBS=ON \
+		-DgRPC_CARES_PROVIDER=pkgconfig \
+		-DgRPC_ZLIB_PROVIDER=package \
+		-DgRPC_SSL_PROVIDER=package \
+		-DgRPC_PROTOBUF_PROVIDER=package \
+		-DgRPC_GFLAGS_PROVIDER=package \
+		-DgRPC_BUILD_TESTS=OFF
+
+override_dh_auto_clean:
+	dh_auto_clean
+	dh_auto_clean -O--buildsystem=pybuild
+	find $(CURDIR)/src/python/grpcio/ -name \*.so -delete
+	$(RM) -rf $(CURDIR)/src/python/grpcio/grpcio.egg-info/ \
+		$(CURDIR)/.eggs/ \
+		$(CURDIR)/Ithrid_party \
+		$(CURDIR)/bins \
+		$(CURDIR)/gens \
+		$(CURDIR)/libs \
+		$(CURDIR)/objs
+	$(RM) -f \
+		$(CURDIR)/src/python/grpcio/grpc/_cython/_credentials/roots.pem \
+		$(CURDIR)/src/python/grpcio/grpc/_cython/cygrpc.cpp \
+		$(CURDIR)/src/python/grpcio/grpc/_grpcio_metadata.py \
+		$(CURDIR)/cache.mk
 
 override_dh_auto_configure:
 	dh_auto_configure -- $(CONFIGURE_ARGS)
+	dh_auto_configure -O--buildsystem=pybuild
+
+override_dh_auto_build:
+	dh_auto_build
+	dh_auto_build -O--buildsystem=pybuild
 
 override_dh_auto_test:
-	:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+#	make test_c
+endif
+	dh_auto_test -O--buildsystem=pybuild
 
-# dh_make generated override targets
-# This is example for Cmake (See https://bugs.debian.org/641051 )
-#override_dh_auto_configure:
-#	dh_auto_configure -- #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
+override_dh_auto_install:
+	dh_auto_install
+#	$(MAKE) INSTALL_LIBDIR=/lib/$(DEB_HOST_MULTIARCH) \
+#		install prefix=$(CURDIR)/debian/tmp/usr
+	dh_auto_install -O--buildsystem=pybuild
+
+override_dh_missing:
+	dh_missing --list-missing
+
+%:
+	dh $@ --with=python2,python3 --buildsystem=cmake
+
+.PHONY: override_dh_auto_clean override_dh_auto_configure \
+	override_dh_auto_build override_dh_auto_test \
+	override_dh_auto_install override_dh_missing

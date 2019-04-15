@@ -1,0 +1,2 @@
+usr/lib/*/libgrpc++*.so.*
+usr/lib/*/libgrpcpp*.so.*

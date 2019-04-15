@@ -1,0 +1,483 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,7 +21,7 @@
+ 
+ 
+ 
+-cmake_minimum_required(VERSION 2.8)
++cmake_minimum_required(VERSION 3.0.2)
+ 
+ set(PACKAGE_NAME      "grpc")
+ set(PACKAGE_VERSION   "1.17.1")
+@@ -30,12 +30,24 @@
+ set(PACKAGE_BUGREPORT "https://github.com/grpc/grpc/issues/")
+ project(${PACKAGE_NAME} C CXX)
+ 
+-set(gRPC_INSTALL_BINDIR "bin" CACHE STRING "Installation directory for executables")
+-set(gRPC_INSTALL_LIBDIR "lib" CACHE STRING "Installation directory for libraries")
+-set(gRPC_INSTALL_INCLUDEDIR "include" CACHE STRING "Installation directory for headers")
++include(GNUInstallDirs)
++set(gRPC_INSTALL_BINDIR "${CMAKE_INSTALL_BINDIR}" CACHE STRING "Installation directory for executables")
++set(gRPC_INSTALL_LIBDIR "${CMAKE_INSTALL_LIBDIR}" CACHE STRING "Installation directory for libraries")
++set(gRPC_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}" CACHE STRING "Installation directory for headers")
+ set(gRPC_INSTALL_CMAKEDIR "lib/cmake/${PACKAGE_NAME}" CACHE STRING "Installation directory for cmake config files")
+ set(gRPC_INSTALL_SHAREDIR "share/grpc" CACHE STRING "Installation directory for root certificates")
+ 
++set(gRPC_MAKEFILE "Makefile")
++set(gRPC_VERSION_REGEX "^CORE_VERSION = ([0-9]+).([0-9]+).([0-9]+)$")
++file(STRINGS "${gRPC_MAKEFILE}" gRPC_VERSION_LINE LIMIT_COUNT 1 REGEX "^CORE_VERSION")
++string(REGEX REPLACE "${gRPC_VERSION_REGEX}" "\\1" gRPC_VERSION_MAJOR "${gRPC_VERSION_LINE}")
++string(REGEX REPLACE "${gRPC_VERSION_REGEX}" "\\2" gRPC_VERSION_MINOR "${gRPC_VERSION_LINE}")
++string(REGEX REPLACE "${gRPC_VERSION_REGEX}" "\\3" gRPC_VERSION_PATCH "${gRPC_VERSION_LINE}")
++set(gRPC_VERSION "${gRPC_VERSION_MAJOR}.${gRPC_VERSION_MINOR}.${gRPC_VERSION_PATCH}")
++set(gRPC_SOVERSION "${gRPC_VERSION_MAJOR}")
++message(STATUS "${gRPC_VERSION}")
++message(STATUS "${gRPC_SOVERSION}")
++
+ # Options
+ option(gRPC_BUILD_TESTS "Build tests" OFF)
+ option(gRPC_BUILD_CODEGEN "Build codegen" ON)
+@@ -707,6 +719,11 @@
+   third_party/address_sorting/address_sorting_windows.c
+ )
+ 
++set_target_properties(address_sorting PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(address_sorting PROPERTIES COMPILE_PDB_NAME "address_sorting"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -759,6 +776,11 @@
+   test/core/tsi/alts/handshaker/alts_handshaker_service_api_test_lib.cc
+ )
+ 
++set_target_properties(alts_test_util PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(alts_test_util PROPERTIES COMPILE_PDB_NAME "alts_test_util"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -840,6 +862,11 @@
+   src/core/lib/profiling/stap_timers.cc
+ )
+ 
++set_target_properties(gpr PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(gpr PROPERTIES COMPILE_PDB_NAME "gpr"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -935,6 +962,11 @@
+   test/core/util/test_config.cc
+ )
+ 
++set_target_properties(gpr_test_util PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(gpr_test_util PROPERTIES COMPILE_PDB_NAME "gpr_test_util"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -1298,6 +1330,11 @@
+   src/core/plugin_registry/grpc_plugin_registry.cc
+ )
+ 
++set_target_properties(grpc PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc PROPERTIES COMPILE_PDB_NAME "grpc"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -1684,6 +1721,11 @@
+   src/core/plugin_registry/grpc_cronet_plugin_registry.cc
+ )
+ 
++set_target_properties(grpc_cronet PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc_cronet PROPERTIES COMPILE_PDB_NAME "grpc_cronet"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -2005,6 +2047,11 @@
+   src/core/ext/filters/http/server/http_server_filter.cc
+ )
+ 
++set_target_properties(grpc_test_util PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc_test_util PROPERTIES COMPILE_PDB_NAME "grpc_test_util"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -2324,6 +2371,11 @@
+   src/core/ext/filters/http/server/http_server_filter.cc
+ )
+ 
++set_target_properties(grpc_test_util_unsecure PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc_test_util_unsecure PROPERTIES COMPILE_PDB_NAME "grpc_test_util_unsecure"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -2663,6 +2715,11 @@
+   src/core/plugin_registry/grpc_unsecure_plugin_registry.cc
+ )
+ 
++set_target_properties(grpc_unsecure PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc_unsecure PROPERTIES COMPILE_PDB_NAME "grpc_unsecure"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -2761,6 +2818,11 @@
+   test/core/util/reconnect_server.cc
+ )
+ 
++set_target_properties(reconnect_server PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(reconnect_server PROPERTIES COMPILE_PDB_NAME "reconnect_server"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -2808,6 +2870,11 @@
+   test/core/util/test_tcp_server.cc
+ )
+ 
++set_target_properties(test_tcp_server PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(test_tcp_server PROPERTIES COMPILE_PDB_NAME "test_tcp_server"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -2898,6 +2965,11 @@
+   src/cpp/codegen/codegen_init.cc
+ )
+ 
++set_target_properties(grpc++ PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc++ PROPERTIES COMPILE_PDB_NAME "grpc++"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -3183,6 +3255,11 @@
+   src/cpp/util/core_stats.cc
+ )
+ 
++set_target_properties(grpc++_core_stats PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc++_core_stats PROPERTIES COMPILE_PDB_NAME "grpc++_core_stats"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -3480,6 +3557,11 @@
+   src/core/ext/filters/census/grpc_context.cc
+ )
+ 
++set_target_properties(grpc++_cronet PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc++_cronet PROPERTIES COMPILE_PDB_NAME "grpc++_cronet"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -3760,6 +3842,11 @@
+   src/cpp/util/error_details.cc
+ )
+ 
++set_target_properties(grpc++_error_details PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc++_error_details PROPERTIES COMPILE_PDB_NAME "grpc++_error_details"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -3827,6 +3914,11 @@
+   ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.grpc.pb.h
+ )
+ 
++set_target_properties(grpc++_proto_reflection_desc_db PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc++_proto_reflection_desc_db PROPERTIES COMPILE_PDB_NAME "grpc++_proto_reflection_desc_db"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -3890,6 +3982,11 @@
+   ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.grpc.pb.h
+ )
+ 
++set_target_properties(grpc++_reflection PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc++_reflection PROPERTIES COMPILE_PDB_NAME "grpc++_reflection"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -3952,6 +4049,11 @@
+   test/cpp/util/test_config_cc.cc
+ )
+ 
++set_target_properties(grpc++_test_config PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc++_test_config PROPERTIES COMPILE_PDB_NAME "grpc++_test_config"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -4023,6 +4125,11 @@
+   src/cpp/codegen/codegen_init.cc
+ )
+ 
++set_target_properties(grpc++_test_util PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc++_test_util PROPERTIES COMPILE_PDB_NAME "grpc++_test_util"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -4213,6 +4320,11 @@
+   src/cpp/codegen/codegen_init.cc
+ )
+ 
++set_target_properties(grpc++_test_util_unsecure PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc++_test_util_unsecure PROPERTIES COMPILE_PDB_NAME "grpc++_test_util_unsecure"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -4417,6 +4529,11 @@
+   src/cpp/codegen/codegen_init.cc
+ )
+ 
++set_target_properties(grpc++_unsecure PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc++_unsecure PROPERTIES COMPILE_PDB_NAME "grpc++_unsecure"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -4690,6 +4807,11 @@
+   test/cpp/microbenchmarks/helpers.cc
+ )
+ 
++set_target_properties(grpc_benchmark PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc_benchmark PROPERTIES COMPILE_PDB_NAME "grpc_benchmark"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -4746,6 +4868,11 @@
+   ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/reflection/v1alpha/reflection.grpc.pb.h
+ )
+ 
++set_target_properties(grpc_cli_libs PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc_cli_libs PROPERTIES COMPILE_PDB_NAME "grpc_cli_libs"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -4810,6 +4937,11 @@
+   src/compiler/ruby_generator.cc
+ )
+ 
++set_target_properties(grpc_plugin_support PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc_plugin_support PROPERTIES COMPILE_PDB_NAME "grpc_plugin_support"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -4872,6 +5004,11 @@
+   ${_gRPC_PROTO_GENS_DIR}/src/proto/grpc/channelz/channelz.grpc.pb.h
+ )
+ 
++set_target_properties(grpcpp_channelz PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpcpp_channelz PROPERTIES COMPILE_PDB_NAME "grpcpp_channelz"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -4946,6 +5083,11 @@
+   test/cpp/interop/http2_client.cc
+ )
+ 
++set_target_properties(http2_client_main PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(http2_client_main PROPERTIES COMPILE_PDB_NAME "http2_client_main"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5008,6 +5150,11 @@
+   test/cpp/interop/client_helper.cc
+ )
+ 
++set_target_properties(interop_client_helper PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(interop_client_helper PROPERTIES COMPILE_PDB_NAME "interop_client_helper"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5073,6 +5220,11 @@
+   test/cpp/interop/interop_client.cc
+ )
+ 
++set_target_properties(interop_client_main PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(interop_client_main PROPERTIES COMPILE_PDB_NAME "interop_client_main"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5133,6 +5285,11 @@
+   test/cpp/interop/server_helper.cc
+ )
+ 
++set_target_properties(interop_server_helper PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(interop_server_helper PROPERTIES COMPILE_PDB_NAME "interop_server_helper"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5193,6 +5350,11 @@
+   test/cpp/interop/interop_server.cc
+ )
+ 
++set_target_properties(interop_server_lib PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(interop_server_lib PROPERTIES COMPILE_PDB_NAME "interop_server_lib"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5253,6 +5415,11 @@
+   test/cpp/interop/interop_server_bootstrap.cc
+ )
+ 
++set_target_properties(interop_server_main PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(interop_server_main PROPERTIES COMPILE_PDB_NAME "interop_server_main"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5337,6 +5504,11 @@
+   test/cpp/qps/usage_timer.cc
+ )
+ 
++set_target_properties(qps PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(qps PROPERTIES COMPILE_PDB_NAME "qps"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5406,6 +5578,11 @@
+   src/csharp/ext/grpc_csharp_ext.c
+ )
+ 
++set_target_properties(grpc_csharp_ext PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(grpc_csharp_ext PROPERTIES COMPILE_PDB_NAME "grpc_csharp_ext"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5459,6 +5636,11 @@
+   test/core/bad_client/bad_client.cc
+ )
+ 
++set_target_properties(bad_client_test PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(bad_client_test PROPERTIES COMPILE_PDB_NAME "bad_client_test"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5505,6 +5687,11 @@
+   test/core/bad_ssl/server_common.cc
+ )
+ 
++set_target_properties(bad_ssl_test_server PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(bad_ssl_test_server PROPERTIES COMPILE_PDB_NAME "bad_ssl_test_server"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5630,6 +5817,11 @@
+   test/core/end2end/tests/write_buffering_at_end.cc
+ )
+ 
++set_target_properties(end2end_tests PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(end2end_tests PROPERTIES COMPILE_PDB_NAME "end2end_tests"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+@@ -5755,6 +5947,11 @@
+   test/core/end2end/tests/write_buffering_at_end.cc
+ )
+ 
++set_target_properties(end2end_nosec_tests PROPERTIES
++  VERSION ${gRPC_VERSION}
++  SOVERSION ${gRPC_SOVERSION}
++)
++
+ if(WIN32 AND MSVC)
+   set_target_properties(end2end_nosec_tests PROPERTIES COMPILE_PDB_NAME "end2end_nosec_tests"
+     COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
