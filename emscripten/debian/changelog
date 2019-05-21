@@ -1,3 +1,9 @@
+emscripten (1.38.32-1ultinous2) bionic; urgency=medium
+
+  * Fixed debian package install contents (.py pairs of some tools)
+
+ -- Lengyel Zsolt <zsolt@kitty.lan.ultinous.com>  Tue, 21 May 2019 15:16:22 +0200
+
 emscripten (1.38.32-1ultinous1) bionic; urgency=medium
 
   * New upstream release
