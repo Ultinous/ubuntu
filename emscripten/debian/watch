@@ -1,0 +1,4 @@
+version=3
+opts="filenamemangle=s/(?:.*)?v?(\d[\d\.]*)\.tar\.gz/emscripten-$1.tar.gz/" \
+ https://github.com/kripken/emscripten/tags (?:.*/)?v?(\d[\d\.]*)\.tar\.gz \
+debian debian/orig-tar.sh

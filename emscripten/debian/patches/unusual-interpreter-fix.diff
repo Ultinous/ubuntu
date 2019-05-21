@@ -1,0 +1,32 @@
+--- a/tools/eliminator/node_modules/uglify-js/bin/uglifyjs
++++ b/tools/eliminator/node_modules/uglify-js/bin/uglifyjs
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env node
++#!/usr/bin/nodejs
+ // -*- js -*-
+ 
+ global.sys = require(/^v0\.[012]/.test(process.version) ? "sys" : "util");
+--- a/tools/eliminator/node_modules/uglify-js/test/beautify.js
++++ b/tools/eliminator/node_modules/uglify-js/test/beautify.js
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env node
++#!/usr/bin/nodejs
+ 
+ global.sys = require("sys");
+ var fs = require("fs");
+--- a/tools/eliminator/node_modules/uglify-js/test/testparser.js
++++ b/tools/eliminator/node_modules/uglify-js/test/testparser.js
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env node
++#!/usr/bin/nodejs
+ 
+ var parseJS = require("../lib/parse-js");
+ var sys = require("sys");
+--- a/tools/eliminator/node_modules/uglify-js/tmp/test.js
++++ b/tools/eliminator/node_modules/uglify-js/tmp/test.js
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env node
++#!/usr/bin/nodejs
+ 
+ global.sys = require(/^v0\.[012]/.test(process.version) ? "sys" : "util");
+ var fs = require("fs");

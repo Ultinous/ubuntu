@@ -1,0 +1,3 @@
+emscripten-doc: executable-not-elf-or-script usr/share/emscripten/demos/webgl/doit.sh
+emscripten-doc: executable-not-elf-or-script usr/share/emscripten/demos/webgl/server.sh
+emscripten-doc: executable-not-elf-or-script usr/share/emscripten/demos/espeak/espeak-data/voices/en/en-us

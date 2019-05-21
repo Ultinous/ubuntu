@@ -1,0 +1,23 @@
+# They are just tests
+emscripten: python-script-but-no-python-dep usr/share/emscripten/tests/freetype/src/tools/chktrcmp.py
+emscripten: python-script-but-no-python-dep usr/share/emscripten/tests/runner.py
+emscripten: python-script-but-no-python-dep usr/share/emscripten/tools/bindings_generator.py
+emscripten: package-contains-devhelp-file-without-symlink usr/share/emscripten/tests/poppler/glib/reference/html/poppler.devhelp
+emscripten: package-contains-devhelp-file-without-symlink usr/share/emscripten/tests/poppler/glib/reference/html/poppler.devhelp2
+emscripten: python-script-but-no-python-dep usr/share/emscripten/system/bin/sdl-config
+emscripten: python-script-but-no-python-dep usr/share/emscripten/tools/merge_asm.py
+emscripten: python-script-but-no-python-dep usr/share/emscripten/tools/split_asm.py
+
+# That is normal
+emscripten: executable-not-elf-or-script usr/share/emscripten/tests/poppler/ltmain.sh
+emscripten: executable-not-elf-or-script usr/share/emscripten/tests/freetype/builds/unix/ltmain.sh
+emscripten: executable-not-elf-or-script usr/share/emscripten/tests/bullet/ltmain.sh
+emscripten: executable-not-elf-or-script usr/share/emscripten/tests/enet/ltmain.sh
+
+# I agree it is unusual bug it is relevant
+emscripten: unusual-interpreter usr/share/emscripten/tools/eliminator/node_modules/uglify-js/bin/uglifyjs #!/usr/bin/nodejs
+emscripten: unusual-interpreter usr/share/emscripten/tools/eliminator/node_modules/uglify-js/test/beautify.js #!/usr/bin/nodejs
+emscripten: unusual-interpreter usr/share/emscripten/tools/eliminator/node_modules/uglify-js/test/testparser.js #!/usr/bin/nodejs
+emscripten: unusual-interpreter usr/share/emscripten/tools/eliminator/node_modules/uglify-js/tmp/test.js #!/usr/bin/nodejs
+emscripten: unusual-interpreter usr/share/emscripten/tools/node_modules/source-map/test/run-tests.js #!node
+emscripten: unusual-interpreter usr/share/emscripten/tools/source-maps/sourcemapper.js #!node

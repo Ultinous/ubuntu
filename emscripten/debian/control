@@ -1,0 +1,44 @@
+Source: emscripten
+Section: devel
+Priority: extra
+Maintainer: LLVM Packaging Team <pkg-llvm-team@lists.alioth.debian.org>
+Uploaders: Sylvestre Ledru <sylvestre@debian.org>
+ , Lengyel Zsolt <zsolt@ultinous.com>
+Build-Depends: debhelper (>= 10.0.0), python-all, help2man, node-uglify
+Standards-Version: 3.9.7
+Homepage: http://emscripten.org/
+Vcs-Svn: svn://anonscm.debian.org/pkg-llvm/emscripten/trunk/
+Vcs-Browser: http://svn.debian.org/viewsvn/pkg-llvm/emscripten/trunk/
+
+Package: emscripten
+# Not set to "any". See bug #723129
+Architecture: i386 kfreebsd-i386 amd64 kfreebsd-amd64 armel armhf mipsel
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, nodejs,
+ libclosure-compiler-java, clang, llvm (>= 1:3.3), node-uglify
+Description: LLVM-to-JavaScript Compiler
+ Emscripten is an LLVM to JavaScript compiler. It takes LLVM bitcode, also
+ called LLVM IR (which can be generated from C/C++ using Clang, or any other
+ language that can be converted into LLVM bitcode) and compiles that into
+ JavaScript, which can be run on the web (or anywhere else JavaScript can run).
+ .
+ Using Emscripten, you can
+   * Compile C and C++ code into JavaScript and run that on the web
+   * Run code in languages like Python as well, by compiling CPython from C
+     to JavaScript and interpreting code in that on the web
+
+Package: emscripten-doc
+Section: doc
+Depends: ${misc:Depends}
+Architecture: all
+Description: LLVM-to-JavaScript Compiler
+ Emscripten is an LLVM to JavaScript compiler. It takes LLVM bitcode, also
+ called LLVM IR (which can be generated from C/C++ using Clang, or any other
+ language that can be converted into LLVM bitcode) and compiles that into
+ JavaScript, which can be run on the web (or anywhere else JavaScript can run).
+ .
+ Using Emscripten, you can
+   * Compile C and C++ code into JavaScript and run that on the web
+   * Run code in languages like Python as well, by compiling CPython from C
+     to JavaScript and interpreting code in that on the web
+ .
+ This package contains the documentation.

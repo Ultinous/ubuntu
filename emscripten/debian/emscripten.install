@@ -1,0 +1,15 @@
+cmake/ /usr/share/emscripten
+src/ /usr/share/emscripten
+system/ /usr/share/emscripten
+tools/ /usr/share/emscripten
+tests/ /usr/share/emscripten
+em++ /usr/share/emscripten
+emar /usr/share/emscripten
+emcc /usr/share/emscripten
+emcc.py /usr/share/emscripten
+em-config /usr/share/emscripten
+emconfigure /usr/share/emscripten
+emmake /usr/share/emscripten
+emranlib /usr/share/emscripten
+emscripten.py /usr/share/emscripten
+emscripten-version.txt /usr/share/emscripten

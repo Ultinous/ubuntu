@@ -1,0 +1,376 @@
+--- a/em-config
++++ b/em-config
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ 
+ '''
+ This is a helper tool which is designed to make it possible
+--- a/em++
++++ b/em++
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ # This script should work in python 2 *or* 3. It loads the main code using
+ # python_selector, which may pick a different version.
+--- a/emar
++++ b/emar
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ # This script should work in python 2 *or* 3. It loads the main code using
+ # python_selector, which may pick a different version.
+--- a/emcc
++++ b/emcc
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ # This script should work in python 2 *or* 3. It loads the main code using
+ # python_selector, which may pick a different version.
+--- a/emconfigure
++++ b/emconfigure
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ # This script should work in python 2 *or* 3. It loads the main code using
+ # python_selector, which may pick a different version.
+--- a/emlink.py
++++ b/emlink.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2013 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/emmake
++++ b/emmake
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ # This script should work in python 2 *or* 3. It loads the main code using
+ # python_selector, which may pick a different version.
+--- a/emranlib
++++ b/emranlib
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ '''
+ emcc - ranlib helper script
+--- a/emscons
++++ b/emscons
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ # This script should work in python 2 *or* 3. It loads the main code using
+ # python_selector, which may pick a different version.
+--- a/tools/nativize_llvm.py
++++ b/tools/nativize_llvm.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2012 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/em++.py
++++ b/em++.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2011 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/emar.py
++++ b/emar.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2016 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/embuilder.py
++++ b/embuilder.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2014 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/emcc.py
++++ b/emcc.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2011 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/emcmake
++++ b/emcmake
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ # This script should work in python 2 *or* 3. It loads the main code using
+ # python_selector, which may pick a different version.
+--- a/emcmake.py
++++ b/emcmake.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2016 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/emconfigure.py
++++ b/emconfigure.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2016 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/emmake.py
++++ b/emmake.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2016 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/emrun
++++ b/emrun
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ # This script should work in python 2 *or* 3. It loads the main code using
+ # python_selector, which may pick a different version.
+--- a/emrun.py
++++ b/emrun.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2017 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/emscons.py
++++ b/emscons.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ """Wrapping the scons invocation, EMSCRIPTEN_TOOL_PATH is set in the process
+ environment, and can be used to locate the emscripten SCons Tool.
+ 
+--- a/site/source/get_api_items.py
++++ b/site/source/get_api_items.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2015 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/site/source/get_wiki.py
++++ b/site/source/get_wiki.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2014 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/system/bin/sdl-config
++++ b/system/bin/sdl-config
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ from __future__ import print_function
+ import sys
+--- a/system/bin/sdl2-config
++++ b/system/bin/sdl2-config
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ from __future__ import print_function
+ import sys
+--- a/tests/freetype/src/tools/chktrcmp.py
++++ b/tests/freetype/src/tools/chktrcmp.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ #
+ # Check trace components in FreeType 2 source.
+ # Author: suzuki toshiya, 2009
+--- a/tests/freetype/src/tools/docmaker/docbeauty.py
++++ b/tests/freetype/src/tools/docmaker/docbeauty.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ #
+ #  DocBeauty (c) 2003, 2004, 2008 David Turner <david@freetype.org>
+ #
+--- a/tests/freetype/src/tools/docmaker/docmaker.py
++++ b/tests/freetype/src/tools/docmaker/docmaker.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ #
+ #  DocMaker (c) 2002, 2004, 2008 David Turner <david@freetype.org>
+ #
+--- a/tests/freetype/src/tools/glnames.py
++++ b/tests/freetype/src/tools/glnames.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ #
+ 
+ #
+--- a/tests/gen_large_switchcase.py
++++ b/tests/gen_large_switchcase.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2015 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tests/gen_many_js_functions.py
++++ b/tests/gen_many_js_functions.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ # Copyright 2018 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+--- a/tests/runner.py
++++ b/tests/runner.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2010 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/add_license.py
++++ b/tools/add_license.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2018 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/create_dom_pk_codes.py
++++ b/tools/create_dom_pk_codes.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # coding=utf-8
+ # Copyright 2017 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+--- a/tools/ctor_evaller.py
++++ b/tools/ctor_evaller.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2016 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/emdebug_cd_merger.py
++++ b/tools/emdebug_cd_merger.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2016 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/emdump
++++ b/tools/emdump
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ # This script should work in python 2 *or* 3. It loads the main code using
+ # python_selector, which may pick a different version.
+--- a/tools/emdump.py
++++ b/tools/emdump.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2018 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/emprofile.py
++++ b/tools/emprofile.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2016 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/emterpretify.py
++++ b/tools/emterpretify.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2014 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/experimental/reproduceriter.py
++++ b/tools/experimental/reproduceriter.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2017 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/ffdb.py
++++ b/tools/ffdb.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2014 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/gen_struct_info.py
++++ b/tools/gen_struct_info.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # coding=utf-8
+ # Copyright 2013 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+--- a/tools/line_endings.py
++++ b/tools/line_endings.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2014 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/scons/site_scons/site_tools/emscripten/__init__.py
++++ b/tools/scons/site_scons/site_tools/emscripten/__init__.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2012 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/scons/site_scons/site_tools/emscripten/emscripten.py
++++ b/tools/scons/site_scons/site_tools/emscripten/emscripten.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/python
+ # Copyright 2012 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be
+--- a/tools/wasm-sourcemap.py
++++ b/tools/wasm-sourcemap.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ # Copyright 2018 The Emscripten Authors.  All rights reserved.
+ # Emscripten is available under two separate licenses, the MIT license and the
+ # University of Illinois/NCSA Open Source License.  Both these licenses can be

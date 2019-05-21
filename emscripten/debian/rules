@@ -1,0 +1,32 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+
+%:
+	dh $@ --with python2
+
+override_dh_install:
+# Remove extra licenses
+	rm -f system/include/libcxx/LICENSE.txt system/lib/compiler-rt/LICENSE.TXT system/lib/libcxx/LICENSE.txt system/lib/libcxxabi/LICENSE.TXT tests/bullet/LICENSE tests/enet/LICENSE tests/freetype/LiberationSansBoldLICENSE.txt tests/freetype/docs/LICENSE.TXT tests/openjpeg/LICENSE tests/python/LICENSE tests/sounds/LICENSE.txt tests/poppler/COPYING tests/freetype/LiberationSansBoldLICENSE.txt tests/freealut/COPYING tests/bullet/COPYING system/lib/libcxx/LICENSE.txt system/lib/libcxxabi/LICENSE.TXT tests/bullet/BulletLicense.txt system/include/SDL/COPYING tests/enet/docs/license.dox tests/box2d/License.txt tests/box2d/freeglut/COPYING tools/node_modules/source-map/LICENSE tools/node_modules/source-map/node_modules/amdefine/LICENSE tests/freetype/docs/GPL.TXT
+# Remove artefact
+	rm -f tools/eliminator/node_modules/uglify-js/.gitignore
+# Remove Visual stuff
+	rm -f `find . -iname '*.vcproj' -o -iname '*.sln' -o -iname '*.dsp' -o -iname '*.dsw'`
+	chmod +x tests/embind/build_benchmark
+	dh_install
+	mkdir -p $(CURDIR)/debian/emscripten/usr/bin
+	cd $(CURDIR)/debian/emscripten/usr/bin; \
+	for f in em++ emar emcc emcc.py em-config emconfigure emmake emranlib emscripten.py emscons; do \
+		ln -s ../share/emscripten/$$f; \
+	done
+	cd $(CURDIR)/debian/emscripten/usr/share/emscripten/tools/eliminator/node_modules/uglify-js/; \
+	rm -rf lib/* bin/uglifyjs; \
+	ln -s /usr/bin/uglifyjs bin/; \
+	cd lib; for f in /usr/lib/nodejs/uglify-js/*; do ln -s $$f .; done
+
+
