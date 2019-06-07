@@ -8,7 +8,10 @@ export DEB_BUILD_MAINT_OPTIONS=hardening=+bindnow,-pie
 include /usr/share/dpkg/buildflags.mk
 
 %:
-	dh $@ --without systemd,autoreconf
+	dh $@ --without systemd,autoreconf --buildsystem=cmake
+
+override_dh_auto_test:
+	/usr/bin/ctest --force-new-ctest-process -j1 -R RdKafkaTestBrokerLess
 
 override_dh_strip:
-	dh_strip -O--dbgsym-migration='librdkafka1-dbg (<< 0.9.1-1~)'
+	dh_strip --dbg-package=librdkafka1-dbg

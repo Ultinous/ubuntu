@@ -1,97 +1,22 @@
-librdkafka (0.11.6-1.1ubuntu1) bionic; urgency=medium
+librdkafka (1.0.0-2ultinous2) bionic; urgency=medium
 
-  * ported to bionic 
+  * Ported librdkafka (1.0.0-2ultinous1) to bionic
 
- -- FRANK Kristof <oturw@ultinous.com>  Mon, 11 Mar 2019 13:22:27 +0000
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 07 Jun 2019 09:09:45 +0000
 
-librdkafka (0.11.6-1.1) unstable; urgency=medium
+librdkafka (1.0.0-2ultinous1) stretch; urgency=medium
 
-  * Non-maintainer upload.
-  * Apply patch to fix hurd-i386 build (Closes: #900716).
+  * Removed sasl2 and lz4 from target build dependencies.
 
- -- Samuel Thibault <sthibault@debian.org>  Sun, 04 Nov 2018 18:41:48 +0100
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 18 Apr 2019 12:17:58 +0000
 
-librdkafka (0.11.6-1) unstable; urgency=medium
-
-  * New upstream version
-  * Update librdkafka1.symbols for 0.11.6
-  * Bump Standards-Version, no changes needed
-  * Drop references to the supported protocol versions
-
- -- Christos Trochalakis <ctrochalakis@debian.org>  Wed, 24 Oct 2018 12:01:10 +0300
-
-librdkafka (0.11.5-1) unstable; urgency=medium
-
-  * New upstream release
-  * Update librdkafka1.symbols for 0.11.5
-  * Bump Standards-Version to 4.1.5, no changes needed
-
- -- Christos Trochalakis <ctrochalakis@debian.org>  Thu, 19 Jul 2018 17:06:55 +0300
-
-librdkafka (0.11.4-1) unstable; urgency=medium
-
-  * Team upload
-  * New upstream release
-  * Bump Standards-Version, no changes needed
-  * Update librdkafka1.symbols for 0.11.4
-  * d/copyright:
-    + Switch the copyright-format URL to https
-    + Move license paragraph to the end
-
- -- Mpampis Kostas <charkost.rb@gmail.com>  Tue, 10 Apr 2018 13:19:03 +0300
-
-librdkafka (0.11.3-1) unstable; urgency=medium
-
-  * Team upload
-  * New upstream release
-  * Bump Standards-Version, no changes needed
-  * Add NEWS entry about librdkafka's configuration changes
-
- -- Mpampis Kostas <charkost.rb@gmail.com>  Mon, 18 Dec 2017 12:29:39 +0200
-
-librdkafka (0.11.1-1) unstable; urgency=medium
-
-  * New upstream release
-  * Bump Standards-Version, no changes needed
-
- -- Christos Trochalakis <ctrochalakis@debian.org>  Wed, 18 Oct 2017 12:44:25 +0300
-
-librdkafka (0.11.0-1) unstable; urgency=medium
-
-  * New upstream release
-  * Update librdkafka1.symbols for 0.11.0
-  * Add NEWS entry about librdkafka's configuration changes
-  * Explicitly depend on libz4-dev with framing support (lz4frame.h)
-  * Bump Standards-Version to 4.0.0, no changes needed
-  * Setup gbp to use git as an upstream source
-
- -- Christos Trochalakis <ctrochalakis@debian.org>  Thu, 20 Jul 2017 15:52:06 +0300
-
-librdkafka (0.9.5-2) unstable; urgency=medium
-
-  * Upload to unstable.
-
- -- Christos Trochalakis <ctrochalakis@debian.org>  Wed, 21 Jun 2017 12:10:57 +0300
-
-librdkafka (0.9.5-1) experimental; urgency=medium
+librdkafka (1.0.0-1ultinous1) stretch; urgency=medium
 
   * New upstream release.
-  * Add a README.source note about shipping lz4 in the upstream tarball.
-    lz4 is not used in Debian builds.
-  * Add copyright for the lz4 library.
+  * Ported librdkafka (0.9.3-1) to stretch.
+  * Changed debian/rules to use the cmake buildsystem.
 
- -- Christos Trochalakis <ctrochalakis@debian.org>  Tue, 18 Apr 2017 12:30:07 +0300
-
-librdkafka (0.9.4-1) experimental; urgency=medium
-
-  [ Faidon Liambotis ]
-  * Update debian/watch with upstream's new convention.
-
-  [ Christos Trochalakis ]
-  * New upstream release.
-  * Update librdkafka1.symbols for 0.9.4.
-
- -- Christos Trochalakis <ctrochalakis@debian.org>  Mon, 27 Feb 2017 11:42:12 +0200
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Tue, 16 Apr 2019 13:01:19 +0000
 
 librdkafka (0.9.3-1) unstable; urgency=medium
 
