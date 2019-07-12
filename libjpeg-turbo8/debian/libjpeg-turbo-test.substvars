@@ -1,0 +1,3 @@
+shlibs:Depends=libc6 (>= 2.14), libjpeg8 (>= 8c), libturbojpeg
+misc:Depends=
+misc:Pre-Depends=

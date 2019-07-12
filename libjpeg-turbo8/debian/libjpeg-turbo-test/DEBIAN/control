@@ -1,0 +1,15 @@
+Package: libjpeg-turbo-test
+Source: libjpeg-turbo
+Version: 1.5.2-0ubuntu6+ultinous1
+Architecture: amd64
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Installed-Size: 95
+Depends: libturbojpeg (= 1.5.2-0ubuntu6+ultinous1), libc6 (>= 2.14), libjpeg8 (>= 8c)
+Replaces: libjpeg-test (<< 1.1.90+svn722-1ubuntu6)
+Section: debug
+Priority: extra
+Homepage: http://libjpeg-turbo.virtualgl.org/
+Description: Program for benchmarking and testing libjpeg-turbo
+ This package contains tjunittest and tjbench.  tjunittest tests the basic
+ functionality of the library and data files for performing those tests.
+ tjbench runs some benchmarks.

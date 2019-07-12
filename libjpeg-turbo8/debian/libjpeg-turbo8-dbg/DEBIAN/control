@@ -1,0 +1,17 @@
+Package: libjpeg-turbo8-dbg
+Source: libjpeg-turbo
+Version: 1.5.2-0ubuntu6+ultinous1
+Architecture: amd64
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Installed-Size: 410
+Depends: libjpeg-turbo8 (= 1.5.2-0ubuntu6+ultinous1)
+Replaces: libjpeg-turbo-dbg (<< 1.1.90+svn722-1ubuntu6), libjpeg62-dbg, libjpeg7-dbg
+Section: debug
+Priority: extra
+Homepage: http://libjpeg-turbo.virtualgl.org/
+Description: Debugging symbols for the libjpeg-turbo library
+ An optimized implementation of the Independent JPEG Group's
+ JPEG library is a library for handling JPEG files.
+ .
+ This package contains the debugging symbols for libjpeg-turbo.
+Build-Ids: 7f705091655afb4f35a099878c6978fdd6d1bc7a

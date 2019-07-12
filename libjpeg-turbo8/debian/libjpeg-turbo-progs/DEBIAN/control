@@ -1,0 +1,19 @@
+Package: libjpeg-turbo-progs
+Source: libjpeg-turbo
+Version: 1.5.2-0ubuntu6+ultinous1
+Architecture: amd64
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Installed-Size: 170
+Depends: libc6 (>= 2.7), libjpeg8 (>= 8c)
+Conflicts: libjpeg-progs
+Replaces: libjpeg-progs (<< 8c-2ubuntu5)
+Provides: libjpeg-progs
+Section: graphics
+Priority: optional
+Homepage: http://libjpeg-turbo.virtualgl.org/
+Description: Programs for manipulating JPEG files
+ This package contains programs for manipulating JPEG files:
+  cjpeg/djpeg: convert to/from the JPEG file format
+  rdjpgcom/wrjpgcom: read/write comments in JPEG files
+  jpegtran: lossless transformations of JPEG files
+  tjbench: a simple JPEG benchmarking tool

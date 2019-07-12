@@ -1,0 +1,7 @@
+libjpeg-turbo-progs_1.5.2-0ubuntu6+ultinous1_amd64.deb graphics optional
+libjpeg-turbo-test_1.5.2-0ubuntu6+ultinous1_amd64.deb debug extra
+libjpeg-turbo8-dbg_1.5.2-0ubuntu6+ultinous1_amd64.deb debug extra
+libjpeg-turbo8-dev_1.5.2-0ubuntu6+ultinous1_amd64.deb libdevel optional
+libjpeg-turbo8_1.5.2-0ubuntu6+ultinous1_amd64.deb libs optional
+libturbojpeg0-dev_1.5.2-0ubuntu6+ultinous1_amd64.deb libdevel optional
+libturbojpeg_1.5.2-0ubuntu6+ultinous1_amd64.deb libs optional

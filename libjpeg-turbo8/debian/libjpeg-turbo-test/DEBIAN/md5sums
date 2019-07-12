@@ -1,0 +1,5 @@
+5d16f4c9161e59d7628c7f5e882ba9f8  usr/bin/tjbench
+c9645f2750c96d59c798bc98a74d9456  usr/bin/tjunittest
+cf8305d703e59b82097dad7355db612d  usr/share/doc/libjpeg-turbo-test/changelog.Debian.gz
+e39223df5fbe3c7cb10afbe26798022c  usr/share/doc/libjpeg-turbo-test/copyright
+ae788ac23d8e6c17ab2343aa122abe65  usr/share/lintian/overrides/libjpeg-turbo-test

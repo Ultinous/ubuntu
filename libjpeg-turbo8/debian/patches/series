@@ -1,0 +1,6 @@
+# FixLibraryStartup.patch
+install-tjunittest.patch
+add-copying-for-debian-dir.patch
+CVE-2017-15232-1.patch
+CVE-2017-15232-2.patch
+CVE-2018-1152.patch
