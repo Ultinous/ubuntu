@@ -1,0 +1,7 @@
+--- a/tests/pytest.ini
++++ b/tests/pytest.ini
+@@ -13,3 +13,4 @@
+     ignore::ImportWarning
+     # bogus numpy ABI warning (see numpy/#432)
+     ignore:.*numpy.dtype size changed.*:RuntimeWarning
++    ignore:.*numpy.ufunc size changed.*:RuntimeWarning
