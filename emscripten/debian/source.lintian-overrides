@@ -1,0 +1,17 @@
+# It is minimized but the sources are ./tools/node_modules/source-map/lib/source-map
+emscripten source: source-is-missing src/emscripten-source-map.min.js
+
+# false positives
+emscripten source: source-is-missing third_party/lzma.js/lzma-decoder.js
+emscripten source: source-is-missing third_party/lzma.js/lzma-full.js
+emscripten source: source-is-missing third_party/websockify/include/web-socket-js/WebSocketMain.swf
+emscripten source: source-is-missing third_party/websockify/include/web-socket-js/swfobject.js
+emscripten source: source-is-missing third_party/websockify/include/web-socket-js/src/WebSocketMain.swf
+emscripten source: source-is-missing third_party/websockify/include/web-socket-js/src/swfobject.js
+
+# In missing-sources (crn_decomp.h) + normal doc
+emscripten source: source-is-missing tools/crunch-worker.js
+
+# Not shipped
+emscripten source: source-is-missing site/build/html/_static/jquery.js
+emscripten source: source-is-missing site/build/html/_static/underscore.js

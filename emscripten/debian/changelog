@@ -1,0 +1,107 @@
+emscripten (1.38.32-1ultinous2) bionic; urgency=medium
+
+  * Fixed debian package install contents (.py pairs of some tools)
+
+ -- Lengyel Zsolt <zsolt@kitty.lan.ultinous.com>  Tue, 21 May 2019 15:16:22 +0200
+
+emscripten (1.38.32-1ultinous1) bionic; urgency=medium
+
+  * New upstream release
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Tue, 21 May 2019 13:29:14 +0200
+
+emscripten (1.22.1-1build1) wily; urgency=medium
+
+  * No-change rebuild using GCC 5.
+
+ -- Matthias Klose <doko@ubuntu.com>  Fri, 28 Aug 2015 10:53:58 +0000
+
+emscripten (1.22.1-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #748923)
+  * Upstream uses now tag. Use them instead of a repack script
+  * Update the clang version dependency from clang-X.Y to clang now they
+    are co instalable (Closes: #748840)
+  * Disable fastcomp. We don't want to manage a fork of llvm in emscripten
+    and not sure we want to add this patch in llvm itself (yet).
+  * Add missing sources (Closes: #753956)
+  * Use node-uglify package (Closes: #753883)
+  * Fix vcs-field-not-canonical
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 04 Jul 2014 13:06:38 +0200
+
+emscripten (1.10.0~20140205~ef1e460-1) unstable; urgency=medium
+
+  * New snapshot release
+  * Also install cmake / emscripten files. Thanks to Daniele Di Proietto
+    for the patch
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 05 Feb 2014 18:46:19 +0100
+
+emscripten (1.9.0~20140119~7dc8c2f-1) unstable; urgency=low
+
+  * New snapshot release (Closes: #733714)
+  * Provide sources for javascript and flash. Done in orig-tar.sh
+    Available in third_party/websockify/include/web-socket-js/src/
+    (Closes: #735903)
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Sun, 19 Jan 2014 14:12:40 +0100
+
+emscripten (1.7.8~20131216~1a007b1-1) unstable; urgency=low
+
+  * New snapshot release
+  * demos/ is removed upstream. Doing the same in the package
+  * remove some extra-license-file
+  * Silent unusual-interpreter & python-script-but-no-python-dep
+  * Standards-Version updated to 3.9.5
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Mon, 16 Dec 2013 15:01:29 +0100
+
+emscripten (1.5.6~20130920~6010666-1) unstable; urgency=low
+
+  * New snapshot release
+  * Update the list of supported architectures to the same as libv8
+    (Closes: #723129)
+  * emlibtool has been removed from upstream.
+  * Fix warning syntax-error-in-dep5-copyright
+  * Refresh of the patches
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 20 Sep 2013 22:44:35 +0200
+
+emscripten (1.4.9~20130620~0ad8724-1) unstable; urgency=low
+
+  * New snapshot release
+  * Depends against the "llvm" package. This package will provide llvm-dis
+    needed by emscripten. Thanks to Sam Hocevar for finding the reason.
+  * Fix the debhelper-but-no-misc-depends warning on emscripten-doc
+  * Override warning "unusual-interpreter" with nodejs
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 20 Jun 2013 17:14:15 +0200
+
+emscripten (1.4.7~20130611~a1eb425-1) unstable; urgency=low
+
+  * New snapshot release
+  * Upload to unstable
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 11 Jun 2013 15:45:24 +0200
+
+emscripten (1.4.7~20130606~98ba795-1) experimental; urgency=low
+
+  * New upstream release
+  * Update the dependencies (clang 3.2, 3.3 & 3.4)
+  * Also install emscons
+  * Remove the empty README.Debian
+  * Fix some warnings "extra-license-file"
+  * Fix the warning manpage-has-useless-whatis-entry for emcc and em++
+  * Remove some lintian overrides (I fixed them upstream)
+  * Silent the warnings "package-contains-devhelp-file-without-symlink"
+  * Fix some warning "unusual-interpreter" by using directly /usr/bin/nodejs
+  * Generate the manpages on the fly thanks to help2man
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 06 Jun 2013 10:59:42 +0200
+
+emscripten (1.4.1~20130504~adb56cb-1) unstable; urgency=low
+
+  * Initial release (Closes: #704906)
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 02 May 2013 13:11:51 +0200

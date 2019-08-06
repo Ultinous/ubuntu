@@ -1,0 +1,4 @@
+debian/tmp/usr/lib/*/libgmock*
+debian/tmp/usr/lib/*/pkgconfig/gmock*pc
+debian/tmp/usr/include/gmock
+

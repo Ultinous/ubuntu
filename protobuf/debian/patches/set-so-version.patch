@@ -1,0 +1,78 @@
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -69,29 +69,29 @@
+ # Contact
+ string(REGEX REPLACE        "${protobuf_AC_INIT_REGEX}" "\\3"
+     protobuf_CONTACT        "${protobuf_AC_INIT_LINE}")
+-# Parse version tweaks
+-set(protobuf_VERSION_REGEX "^([0-9]+)\\.([0-9]+)\\.([0-9]+)([-]rc[-]|\\.)?([0-9]*)$")
+-string(REGEX REPLACE     "${protobuf_VERSION_REGEX}" "\\1"
+-  protobuf_VERSION_MAJOR "${protobuf_VERSION_STRING}")
+-string(REGEX REPLACE     "${protobuf_VERSION_REGEX}" "\\2"
+-  protobuf_VERSION_MINOR "${protobuf_VERSION_STRING}")
+-string(REGEX REPLACE     "${protobuf_VERSION_REGEX}" "\\3"
+-  protobuf_VERSION_PATCH "${protobuf_VERSION_STRING}")
+-string(REGEX REPLACE     "${protobuf_VERSION_REGEX}" "\\5"
+-  protobuf_VERSION_PRERELEASE "${protobuf_VERSION_STRING}")
+ 
+-message(STATUS "${protobuf_VERSION_PRERELEASE}")
++# Parse version tweaks
++set(protobuf_MAKEFILE "../src/Makefile.am")
++set(protobuf_PROTOBUF_VERSION_REGEX
++  "^PROTOBUF_VERSION = ([0-9]+):([0-9]+):([0-9]+)$")
++file(STRINGS "${protobuf_MAKEFILE}" protobuf_PROTOBUF_VERSION_LINE
++  LIMIT_COUNT 1 REGEX "^PROTOBUF_VERSION")
++string(REGEX REPLACE     "${protobuf_PROTOBUF_VERSION_REGEX}" "\\1"
++  protobuf_VERSION_MAJOR "${protobuf_PROTOBUF_VERSION_LINE}")
++string(REGEX REPLACE     "${protobuf_PROTOBUF_VERSION_REGEX}" "\\2"
++  protobuf_VERSION_MINOR "${protobuf_PROTOBUF_VERSION_LINE}")
++string(REGEX REPLACE     "${protobuf_PROTOBUF_VERSION_REGEX}" "\\3"
++  protobuf_VERSION_PATCH "${protobuf_PROTOBUF_VERSION_LINE}")
++set(protobuf_VERSION_PRERELEASE "")
+ 
+ # Package version
+ set(protobuf_VERSION
+   "${protobuf_VERSION_MAJOR}.${protobuf_VERSION_MINOR}.${protobuf_VERSION_PATCH}")
++set(protobuf_SOVERSION "${protobuf_VERSION_MAJOR}")
+ 
+-if(protobuf_VERSION_PRERELEASE)
+-  set(protobuf_VERSION "${protobuf_VERSION}.${protobuf_VERSION_PRERELEASE}")
+-else()
+-  set(protobuf_VERSION "${protobuf_VERSION}.0")
+-endif()
++set(protobuf_VERSION "${protobuf_VERSION}")
+ message(STATUS "${protobuf_VERSION}")
++message(STATUS "${protobuf_SOVERSION}")
+ 
+ if(protobuf_VERBOSE)
+   message(STATUS "Configuration script parsing status [")
+--- a/cmake/libprotobuf-lite.cmake
++++ b/cmake/libprotobuf-lite.cmake
+@@ -68,6 +68,7 @@
+ endif()
+ set_target_properties(libprotobuf-lite PROPERTIES
+     VERSION ${protobuf_VERSION}
++    SOVERSION ${protobuf_SOVERSION}
+     OUTPUT_NAME ${LIB_PREFIX}protobuf-lite
+     DEBUG_POSTFIX "${protobuf_DEBUG_POSTFIX}")
+ add_library(protobuf::libprotobuf-lite ALIAS libprotobuf-lite)
+--- a/cmake/libprotobuf.cmake
++++ b/cmake/libprotobuf.cmake
+@@ -130,6 +130,7 @@
+ endif()
+ set_target_properties(libprotobuf PROPERTIES
+     VERSION ${protobuf_VERSION}
++    SOVERSION ${protobuf_SOVERSION}
+     OUTPUT_NAME ${LIB_PREFIX}protobuf
+     DEBUG_POSTFIX "${protobuf_DEBUG_POSTFIX}")
+ add_library(protobuf::libprotobuf ALIAS libprotobuf)
+--- a/cmake/libprotoc.cmake
++++ b/cmake/libprotoc.cmake
+@@ -176,6 +176,7 @@
+ set_target_properties(libprotoc PROPERTIES
+     COMPILE_DEFINITIONS LIBPROTOC_EXPORTS
+     VERSION ${protobuf_VERSION}
++    SOVERSION ${protobuf_SOVERSION}
+     OUTPUT_NAME ${LIB_PREFIX}protoc
+     DEBUG_POSTFIX "${protobuf_DEBUG_POSTFIX}")
+ add_library(protobuf::libprotoc ALIAS libprotoc)

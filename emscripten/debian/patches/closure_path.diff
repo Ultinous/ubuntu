@@ -1,0 +1,11 @@
+--- a/tools/shared.py
++++ b/tools/shared.py
+@@ -946,7 +946,7 @@
+     JS_ENGINES = [JS_ENGINE]
+ 
+ if CLOSURE_COMPILER is None:
+-  CLOSURE_COMPILER = path_from_root('third_party', 'closure-compiler', 'compiler.jar')
++  CLOSURE_COMPILER = '/usr/share/java/closure-compiler.jar'
+ 
+ if PYTHON is None:
+   logger.debug('PYTHON not defined in ' + hint_config_file_location() + ', using "%s"' % (sys.executable,))

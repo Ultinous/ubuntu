@@ -1,0 +1,10 @@
+emscripten (1.22.1-1) unstable; urgency=medium
+
+  * emscripten has changed its generation backend to a LLVM target called
+    fastcomp. Because we don't want to maintain a fork of LLVM in emscripten
+    package, we force the usage of the previous method.
+    This is done in the first line of the emcc script.
+    We will either wait for fastcomp to be merged in LLVM or maybe apply the
+    change in llvm Debian package.
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 21 Aug 2014 09:53:39 +0200

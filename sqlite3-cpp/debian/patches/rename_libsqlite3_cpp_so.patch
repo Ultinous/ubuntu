@@ -1,0 +1,67 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,7 +6,7 @@
+ # or copy at http://opensource.org/licenses/MIT) 
+ cmake_minimum_required(VERSION 2.8.12) # first version with add_compile_options()
+ project(SQLiteCpp)
+-
++set(SQLITE3CPP_VERSION 2)
+ message (STATUS "CMake version: ${CMAKE_VERSION}")
+ 
+ # Define useful variables to handle OS differences:
+@@ -169,22 +169,23 @@
+ include_directories("${PROJECT_SOURCE_DIR}/include")
+ 
+ # add sources of the wrapper as a "SQLiteCpp" static library
+-add_library(SQLiteCpp ${SQLITECPP_SRC} ${SQLITECPP_INC} ${SQLITECPP_DOC} ${SQLITECPP_SCRIPT})
++add_library(libsqlite3-cpp ${SQLITECPP_SRC} ${SQLITECPP_INC} ${SQLITECPP_DOC} ${SQLITECPP_SCRIPT})
++set_target_properties(libsqlite3-cpp PROPERTIES PREFIX "" SUFFIX ".so.${SQLITE3CPP_VERSION}")
+ # make the sqlite3 library part of the interface of the SQLiteCpp wrapper itself (the client app does not need to link to sqlite3)
+ # PR https://github.com/SRombauts/SQLiteCpp/pull/111 "linked SQLiteCpp to sqlite3" commented out since it breacks install step from PR #118
+ #target_link_libraries(SQLiteCpp PUBLIC sqlite3)
+ 
+ if (UNIX AND (CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang"))
+-    set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-fPIC")
++    set_target_properties(libsqlite3-cpp PROPERTIES COMPILE_FLAGS "-fPIC")
+ endif (UNIX AND (CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang"))
+ 
+ # Allow the library to be installed via "make install" and found with "find_package"
+-install(TARGETS SQLiteCpp
++install(TARGETS libsqlite3-cpp
+     EXPORT ${PROJECT_NAME}Config
+     LIBRARY DESTINATION lib
+     ARCHIVE DESTINATION lib
+     COMPONENT libraries)
+-target_include_directories(SQLiteCpp PUBLIC 
++target_include_directories(libsqlite3-cpp PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include/>)
+ install(DIRECTORY include/ DESTINATION include COMPONENT headers FILES_MATCHING REGEX ".*\\.(hpp|h)$")
+@@ -260,7 +261,7 @@
+ if (SQLITECPP_BUILD_EXAMPLES)
+     # add the basic example executable
+     add_executable(SQLiteCpp_example1 ${SQLITECPP_EXAMPLES})
+-    target_link_libraries(SQLiteCpp_example1 SQLiteCpp sqlite3)
++    target_link_libraries(SQLiteCpp_example1 libsqlite3-cpp sqlite3)
+     # Link target with pthread and dl for linux
+     if (UNIX)
+         target_link_libraries(SQLiteCpp_example1 pthread)
+@@ -282,11 +283,11 @@
+     endif (NOT MSVC)
+ 
+     find_package(GTest REQUIRED)
+-    target_link_libraries(SQLiteCpp GTest::GTest)
++    target_link_libraries(libsqlite3-cpp GTest::GTest)
+ 
+     # add the unit test executable
+     add_executable(SQLiteCpp_tests ${SQLITECPP_TESTS})
+-    target_link_libraries(SQLiteCpp_tests gtest_main SQLiteCpp sqlite3)
++    target_link_libraries(SQLiteCpp_tests gtest_main libsqlite3-cpp sqlite3)
+     # Link target with dl for linux
+     if (UNIX AND NOT APPLE)
+         target_link_libraries(SQLiteCpp_tests dl)
+@@ -305,4 +306,3 @@
+ else (SQLITECPP_BUILD_TESTS)
+     message(STATUS "SQLITECPP_BUILD_TESTS OFF")
+ endif (SQLITECPP_BUILD_TESTS)
+-

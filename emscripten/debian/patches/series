@@ -1,0 +1,5 @@
+pythonpath.diff
+closure_path.diff
+unusual-interpreter-fix.diff
+update-parsing.diff
+disable-fastcomp.diff

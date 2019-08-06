@@ -1,0 +1,42 @@
+From: Dmitry Shachnev <mitya57@gmail.com>
+Date: Tue, 20 Dec 2016 16:37:32 +0300
+Subject: Skip linkcheck tests that require network access
+
+Forwarded: not-needed
+---
+ tests/test_build_latex.py     | 1 +
+ tests/test_build_linkcheck.py | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/tests/test_build_latex.py b/tests/test_build_latex.py
+index b549404..4d03d19 100644
+--- a/tests/test_build_latex.py
++++ b/tests/test_build_latex.py
+@@ -1183,6 +1183,7 @@ def test_latex_raw_directive(app, status, warning):
+     assert 'LaTeX: abc def ghi' in result
+ 
+ 
++@pytest.mark.skip('Requires internet access')
+ @pytest.mark.sphinx('latex', testroot='images')
+ def test_latex_images(app, status, warning):
+     app.builder.build_all()
+diff --git a/tests/test_build_linkcheck.py b/tests/test_build_linkcheck.py
+index 049c4f6..0b0bcc9 100644
+--- a/tests/test_build_linkcheck.py
++++ b/tests/test_build_linkcheck.py
+@@ -13,6 +13,7 @@ from __future__ import print_function
+ import pytest
+ 
+ 
++@pytest.mark.skip('Requires internet access')
+ @pytest.mark.sphinx('linkcheck', testroot='linkcheck', freshenv=True)
+ def test_defaults(app, status, warning):
+     app.builder.build_all()
+@@ -29,6 +30,7 @@ def test_defaults(app, status, warning):
+     assert len(content.splitlines()) == 3
+ 
+ 
++@pytest.mark.skip('Requires internet access')
+ @pytest.mark.sphinx(
+     'linkcheck', testroot='linkcheck', freshenv=True,
+     confoverrides={'linkcheck_anchors_ignore': ["^!", "^top$"],

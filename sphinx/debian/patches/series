@@ -1,0 +1,9 @@
+disable_js_version_check.diff
+no_snowballstemmer.diff
+skip_tests_network.diff
+no_require_websupport.diff
+no_external_css.diff
+no_require_setuptools.diff
+no_external_image.diff
+python2_tests_import_hack.diff
+python2_test_get_module_source.diff

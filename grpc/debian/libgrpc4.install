@@ -1,5 +1,0 @@
-usr/lib/libgpr.so*
-usr/lib/libgrpc.so*
-usr/lib/libgrpc_*.so*
-usr/lib/libaddress_sorting.so
-usr/lib/libgrpcpp_channelz.so

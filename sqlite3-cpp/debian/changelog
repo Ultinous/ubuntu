@@ -1,0 +1,12 @@
+sqlite3-cpp (2.2.0-1ultinous1) bionic; urgency=medium
+
+  * Ported sqlite3-cpp (2.2.0-1) to bionic.
+  * Converted git submodule googletest to build dependency.
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 28 Feb 2019 15:01:10 +0000
+
+sqlite3-cpp (2.2.0-1) stretch; urgency=medium
+
+  * New upstream release.
+
+ -- Kristof Frank <oturw@ultinous.com>  Wed, 26 Sep 2018 12:47:50 +0000

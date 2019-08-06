@@ -1,0 +1,11 @@
+--- a/emcc
++++ b/emcc
+@@ -7,5 +7,8 @@
+ 
+ import sys
+ 
++import os
++os.environ["EMCC_FAST_COMPILER"]="0"
++
+ if __name__ == '__main__':
+   python_selector.run(__file__)

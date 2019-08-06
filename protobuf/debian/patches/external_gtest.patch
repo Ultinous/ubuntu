@@ -1,0 +1,116 @@
+Index: protobuf-3.7.0/cmake/tests.cmake
+===================================================================
+--- protobuf-3.7.0.orig/cmake/tests.cmake
++++ protobuf-3.7.0/cmake/tests.cmake
+@@ -1,33 +1,10 @@
+-if (NOT EXISTS "${PROJECT_SOURCE_DIR}/../third_party/googletest/CMakeLists.txt")
+-  message(FATAL_ERROR
+-          "Cannot find third_party/googletest directory that's needed to "
+-          "build tests. If you use git, make sure you have cloned submodules:\n"
+-          "  git submodule update --init --recursive\n"
+-          "If instead you want to skip tests, run cmake with:\n"
+-          "  cmake -Dprotobuf_BUILD_TESTS=OFF\n")
+-endif()
++find_package(GTest REQUIRED)
++find_package(GMock REQUIRED)
+ 
+ option(protobuf_ABSOLUTE_TEST_PLUGIN_PATH
+   "Using absolute test_plugin path in tests" ON)
+ mark_as_advanced(protobuf_ABSOLUTE_TEST_PLUGIN_PATH)
+ 
+-set(googlemock_source_dir "${protobuf_source_dir}/third_party/googletest/googlemock")
+-set(googletest_source_dir "${protobuf_source_dir}/third_party/googletest/googletest")
+-include_directories(
+-  ${googlemock_source_dir}
+-  ${googletest_source_dir}
+-  ${googletest_source_dir}/include
+-  ${googlemock_source_dir}/include
+-)
+-
+-add_library(gmock STATIC
+-  "${googlemock_source_dir}/src/gmock-all.cc"
+-  "${googletest_source_dir}/src/gtest-all.cc"
+-)
+-target_link_libraries(gmock ${CMAKE_THREAD_LIBS_INIT})
+-add_library(gmock_main STATIC "${googlemock_source_dir}/src/gmock_main.cc")
+-target_link_libraries(gmock_main gmock)
+-
+ set(lite_test_protos
+   google/protobuf/map_lite_unittest.proto
+   google/protobuf/unittest_import_lite.proto
+@@ -219,7 +196,7 @@ if(MINGW)
+ endif()
+ 
+ add_executable(tests ${tests_files} ${common_test_files} ${tests_proto_files} ${lite_test_proto_files})
+-target_link_libraries(tests libprotoc libprotobuf gmock_main)
++target_link_libraries(tests libprotoc libprotobuf GMock::Main)
+ 
+ set(test_plugin_files
+   ${protobuf_source_dir}/src/google/protobuf/compiler/mock_code_generator.cc
+@@ -229,19 +206,19 @@ set(test_plugin_files
+ )
+ 
+ add_executable(test_plugin ${test_plugin_files})
+-target_link_libraries(test_plugin libprotoc libprotobuf gmock)
++target_link_libraries(test_plugin libprotoc libprotobuf GMock::GMock)
+ 
+ set(lite_test_files
+   ${protobuf_source_dir}/src/google/protobuf/lite_unittest.cc
+ )
+ add_executable(lite-test ${lite_test_files} ${common_lite_test_files} ${lite_test_proto_files})
+-target_link_libraries(lite-test libprotobuf-lite gmock_main)
++target_link_libraries(lite-test libprotobuf-lite GMock::GMock GTest::Main)
+ 
+ set(lite_arena_test_files
+   ${protobuf_source_dir}/src/google/protobuf/lite_arena_unittest.cc
+ )
+ add_executable(lite-arena-test ${lite_arena_test_files} ${common_lite_test_files} ${lite_test_proto_files})
+-target_link_libraries(lite-arena-test libprotobuf-lite gmock_main)
++target_link_libraries(lite-arena-test libprotobuf-lite GMock::GMock GTest::Main)
+ 
+ add_custom_target(check
+   COMMAND tests
+Index: protobuf-3.7.0/cmake/CMakeLists.txt
+===================================================================
+--- protobuf-3.7.0.orig/cmake/CMakeLists.txt
++++ protobuf-3.7.0/cmake/CMakeLists.txt
+@@ -19,6 +19,8 @@ endif()
+ # Project
+ project(protobuf C CXX)
+ 
++list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
++
+ # Add c++11 flags
+ if (CYGWIN)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+Index: protobuf-3.7.0/cmake/FindGMock.cmake
+===================================================================
+--- /dev/null
++++ protobuf-3.7.0/cmake/FindGMock.cmake
+@@ -0,0 +1,26 @@
++if(NOT GTEST_FOUND)
++  message(ERROR "GTest required for GMock")
++endif()
++
++get_filename_component(GTEST_LIBRARY_DIR "${GTEST_LIBRARIES}" DIRECTORY CACHE)
++find_path(GMock_INCLUDE_DIR gmock/gmock.h PATHS ${GTEST_INCLUDE_DIRS} NO_DEFAULT_PATH DOC "Path to GMock include directory.")
++find_library(GMock_LIBRARY NAMES gmock PATHS ${GTEST_LIBRARY_DIR} NO_DEFAULT_PATH DOC "Path to gmock library.")
++find_library(GMock_MAIN_LIBRARY NAMES gmock_main PATHS ${GTEST_LIBRARY_DIR} NO_DEFAULT_PATH DOC "Path to gmock_main library.")
++mark_as_advanced(GTEST_LIBRARY_DIR GMock_INCLUDE_DIR GMock_LIBRARY GMock_MAIN_LIBRARY)
++
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(GMock REQUIRED_VARS GMock_INCLUDE_DIR GMock_LIBRARY GMock_MAIN_LIBRARY)
++
++if(NOT TARGET GMock::GMock)
++  add_library(GMock::GMock INTERFACE IMPORTED)
++  set_target_properties(GMock::GMock PROPERTIES
++    INTERFACE_INCLUDE_DIRECTORIES "${GMock_INCLUDE_DIR}"
++    INTERFACE_LINK_LIBRARIES "GTest::GTest;${GMock_LIBRARY}"
++  )
++endif()
++if(NOT TARGET GMock::Main)
++  add_library(GMock::Main INTERFACE IMPORTED)
++  set_target_properties(GMock::Main PROPERTIES
++    INTERFACE_LINK_LIBRARIES "GMock::GMock;${GMock_MAIN_LIBRARY}"
++  )
++endif()
