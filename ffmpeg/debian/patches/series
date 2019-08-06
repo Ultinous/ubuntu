@@ -1,0 +1,6 @@
+0001-arm-thumb2-blx.patch
+0004-avformat-dashenc-fix-min_seg_duration-option-size.patch
+0005-float-dsp-i386.patch
+ffmpeg_n3.4.6_assert_handler.patch
+ffmpeg_n3.4.6_rtp_ntp.patch
+ffmpeg_n3.4.6_ucppw.patch

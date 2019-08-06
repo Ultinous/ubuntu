@@ -1,0 +1,73 @@
+diff --git a/libavutil/Makefile b/libavutil/Makefile
+index 65e285a..edd3a2a 100644
+--- a/libavutil/Makefile
++++ b/libavutil/Makefile
+@@ -89,7 +89,8 @@ ARCH_HEADERS = bswap.h                                                  \
+ BUILT_HEADERS = avconfig.h                                              \
+                 ffversion.h
+ 
+-OBJS = adler32.o                                                        \
++OBJS = avassert.o                                                       \
++       adler32.o                                                        \
+        aes.o                                                            \
+        aes_ctr.o                                                        \
+        audio_fifo.o                                                     \
+diff --git a/libavutil/avassert.c b/libavutil/avassert.c
+new file mode 100644
+index 0000000..288fb98
+--- /dev/null
++++ b/libavutil/avassert.c
+@@ -0,0 +1,16 @@
++#include "avassert.h"
++
++static void defaultAssertHandler(const char *condition, const char *file, int line, const char *function)
++{ }
++
++static AssertHandler handler = &defaultAssertHandler;
++
++void registerAssertHandler(AssertHandler h)
++{
++  handler = h;
++}
++
++void callAssertHandler(const char *condition, const char *file, int line, const char *function)
++{
++  handler(condition, file, line, function);
++}
+diff --git a/libavutil/avassert.h b/libavutil/avassert.h
+index 46f3fea..290b843 100644
+--- a/libavutil/avassert.h
++++ b/libavutil/avassert.h
+@@ -31,6 +31,10 @@
+ #include "avutil.h"
+ #include "log.h"
+ 
++typedef void(*AssertHandler)(const char *condition, const char *file, int line, const char *function);
++void registerAssertHandler(AssertHandler);
++void callAssertHandler(const char *condition, const char *file, int line, const char *function);
++
+ /**
+  * assert() equivalent, that is always enabled.
+  */
+@@ -38,7 +42,7 @@
+     if (!(cond)) {                                                      \
+         av_log(NULL, AV_LOG_PANIC, "Assertion %s failed at %s:%d\n",    \
+                AV_STRINGIFY(cond), __FILE__, __LINE__);                 \
+-        abort();                                                        \
++        callAssertHandler(AV_STRINGIFY(cond), __FILE__, __LINE__, __func__);abort();\
+     }                                                                   \
+ } while (0)
+ 
+diff --git a/libavutil/libavutil.v b/libavutil/libavutil.v
+index fb17058..4039d73 100644
+--- a/libavutil/libavutil.v
++++ b/libavutil/libavutil.v
+@@ -1,6 +1,8 @@
+ LIBAVUTIL_MAJOR {
+     global:
+         av*;
++        registerAssertHandler*;
++        callAssertHandler*;
+     local:
+         *;
+ };

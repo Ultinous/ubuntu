@@ -1,0 +1,229 @@
+diff --git a/libavcodec/avcodec.h b/libavcodec/avcodec.h
+index 18c3e3e..4a48af7 100644
+--- a/libavcodec/avcodec.h
++++ b/libavcodec/avcodec.h
+@@ -1607,6 +1607,11 @@ enum AVPacketSideDataType {
+     AV_PKT_DATA_A53_CC,
+ 
+     /**
++     * Custom info filled by ucppw demuxer.
++     */
++    AV_PKT_DATA_UCPPW,
++
++    /**
+      * The number of side data elements (in fact a bit more than it).
+      * This is not part of the public API/ABI in the sense that it may
+      * change when new side data types are added.
+diff --git a/libavformat/Makefile b/libavformat/Makefile
+index df709c29..979dc92 100644
+--- a/libavformat/Makefile
++++ b/libavformat/Makefile
+@@ -3,6 +3,7 @@ DESC = FFmpeg container format library
+ 
+ HEADERS = avformat.h                                                    \
+           avio.h                                                        \
++          ucppw.h                                                       \
+           version.h                                                     \
+ 
+ OBJS = allformats.o         \
+@@ -65,6 +66,7 @@ OBJS-$(CONFIG_SHARED)                    += log2_tab.o golomb_tab.o
+ OBJS-$(CONFIG_SRTP)                      += srtp.o
+ 
+ # muxers/demuxers
++OBJS-$(CONFIG_UCPPW_DEMUXER)             += ucppw.o
+ OBJS-$(CONFIG_A64_MUXER)                 += a64.o rawenc.o
+ OBJS-$(CONFIG_AA_DEMUXER)                += aadec.o
+ OBJS-$(CONFIG_AAC_DEMUXER)               += aacdec.o apetag.o img2.o rawdec.o
+diff --git a/libavformat/allformats.c b/libavformat/allformats.c
+index 405ddb5..fff5349 100644
+--- a/libavformat/allformats.c
++++ b/libavformat/allformats.c
+@@ -47,6 +47,7 @@ static void register_all(void)
+     avcodec_register_all();
+ 
+     /* (de)muxers */
++    REGISTER_DEMUXER (UCPPW,            ucppw);
+     REGISTER_MUXER   (A64,              a64);
+     REGISTER_DEMUXER (AA,               aa);
+     REGISTER_DEMUXER (AAC,              aac);
+diff --git a/libavformat/ucppw.c b/libavformat/ucppw.c
+new file mode 100644
+index 0000000..ac553ea
+--- /dev/null
++++ b/libavformat/ucppw.c
+@@ -0,0 +1,91 @@
++#include <libavformat/ucppw.h>
++#include <libavutil/avstring.h>
++#include <libavutil/internal.h>
++
++#if SIZE_MAX == ULONG_MAX
++#define strtosize(...) strtoul(__VA_ARGS__)
++#elif SIZE_MAX == ULLONG_MAX
++#define strtosize(...) strtoull(__VA_ARGS__)
++#else
++#error Unsupported pointer size type
++#endif
++
++typedef struct UCPPWState
++{
++    AVClass const *class;
++    UCPPWContext *context;
++} UCPPWState;
++
++static int ucppw_probe(AVProbeData *probeData)
++{
++    return av_strstart(probeData->filename, UCPPW_PROTOCOL_STR, NULL) ? AVPROBE_SCORE_MAX : 0;
++}
++
++inline static int parse_ptr(void const ** const target, char const * const str, char const ** const endptr)
++{
++    char *eptr;
++    *target = (void const *)strtosize(str, &eptr, 0);
++    if(eptr == str)
++        return AVERROR_INVALIDDATA;
++    if(endptr)
++        *endptr = eptr;
++    return 0;
++}
++
++static int ucppw_read_header(AVFormatContext *formatContext)
++{
++    UCPPWState * const state = formatContext->priv_data;
++    char const *addressStr;
++    int ret;
++
++    if(!av_strstart(formatContext->filename, UCPPW_PROTOCOL_STR, &addressStr))
++    {
++        av_log(formatContext, AV_LOG_ERROR, "UCPPW URL must be \""UCPPW_PROTOCOL_STR"[UCPPWContext-ptr]\"");
++        return AVERROR_INVALIDDATA;
++    }
++    if((ret = parse_ptr((void const **)&state->context, addressStr, NULL)) < 0)
++    {
++        av_log(formatContext, AV_LOG_ERROR, "Invalid UCCPW context pointer.");
++        return ret;
++    }
++
++    return state->context->readHeader(formatContext, state->context->userData);
++}
++
++static int ucppw_read_packet(AVFormatContext *formatContext, AVPacket *to)
++{
++    UCPPWState * const state = formatContext->priv_data;
++    return state->context->readPacket(formatContext, to, state->context->userData);
++}
++
++static int ucppw_read_close(AVFormatContext *formatContext)
++{
++    UCPPWState * const state = formatContext->priv_data;
++    return state->context->close(formatContext, state->context->userData);
++}
++
++static int ucppw_read_seek(AVFormatContext *formatContext, int streamIndex, int64_t timestamp, int flags)
++{
++    UCPPWState * const state = formatContext->priv_data;
++    return state->context->seek(formatContext, streamIndex, timestamp, flags, state->context->userData);
++}
++
++static const AVClass ucppw_demuxer_class = {
++    .class_name     = "UCPPW demuxer",
++    .item_name      = av_default_item_name,
++    .option         = NULL,
++    .version        = LIBAVUTIL_VERSION_INT,
++};
++
++AVInputFormat ff_ucppw_demuxer = {
++    .name           = "ucppw",
++    .long_name      = NULL_IF_CONFIG_SMALL("Ultinous CPP Wrapper input"),
++    .priv_data_size = sizeof(UCPPWState),
++    .read_probe     = ucppw_probe,
++    .read_header    = ucppw_read_header,
++    .read_packet    = ucppw_read_packet,
++    .read_close     = ucppw_read_close,
++    .read_seek      = ucppw_read_seek,
++    .flags          = AVFMT_NOFILE,
++    .priv_class     = &ucppw_demuxer_class,
++};
+diff --git a/libavformat/ucppw.h b/libavformat/ucppw.h
+new file mode 100644
+index 0000000..fa24c3f
+--- /dev/null
++++ b/libavformat/ucppw.h
+@@ -0,0 +1,78 @@
++#ifndef AVFORMAT_UCPPW_H
++#define AVFORMAT_UCPPW_H
++
++#ifdef __cplusplus
++#include <string>
++
++extern "C"
++{
++#endif
++
++#include <libavcodec/avcodec.h>
++#include <libavformat/avformat.h>
++
++#define UCPPW_PROTOCOL_STR "ucppw:"
++
++typedef int(*UCPPWReadHeader)(AVFormatContext *formatContext, void *contextUserData);
++typedef int(*UCPPWReadPacket)(AVFormatContext *formatContext, AVPacket *to, void *contextUserData);
++typedef int(*UCPPWSeek)(AVFormatContext *formatContext, int streamIndex, int64_t timestamp, int flags, void *contextUserData);
++typedef int(*UCPPWClose)(AVFormatContext *formatContext, void *contextUserData);
++
++typedef struct UCPPWContext
++{
++    UCPPWReadHeader readHeader;
++    UCPPWReadPacket readPacket;
++    UCPPWSeek seek;
++    UCPPWClose close;
++
++    void *userData;
++} UCPPWContext;
++
++#ifdef __cplusplus
++}
++
++template<typename Wrapper>
++class UCPPWContextClass
++{
++public:
++  UCPPWContextClass(Wrapper *wrapper)
++    : m_url(UCPPW_PROTOCOL_STR + std::to_string(reinterpret_cast<std::uintptr_t>(&m_context)))
++  {
++    m_context.readHeader = &readHeader;
++    m_context.readPacket = &readPacket;
++    m_context.seek = &seek;
++    m_context.close = &close;
++    m_context.userData = wrapper;
++  }
++  UCPPWContextClass(UCPPWContextClass const &) = delete;
++  UCPPWContextClass & operator=(UCPPWContextClass const &) = delete;
++
++  char const * url() const
++  {
++    return m_url.c_str();
++  }
++
++private:
++  static int readHeader(AVFormatContext *formatContext, void *contextUserData) noexcept
++  {
++    return reinterpret_cast<Wrapper*>(contextUserData)->readHeader(formatContext);
++  }
++  static int readPacket(AVFormatContext *formatContext, AVPacket *to, void *contextUserData) noexcept
++  {
++    return reinterpret_cast<Wrapper*>(contextUserData)->readPacket(formatContext, to);
++  }
++  static int seek(AVFormatContext *formatContext, int streamIndex, int64_t timestamp, int flags, void *contextUserData) noexcept
++  {
++    return reinterpret_cast<Wrapper*>(contextUserData)->seek(formatContext, streamIndex, timestamp, flags);
++  }
++  static int close(AVFormatContext *formatContext, void *contextUserData) noexcept
++  {
++    return reinterpret_cast<Wrapper*>(contextUserData)->close(formatContext);
++  }
++
++  UCPPWContext m_context;
++  std::string m_url;
++};
++#endif
++
++#endif // AVFORMAT_UCPPW_H
