@@ -1,3 +1,0 @@
-shlibs:Depends=libc6 (>= 2.7), libjpeg8 (>= 8c)
-misc:Depends=
-misc:Pre-Depends=
