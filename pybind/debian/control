@@ -1,6 +1,7 @@
 Source: pybind11
 Maintainer: Debian Science Maintainers <debian-science-maintainers@lists.alioth.debian.org>
 Uploaders: Ghislain Antony Vaillant <ghisvail@gmail.com>
+ , Lengyel Zsolt <zsolt@ultinous.com>
 Section: libs
 Priority: optional
 Build-Depends: cmake (>= 2.8.12),

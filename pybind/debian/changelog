@@ -1,3 +1,9 @@
+pybind11 (2.2.4-2ultinous2) bionic; urgency=medium
+
+  * Rebuilt with libeigen3 3.3.7-1ultinous2
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Wed, 04 Sep 2019 09:56:31 +0000
+
 pybind11 (2.2.4-2ultinous1) bionic; urgency=medium
 
   * backported to bionic
