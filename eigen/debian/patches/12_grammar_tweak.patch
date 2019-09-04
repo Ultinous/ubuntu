@@ -1,0 +1,39 @@
+Description: Correct grammar error found by lintian which can leak into other
+ .
+ projects.
+Author: Michael R. Crusoe <crusoe@ucdavis.edu>
+Index: eigen-eigen-323c052e1731/Eigen/src/Core/DenseBase.h
+===================================================================
+--- eigen-eigen-323c052e1731.orig/Eigen/src/Core/DenseBase.h
++++ eigen-eigen-323c052e1731/Eigen/src/Core/DenseBase.h
+@@ -242,7 +242,7 @@ template<typename Derived> class DenseBa
+     {
+       EIGEN_ONLY_USED_FOR_DEBUG(newSize);
+       eigen_assert(newSize == this->size()
+-                && "DenseBase::resize() does not actually allow to resize.");
++                && "DenseBase::resize() does not actually allow one to resize.");
+     }
+     /** Only plain matrices/arrays, not expressions, may be resized; therefore the only useful resize methods are
+       * Matrix::resize() and Array::resize(). The present method only asserts that the new size equals the old size, and does
+@@ -254,7 +254,7 @@ template<typename Derived> class DenseBa
+       EIGEN_ONLY_USED_FOR_DEBUG(rows);
+       EIGEN_ONLY_USED_FOR_DEBUG(cols);
+       eigen_assert(rows == this->rows() && cols == this->cols()
+-                && "DenseBase::resize() does not actually allow to resize.");
++                && "DenseBase::resize() does not actually allow one to resize.");
+     }
+ 
+ #ifndef EIGEN_PARSED_BY_DOXYGEN
+Index: eigen-eigen-323c052e1731/Eigen/src/SparseCore/SparseSelfAdjointView.h
+===================================================================
+--- eigen-eigen-323c052e1731.orig/Eigen/src/SparseCore/SparseSelfAdjointView.h
++++ eigen-eigen-323c052e1731/Eigen/src/SparseCore/SparseSelfAdjointView.h
+@@ -154,7 +154,7 @@ template<typename MatrixType, unsigned i
+       EIGEN_ONLY_USED_FOR_DEBUG(rows);
+       EIGEN_ONLY_USED_FOR_DEBUG(cols);
+       eigen_assert(rows == this->rows() && cols == this->cols()
+-                && "SparseSelfadjointView::resize() does not actually allow to resize.");
++                && "SparseSelfadjointView::resize() does not actually allow one to resize.");
+     }
+     
+   protected:

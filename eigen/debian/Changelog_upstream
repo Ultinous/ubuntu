@@ -1,0 +1,1455 @@
+Changelog has been taken from
+  http://eigen.tuxfamily.org/index.php?title=ChangeLog
+
+== Eigen 3.3.7 ==
+
+Released on December 11, 2018.
+
+Changes since 3.3.6:
+
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1643 Bug 1643]: Fix compilation with GCC>=6 and compiler optimization turned off.
+
+== Eigen 3.3.6 ==
+
+Released on December 10, 2018.
+
+Changes since 3.3.5:
+
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1617 Bug 1617]: Fix triangular solve crashing for empty matrix.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=785 Bug 785]: Make dense Cholesky decomposition work for empty matrices.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1634 Bug 1634]: Remove double copy in move-ctor of non movable Matrix/Array.
+* [https://bitbucket.org/eigen/eigen/commits/588e1eb34eff Changeset 588e1eb34eff]: Workaround weird MSVC bug.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1637 Bug 1637] Workaround performance regression in matrix products with gcc>=6 and clang>=6.0.
+* [https://bitbucket.org/eigen/eigen/commits/bf0f100339c1 Changeset bf0f100339c1]: Fix some implicit 0 to Scalar conversions.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1605 Bug 1605]: Workaround ABI issue with vector types (aka __m128) versus scalar types (aka float).
+* [https://bitbucket.org/eigen/eigen/commits/d1421c479baa Changeset d1421c479baa]: Fix for gcc<4.6 regarding usage of #pragma GCC diagnostic push/pop.
+* [https://bitbucket.org/eigen/eigen/commits/c20b83b9d736 Changeset c20b83b9d736]: Fix conjugate-gradient for right-hand-sides with a very small magnitude.
+* [https://bitbucket.org/eigen/eigen/commits/281a877a3bf7 Changeset 281a877a3bf7]: Fix product of empty arrays (returned 0 instead of 1).
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1590 Bug 1590]: Fix collision with some system headers defining the macro FP32.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1584 Bug 1584]: Fix possible undefined behavior in random generation.
+* [https://bitbucket.org/eigen/eigen/commits/d632d18db8ca Changeset d632d18db8ca]: Fix fallback to BLAS for rankUpdate.
+* Fixes for NVCC 9.
+* Fix matrix-market IO.
+* Various fixes in the doc.
+* Various minor warning fixes/workarounds.
+
+== Eigen 3.3.5 ==
+
+Released on July 23, 2018.
+
+Changes since 3.3.4:
+
+* General bug fixes:
+** Fix GeneralizedEigenSolver when requesting for eigenvalues only ([https://bitbucket.org/eigen/eigen/commits/0d15855abb30 0d15855abb30])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1560 Bug 1560] fix product with a 1x1 diagonal matrix ([https://bitbucket.org/eigen/eigen/commits/90d7654f4a59 90d7654f4a59])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1543 Bug 1543]: fix linear indexing in generic block evaluation
+** Fix compilation of product with inverse transpositions (e.g., mat * Transpositions().inverse()) ([https://bitbucket.org/eigen/eigen/commits/14a13748d761 14a13748d761])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1509 Bug 1509]: fix computeInverseWithCheck for complexes ([https://bitbucket.org/eigen/eigen/commits/8be258ef0b6d 8be258ef0b6d])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1521 Bug 1521]: avoid signalling NaN in hypot and make it std::complex<> friendly ([https://bitbucket.org/eigen/eigen/commits/a9c06b854991 a9c06b854991]).
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1517 Bug 1517]: fix triangular product with unit diagonal and nested scaling factor: (s*A).triangularView<UpperUnit>()*B ([https://bitbucket.org/eigen/eigen/commits/a546d43bdd4f a546d43bdd4f])
+** Fix compilation of stableNorm for some odd expressions as input ([https://bitbucket.org/eigen/eigen/commits/499e982b9281 499e982b9281])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1485 Bug 1485]: fix linking issue of non template functions ([https://bitbucket.org/eigen/eigen/commits/ae28c2aaeeda ae28c2aaeeda])
+** Fix overflow issues in BDCSVD ([https://bitbucket.org/eigen/eigen/commits/92060f82e1de 92060f82e1de])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1468 Bug 1468] : add missing std:: to memcpy ([https://bitbucket.org/eigen/eigen/commits/4565282592ae 4565282592ae])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1453 Bug 1453]: fix Map with non-default inner-stride but no outer-stride ([https://bitbucket.org/eigen/eigen/commits/af00212cf3a4 af00212cf3a4])
+** Fix mixing types in sparse matrix products ([https://bitbucket.org/eigen/eigen/commits/7e5fcd0008bd 7e5fcd0008bd])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1544 Bug 1544]: Generate correct Q matrix in complex case ([https://bitbucket.org/eigen/eigen/commits/c0c410b508a1 c0c410b508a1])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1461 Bug 1461]: fix compilation of Map<const Quaternion>::x() ([https://bitbucket.org/eigen/eigen/commits/69652a06967d 69652a06967d])
+
+* Backends:
+** Fix MKL backend for symmetric eigenvalues on row-major matrices ([https://bitbucket.org/eigen/eigen/commits/4726d6a24f69 4726d6a24f69])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1527 Bug 1527]: fix support for MKL's VML ([https://bitbucket.org/eigen/eigen/commits/972424860545 972424860545])
+** Fix incorrect ldvt in LAPACKE call from JacobiSVD ([https://bitbucket.org/eigen/eigen/commits/88c4604601b9 88c4604601b9])
+** Fix support for MKL's BLAS when using MKL_DIRECT_CALL ([https://bitbucket.org/eigen/eigen/commits/205731b87e19 205731b87e19], [https://bitbucket.org/eigen/eigen/commits/b88c70c6ced7 b88c70c6ced7], [https://bitbucket.org/eigen/eigen/commits/46e2367262e1 46e2367262e1])
+** Use MKL's lapacke.h header when using MKL ([https://bitbucket.org/eigen/eigen/commits/19bc9df6b726 19bc9df6b726])
+
+* Diagnostics:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1516 Bug 1516]: add assertion for out-of-range diagonal index in MatrixBase::diagonal(i) ([https://bitbucket.org/eigen/eigen/commits/783d38b3c78c 783d38b3c78c])
+** Add static assertion for fixed sizes Ref<> ([https://bitbucket.org/eigen/eigen/commits/e1203d5ceb8e e1203d5ceb8e])
+** Add static assertion on selfadjoint-view's UpLo parameter. ([https://bitbucket.org/eigen/eigen/commits/b84db94c677e b84db94c677e], [https://bitbucket.org/eigen/eigen/commits/0ffe8a819801 0ffe8a819801])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1479 Bug 1479]: fix failure detection in LDLT ([https://bitbucket.org/eigen/eigen/commits/67719139abc3 67719139abc3])
+
+* Compiler support:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1555 Bug 1555]: compilation fix with XLC
+** Workaround MSVC 2013 ambiguous calls ([https://bitbucket.org/eigen/eigen/commits/1c7b59b0b5f4 1c7b59b0b5f4])
+** Adds missing EIGEN_STRONG_INLINE to help MSVC properly inlining small vector calculations ([https://bitbucket.org/eigen/eigen/commits/1ba3f10b91f2 1ba3f10b91f2])
+** Several minor warning fixes: [https://bitbucket.org/eigen/eigen/commits/3c87fc0f1042 3c87fc0f1042], [https://bitbucket.org/eigen/eigen/commits/ad6bcf0e8efc ad6bcf0e8efc], "used uninitialized" ([https://bitbucket.org/eigen/eigen/commits/20efc44c5500 20efc44c5500]), Wint-in-bool-context ([https://bitbucket.org/eigen/eigen/commits/131da2cbc695 131da2cbc695], [https://bitbucket.org/eigen/eigen/commits/b4f969795d1b b4f969795d1b])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1428 Bug 1428]: make NEON vectorization compilable by MSVC. (* [https://bitbucket.org/eigen/eigen/commits/3d1b3dbe5927 3d1b3dbe5927], [https://bitbucket.org/eigen/eigen/commits/4e1b7350182a 4e1b7350182a])
+** Fix compilation and SSE support with PGI compiler ([https://bitbucket.org/eigen/eigen/commits/faabf000855d faabf000855d] [https://bitbucket.org/eigen/eigen/commits/90d33b09040f 90d33b09040f])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1555 Bug 1555]: compilation fix with XLC ([https://bitbucket.org/eigen/eigen/commits/23eb37691f14 23eb37691f14])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1520 Bug 1520]: workaround some -Wfloat-equal warnings by calling std::equal_to ([https://bitbucket.org/eigen/eigen/commits/7d9a9456ed7c 7d9a9456ed7c])
+** Make the TensorStorage class compile with clang 3.9 ([https://bitbucket.org/eigen/eigen/commits/eff7001e1f0a eff7001e1f0a])
+** Misc: some old compiler fixes ([https://bitbucket.org/eigen/eigen/commits/493691b29be1 493691b29be1])
+** Fix MSVC warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow) ([https://bitbucket.org/eigen/eigen/commits/524918622506 524918622506])
+
+* Architecture support:
+** Several AVX512 fixes for log, sqrt, rsqrt, non AVX512ER CPUs, apply_rotation_in_the_plane [https://bitbucket.org/eigen/eigen/commits/b64275e912ba b64275e912ba] [https://bitbucket.org/eigen/eigen/commits/cab3d626a59e cab3d626a59e] [https://bitbucket.org/eigen/eigen/commits/7ce234652ab9 7ce234652ab9], [https://bitbucket.org/eigen/eigen/commits/d89b9a754371 d89b9a754371].
+** AltiVec fixes: [https://bitbucket.org/eigen/eigen/commits/9450038e380d 9450038e380d]
+** NEON fixes: const-cast ([https://bitbucket.org/eigen/eigen/commits/e8a69835ccda e8a69835ccda]), compilation of Jacobi rotations ([https://bitbucket.org/eigen/eigen/commits/c06cfd545b15 c06cfd545b15],[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1436 bug 1436]).
+** [https://bitbucket.org/eigen/eigen/commits/d0658cc9d4a2 Changeset d0658cc9d4a2]: Define pcast<> for SSE types even when AVX is enabled. (otherwise float are silently reinterpreted as int instead of being converted)
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1494 Bug 1494]: makes pmin/pmax behave on Altivec/VSX as on x86 regarding NaNs ([https://bitbucket.org/eigen/eigen/commits/d0af83f82b19 d0af83f82b19])
+
+* Documentation:
+** Update manual pages regarding BDCSVD ([http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1538 bug 1538])
+** Add aliasing in common pitfaffs ([https://bitbucket.org/eigen/eigen/commits/2a5a8408fdc5 2a5a8408fdc5])
+** Update aligned_allocator ([https://bitbucket.org/eigen/eigen/commits/21e03aef9f2b 21e03aef9f2b])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1456 Bug 1456]: add perf recommendation for LLT and storage format ([https://bitbucket.org/eigen/eigen/commits/c8c154ebf130 c8c154ebf130],  [https://bitbucket.org/eigen/eigen/commits/9aef1e23dbe0 9aef1e23dbe0])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1455 Bug 1455]: Cholesky module depends on Jacobi for rank-updates ([https://bitbucket.org/eigen/eigen/commits/2e6e26b851a8 2e6e26b851a8])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1458 Bug 1458]: fix documentation of LLT and LDLT info() method ([https://bitbucket.org/eigen/eigen/commits/2a4cf4f473dd 2a4cf4f473dd])
+** Warn about constness in LLT::solveInPlace ([https://bitbucket.org/eigen/eigen/commits/518f97b69bdf 518f97b69bdf])
+** Fix lazyness of operator* with CUDA ([https://bitbucket.org/eigen/eigen/commits/c4dbb556bd36 c4dbb556bd36])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=336 Bug 336]: improve doc for PlainObjectBase::Map ([https://bitbucket.org/eigen/eigen/commits/13dc446545fe 13dc446545fe])
+
+* Other general improvements:
+** Enable linear indexing in generic block evaluation ([https://bitbucket.org/eigen/eigen/commits/31537598bf83 31537598bf83], [https://bitbucket.org/eigen/eigen/commits/5967bc3c2cdb 5967bc3c2cdb], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1543 bug 1543]).
+** Fix packet and alignment propagation logic of Block<Xpr> expressions. In particular, (A+B).col(j) now preserve vectorisation. ([https://bitbucket.org/eigen/eigen/commits/b323cc9c2c7f b323cc9c2c7f])
+** Several fixes regarding custom scalar type support: hypot ([https://bitbucket.org/eigen/eigen/commits/f8d6c791791d f8d6c791791d]), boost-multiprec ([https://bitbucket.org/eigen/eigen/commits/acb8ef9b2478 acb8ef9b2478]), literal casts ([https://bitbucket.org/eigen/eigen/commits/6bbd97f17534 6bbd97f17534], [https://bitbucket.org/eigen/eigen/commits/39f65d65894f 39f65d65894f]), 
+** LLT: avoid making a copy when decomposing in place ([https://bitbucket.org/eigen/eigen/commits/2f7e28920f4e 2f7e28920f4e]), const the arg to solveInPlace() to allow passing .transpose(), .block(), etc. ([https://bitbucket.org/eigen/eigen/commits/c31c0090e998 c31c0090e998]).
+** Add possibility to overwrite EIGEN_STRONG_INLINE ([https://bitbucket.org/eigen/eigen/commits/7094bbdf3f4d 7094bbdf3f4d])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1528 Bug 1528]: use numeric_limits::min() instead of 1/highest() that might underflow ([https://bitbucket.org/eigen/eigen/commits/dd823c64ade7 dd823c64ade7])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1532 Bug 1532]: disable stl::*_negate in C++17 (they are deprecated) ([https://bitbucket.org/eigen/eigen/commits/88e9452099d5 88e9452099d5])
+** Add C++11 max_digits10 for half ([https://bitbucket.org/eigen/eigen/commits/faf74dde8ed1 faf74dde8ed1])
+** Make sparse QR result sizes consistent with dense QR ([https://bitbucket.org/eigen/eigen/commits/4638bc4d0f96 4638bc4d0f96])
+
+* Unsupported/unit-tests/cmake/unvisible internals/etc.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1484 Bug 1484]: restore deleted line for 128 bits long doubles, and improve dispatching logic. ([https://bitbucket.org/eigen/eigen/commits/dffc0f957f19 dffc0f957f19])
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1462 Bug 1462]: remove all occurences of the deprecated __CUDACC_VER__ macro by introducing EIGEN_CUDACC_VER ([https://bitbucket.org/eigen/eigen/commits/a201b8438d36 a201b8438d36])
+** [https://bitbucket.org/eigen/eigen/commits/2722aa8eb93f Changeset 2722aa8eb93f]: Fix oversharding bug in parallelFor.
+** [https://bitbucket.org/eigen/eigen/commits/ea1db80eab46 Changeset ea1db80eab46]: commit 45e9c9996da790b55ed9c4b0dfeae49492ac5c46 (HEAD -> memory_fix)
+** [https://bitbucket.org/eigen/eigen/commits/350957be012c Changeset 350957be012c]: Fix int versus Index
+** [https://bitbucket.org/eigen/eigen/commits/424038431015 Changeset 424038431015]: fix linking issue
+** [https://bitbucket.org/eigen/eigen/commits/3f938790b7e0 Changeset 3f938790b7e0]: Fix short vs long
+** [https://bitbucket.org/eigen/eigen/commits/ba14974d054a Changeset ba14974d054a]: Fix cmake scripts with no fortran compiler
+** [https://bitbucket.org/eigen/eigen/commits/2ac088501976 Changeset 2ac088501976]: add cmake-option to enable/disable creation of tests
+** [https://bitbucket.org/eigen/eigen/commits/56996c54158b Changeset 56996c54158b]: Use col method for column-major matrix
+** [https://bitbucket.org/eigen/eigen/commits/762373ca9793 Changeset 762373ca9793]: [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1449 Bug 1449]: fix redux_3 unit test
+** [https://bitbucket.org/eigen/eigen/commits/eda96fd2fa30 Changeset eda96fd2fa30]: Fix uninitialized output argument.
+** [https://bitbucket.org/eigen/eigen/commits/75a12dff8ca4 Changeset 75a12dff8ca4]: Handle min/max/inf/etc issue in cuda_fp16.h directly in test/main.h
+** [https://bitbucket.org/eigen/eigen/commits/568614bf79b8 Changeset 568614bf79b8]: Add tests for sparseQR results (value and size) covering bugs 1522 and 1544
+** [https://bitbucket.org/eigen/eigen/commits/12c9ece47d14 Changeset 12c9ece47d14]: SelfAdjointView<...,Mode> causes a static assert since commit c73a77e47db8
+** [https://bitbucket.org/eigen/eigen/commits/899fd2ef704f Changeset 899fd2ef704f]: weird compilation issue in mapped_matrix.cpp
+
+== Eigen 3.3.4 ==
+
+Released on June 15, 2017.
+
+Changes since 3.3.3:
+
+* General:
+** Improve speed of Jacobi rotation when mixing complex and real types.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1405 Bug 1405]: enable StrictlyLower/StrictlyUpper triangularView as the destination of matrix*matrix products.
+** UmfPack support: enable changes in the control settings and add report functions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1423 Bug 1423]: fix LSCG's Jacobi preconditioner for row-major matrices.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1424 Bug 1424]: fix compilation issue with abs and unsigned integers as scalar type.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1410 Bug 1410]: fix lvalue propagation of Array/Matrix-Wrapper with a const nested expression.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1403 Bug 1403]: fix several implicit scalar type conversion making SVD decompositions compatible with ceres::Jet.
+** Fix some real-to-scalar-to-real useless conversions in  ColPivHouseholderQR.
+* Regressions:
+** Fix dense * sparse-selfadjoint-view product.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1417 Bug 1417]: make LinSpace compatible with std::complex.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1400 Bug 1400]: fix stableNorm alignment issue with EIGEN_DONT_ALIGN_STATICALLY.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1411 Bug 1411]: fix alignment issue in Quaternion.
+** Fix compilation of operations between nested Arrays.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1435 Bug 1435]: fix aliasing issue in expressions like: A = C - B*A.
+* Others:
+** Fix compilation with gcc 4.3 and ARM NEON.
+** Fix prefetches on ARM64 and ARM32.
+** Fix out-of-bounds check in COLAMD.
+** Few minor fixes regarding nvcc/CUDA support, including [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1396 bug 1396].
+** Improve cmake scripts for Pastix and BLAS detection.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1401 Bug 1401]: fix compilation of "cond ? x : -x" with x an AutoDiffScalar
+** Fix compilation of matrix log with Map as input.
+** Add specializations of std::numeric_limits for Eigen::half and and AutoDiffScalar
+** Fix compilation of streaming nested Array, i.e., cout << Array<Array<>>
+
+== Eigen 3.3.3 ==
+
+Released on February 21, 2017.
+
+Changes since 3.3.2:
+
+* General:
+** Improve multi-threading heuristic for matrix products with a small number of columns.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1395 Bug 1395]: fix compilation of JacobiSVD for vectors type.
+** Fix pruning in (sparse*sparse).pruned() when the result is nearly dense.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1382 Bug 1382]: move using std::size_t/ptrdiff_t to Eigen's namespace.
+** Fix compilation and inlining when using clang-cl with visual studio.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1392 Bug 1392]: fix #include <Eigen/Sparse> with mpl2-only.
+* Regressions:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1379 Bug 1379]: fix compilation in sparse*diagonal*dense with OpenMP.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1373 Bug 1373]: add missing assertion on size mismatch with compound assignment operators (e.g., mat += mat.col(j))
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1375 Bug 1375]: fix cmake installation with cmake 2.8.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1383 Bug 1383]: fix LinSpaced with integers for LinPspaced(n,0,n-1) with n==0 or the high<low case.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1381 Bug 1381]: fix sparse.diagonal() used as a rvalue.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1384 Bug 1384]:  fix evaluation of "sparse/scalar" that used the wrong evaluation path.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=478 Bug 478]: fix regression in the eigen decomposition of zero matrices.
+** Fix a compilation issue with MSVC regarding the usage of CUDACC_VER
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1393 Bug 1393]: enable Matrix/Array explicit constructor from types with conversion operators.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1394 Bug 1394]: fix compilation of SelfAdjointEigenSolver<Matrix>(sparse*sparse).
+* Others:
+** Fix ARM NEON wrapper for 16 byte systems.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1391 Bug 1391]: include IO.h before DenseBase to enable its usage in DenseBase plugins.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1389 Bug 1389]: fix std containers support with MSVC and AVX.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1380 Bug 1380]: fix matrix exponential with Map<>.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1369 Bug 1369]: fix type mismatch warning with OpenMP.
+** Fix usage of size_t instead of Index in sefl-adjoint matrix * vector
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1378 Bug 1378]: fix doc (DiagonalIndex vs Diagonal).
+
+== Eigen 3.3.2 ==
+
+Released on January 18, 2017.
+
+Changes since 3.3.1:
+
+* General:
+** Add transpose, adjoint, conjugate methods to SelfAdjointView (useful to write generic code)
+** Make sure that HyperPlane::transform maintains a unit normal vector in the Affine case.
+** Several documentation improvements, including: several doxygen workarounds, [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1336 bug 1336], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1370 Bug 1370], StorageIndex, selfadjointView, sparseView(), sparse triangular solve, AsciiQuickReference.txt, ...)
+* Regressions:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1358 Bug 1358]: fix compilation of sparse += sparse.selfadjointView();
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1359 Bug 1359]: fix compilation of sparse /=scalar, sparse *=scalar, and col_major_sparse.row() *= scalar.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1361 Bug 1361]:  fix compilation of mat=perm.inverse()
+** Some fixes in sparse coeff-wise binary operations: add missing .outer() member to iterators, and properly report storage order.
+** Fix aliasing issue in code as A.triangularView() = B*A.sefladjointView()*B.adjoint()
+* Performance:
+** Improve code generation for mat*vec on some compilers.
+** Optimize horizontal adds in SSE3 and AVX.
+** Speed up row-major TRSM (triangular solve with a matrix as right-hand-side) by reverting "vec/y" to "vec*(1/y)". The rationale is:
+*** div is extremely costly
+*** this is consistent with the column-major case
+*** this is consistent with all other BLAS implementations
+** Remove one temporary in SparseLU::solve()
+* Others:
+** Fix BLAS backend for symmetric rank K updates.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1360 Bug 1360]: fix -0 vs +0 issue with Altivec
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1363 Bug 1363]: fix mingw's ABI issue
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1367 Bug 1367]: fix compilation with gcc 4.1.
+** Fix ABI issue with AVX and old gcc versions.
+** Fix some warnings with ICC, Power8, etc.
+** Fix compilation with MSVC 2017
+
+== Eigen 3.3.1 ==
+
+Released on December 06, 2016.
+
+Changes since 3.3.0:
+
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=426 Bug 426]: add operators && and || to dense and sparse matrices (only dense arrays were supported)
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1319 Bug 1319]: add support for CMake's imported targets.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1343 Bug 1343]: fix compilation regression in array = matrix_product and mat+=selfadjoint_view
+* Fix regression in assignment of sparse block to sparse block.
+* Fix a memory leak in Ref<SparseMatrix> and Ref<SparseVector>.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1351 Bug 1351]: fix compilation of random with old compilers.
+* Fix a performance regression in (mat*mat)*vec for which mat*mat was evaluated multiple times.
+* Fix a regression in SparseMatrix::ReverseInnerIterator
+* Fix performance issue of products for dynamic size matrices with fixed max size.
+* implement float/std::complex<float> for ZVector
+* Some fixes for expression-template scalar-types
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1356 Bug 1356]: fix undefined behavior with nullptr.
+* Workaround some compilation errors with MSVC and MSVC/clr
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1348 Bug 1348]: document EIGEN_MAX_ALIGN_BYTES and EIGEN_MAX_STATIC_ALIGN_BYTES, and reflect in the doc that EIGEN_DONT_ALIGN* are deprecated.
+* Bugs [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1346 1346],[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1347 1347]: make Eigen's installation relocatable.
+* Fix some harmless compilation warnings.
+
+== Eigen 3.3 ==
+
+Released on November 10, 2016
+
+Main changes since 3.3-rc2:
+* Fix regression in printing sparse expressions.
+* Fix sparse solvers when using a SparseVector as the result and/or right-hand-side.
+
+== Eigen 3.3-rc2 ==
+
+Released on November 04, 2016
+
+Main changes since 3.3-rc1:
+* Core module
+** Add supports for AVX512 SIMD instruction set.
+** Bugs [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=698 698] and  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1004 1004]: Improve numerical robustness of LinSpaced methods for both real and integer scalar types ([http://eigen.tuxfamily.org/dox-devel/classEigen_1_1DenseBase.html#aaef589c1dbd7fad93f97bd3fa1b1e768 details]).
+** Fix a regression in X = (X*X.transpose())/scalar with X rectangular (X was resized before the evaluation).
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1311 Bug 1311]: Fix alignment logic in some cases of (scalar*small).lazyProduct(small)
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1317 Bug 1317]:  fix a performance regression from 3.2 with clang and some nested block expressions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1308 Bug 1308]: fix compilation of some small products involving nullary-expressions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1333 Bug 1333]: Fix a regression with mat.array().sum()
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1328 Bug 1328]: Fix a compilation issue with old compilers introduced in 3.3-rc1.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1325 Bug 1325]: Fix compilation on NEON with clang
+** Properly handle negative inputs in vectorized sqrt.
+** Improve cost-model to determine the ideal number of threads in matrix-matrix products.
+* Geometry module
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1304 Bug 1304]: Fix Projective * scaling and Projective *= scaling.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1310 Bug 1310]: Workaround a compilation regression from 3.2 regarding triangular * homogeneous
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1312 Bug 1312]: Quaternion to AxisAngle conversion now ensures the angle will be in the range [0,pi]. This also increases accuracy when q_w is negative.
+* Tensor module
+** Add support for OpenCL.
+** Improved random number generation.
+* Other
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1330 Bug 1330]: SuiteSparse, explicitly handle the fact that Cholmod does not support single precision float numbers.
+** SuiteSparse, fix SPQR for rectangular matrices
+** Fix compilation of qr.inverse() for column and full pivoting variants
+
+== Eigen 3.3-rc1 ==
+
+Released on September 22, 2016
+
+Main changes since 3.3-beta2:
+
+* New features and improvements:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=645 Bug 645]: implement eigenvector computation in GeneralizedEigenSolver
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1271 Bug 1271]: add a SparseMatrix::coeffs() method returning a linear view of the non-zeros (for compressed mode only).
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1286 Bug 1286]: Improve support for custom nullary functors: now the functor only has to expose one relevant operator among f(), f(i), f(i,j).
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1272 Bug 1272]: improve comma-initializer in handling empty matrices.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1268 Bug 1268]: detect failure in LDLT and report them through info()
+** Add support for scalar factor in sparse-selfadjoint * dense products, and enable +=/-= assignment for such products.
+** Remove temporaries in product expressions matching "d?=a-b*c" by rewriting them as "d?=a; d?=b*c;"
+** Vectorization improvements for some small product cases.
+
+* Doc:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1265 Bug 1265]: fix outdated doc in QR facto
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=828 Bug 828]: improve documentation of sparse block methods, and sparse unary methods.
+** Improve documentation regarding nullary functors, and add an example demonstrating the use of nullary expression to perform fancy matrix manipulations.
+** Doc: explain how to use Accelerate as a LAPACK backend.
+
+* Bug fixes and internal changes:
+** Numerous fixes regarding support for custom complex types.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1273 Bug 1273]: fix shortcoming in eigen_assert macro
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1278 Bug 1278]: code formatting
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1270 Bug 1270]: by-pass hand written pmadd with recent clang versions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1282 Bug 1282]: fix implicit double to float conversion warning
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1167 Bug 1167]: simplify installation of header files using cmake's install(DIRECTORY ...) command
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1283 Bug 1283]: fix products involving an uncommon vector.block(..) expressions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1285 Bug 1285]: fix a minor regression in LU factorization.
+** JacobiSVD now consider any denormal number as zero.
+** Numerous fixes regarding support for CUDA/NVCC (including bugs [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1266 1266]:
+** Fix an alignment issue in gemv, symv, and trmv for statically allocated temporaries.
+** Fix 4x4 matrix inversion for non-linear destinations.
+** Numerous improvements and fixes in half precision scalar type.
+** Fix vectorization logic for coeff-based product for some corner cases
+** Bugs [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1260 1260], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1261 1261], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1264 1264]: several fixes in AutoDiffScalar.
+
+== Eigen 3.3-beta2 ==
+
+Released on July 26, 2016
+
+Main changes since 3.3-beta1:
+
+* Dense features:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=707 Bug 707]: Add support for [http://eigen.tuxfamily.org/dox-devel/group__InplaceDecomposition.html inplace] dense decompositions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=977 Bug 977]: normalize(d) left the input unchanged if its norm is 0 or too close to 0.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=977 Bug 977]: add stableNormalize[d] methods: they are analogues to normalize[d] but with carefull handling of under/over-flow.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=279 Bug 279]: Implement generic scalar*expr and expr*scalar operators. This is especially useful for custom scalar types, e.g., to enable float*expr<multi_prec> without conversion.
+** New unsupported/Eigen/SpecialFunctions module providing the following coefficient-wise math functions: erf, erfc, lgamma, digamma, polygamma, igamma, igammac, zeta, betainc.
+** Add fast reciprocal condition estimators in dense LU and Cholesky factorizations.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1230 Bug 1230]: add support for SelfadjointView::triangularView() and diagonal()
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=823 Bug 823]: add Quaternion::UnitRandom() method.
+** Add exclusive or operator for bool arrays.
+** Relax dependency on MKL for EIGEN_USE_BLAS and EIGEN_USE_LAPACKE: any BLAS and LAPACK libraries can now be used as backend (see  [http://eigen.tuxfamily.org/dox-devel/TopicUsingBlasLapack.html doc]).
+** Add static assertion to x(), y(), z(), w() accessors
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=51 Bug 51]: avoid dynamic memory allocation in fixed-size rank-updates, matrix products evaluated within a triangular part, and selfadjoint times matrix products.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=696 Bug 696]: enable zero-sized block at compile-time by relaxing the respective assertion
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=779 Bug 779]: in Map, allows non aligned buffers for buffers smaller than the requested alignment.
+** Add a complete orthogonal decomposition class: [http://eigen.tuxfamily.org/dox-devel/classEigen_1_1CompleteOrthogonalDecomposition.html CompleteOrthogonalDecomposition]
+** Improve robustness of JacoviSVD with complexes (underflow, noise amplification in complex to real conversion, compare off-diagonal entries to the current biggest diagonal entry instead of the global biggest, null inputs).
+** Change Eigen's ColPivHouseholderQR to use a numerically stable norm downdate formula (changeset 9da6c621d055)
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1214 Bug 1214]: consider denormals as zero in D&C SVD. This also workaround infinite binary search when compiling with ICC's unsafe optimizations.
+** Add log1p for arrays.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1193 Bug 1193]: now lpNorm<Infinity> supports empty inputs.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1151 Bug 1151]: remove useless critical section in matrix product
+** Add missing non-const reverse method in VectorwiseOp (e.g., this enables A.rowwise().reverse() = ...)
+** Update RealQZ to reduce 2x2 diagonal block of T corresponding to non reduced diagonal block of S to positive diagonal form.
+
+* Sparse features:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=632 Bug 632]: add support for "dense +/- sparse" operations. The current implementation is based on SparseView to make the dense subexpression compatible with the sparse one.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1095 Bug 1095]: add Cholmod*::logDeterminant/determinant functions.
+** Add SparseVector::conservativeResize() method
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=946 Bug 946]: generalize Cholmod::solve to handle any rhs expressions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1150 Bug 1150]: make IncompleteCholesky more robust by iteratively increase the shift until the factorization succeed (with at most 10 attempts)
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=557 Bug 557]: make InnerIterator of sparse storage types more versatile by adding default-ctor, copy-ctor/assignment.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=694 Bug 694]: document that SparseQR::matrixR is not sorted.
+** Block expressions now expose all the information defining the block.
+** Fix GMRES returned error.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1119 Bug 1119]: add support for SuperLU 5
+
+* Performance improvements:
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=256 Bug 256]: enable vectorization with unaligned loads/stores. This concerns all architectures and all sizes. This new behavior can be disabled by defining EIGEN_UNALIGNED_VECTORIZE=0
+** Add support for s390x(zEC13) ZVECTOR instruction set.
+** Optimize mixing of real with complex matrices by avoiding a conversion from real to complex when the real types do not match exactly. (see [https://bitbucket.org/eigen/eigen/commits/bccae23d7018 bccae23d7018])
+** Speedup square roots in performance critical methods such as norm, normalize(d).
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1154 Bug 1154]: use dynamic scheduling for spmv products.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=667 Bug 667],  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1181 1181]: improve perf with MSVC and ICC through FORCE_INLINE
+** Improve heuristics for switching between coeff-based and general matrix product implementation at compile-time.
+** Add vectorization of tanh for float (SSE/AVX)
+** Improve cost estimates of numerous functors.
+** Numerous improvements regarding half-packet vectorization: coeff-based products (e.g.,  Matrix4f*Vector4f is now vectorized again when using AVX), reductions, linear vs inner traversals.
+** Fix performance regression: with AVX, unaligned stores were emitted instead of aligned ones for fixed size assignment.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1201 Bug 1201]: optimize affine*vector products.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1191 Bug 1191]: prevent Clang/ARM from rewriting VMLA into VMUL+VADD.
+** Small speed-up in Quaternion::slerp.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1201 Bug 1201]:  improve code generation of affine*vec with MSVC
+
+* Doc:
+** Add [http://eigen.tuxfamily.org/dox-devel/group__MatrixfreeSolverExample.html documentation and exemple] for matrix-free solving.
+** A new documentation [http://eigen.tuxfamily.org/dox-devel/group__CoeffwiseMathFunctions.html page] summarizing coefficient-wise math functions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1144 Bug 1144]: clarify the doc about aliasing in case of resizing and matrix product.
+** A new documentation [http://eigen.tuxfamily.org/dox-devel/group__DenseDecompositionBenchmark.html page] summarizing the true performance of Eigen's dense decomposition algorithms.
+
+* Misc improvements:
+** Allow one generic scalar argument for all binary operators/functions.
+** Add a EIGEN_MAX_CPP_VER option to limit the C++ version to be used, as well as [http://eigen.tuxfamily.org/dox-devel/TopicPreprocessorDirectives.html#title1 fine grained options] to control individual language features.
+** A new [http://eigen.tuxfamily.org/dox-devel/structEigen_1_1ScalarBinaryOpTraits.html ScalarBinaryOpTraits] class allowing to control how different scalar types are mixed.
+** NumTraits now exposes a digits10 function making internal::significant_decimals_impl deprecated.
+** Countless improvements and fixes in Tensors module.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1156 Bug 1156]: fix several function declarations whose arguments were passed by value instead of being passed by reference
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1164 Bug 1164]: fix std::list and std::deque specializations such that our aligned allocator is automatically activated only when the user did not specified an allocator (or specified the default std::allocator).
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=795 Bug 795]: mention allocate_shared as a candidate for aligned_allocator.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1170 Bug 1170]: skip calls to memcpy/memmove for empty inputs.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1203 Bug 1203]: by-pass large stack-allocation in stableNorm if EIGEN_STACK_ALLOCATION_LIMIT is too small
+** Improve constness of blas level-2/3 interface.
+** Implement stricter argument checking for SYRK and SY2K
+** Countless improvements in the documentations.
+** Internal: Remove posix_memalign, _mm_malloc, and _aligned_malloc special paths.
+** Internal: Remove custom unaligned loads for SSE
+** Internal: introduce [U]IntPtr types to be used for casting pointers to integers.
+** Internal: NumTraits now exposes infinity()
+** Internal: EvalBeforeNestingBit is now deprecated.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1213 Bug 1213]: workaround gcc linking issue with anonymous enums.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1242 Bug 1242]: fix comma initializer with empty matrices.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=725 Bug 725]: make move ctor/assignment noexcept
+** Add minimal support for Array<string>
+** Improve support for custom scalar types bases on expression template (e.g., boost::multiprecision::number<> type). All dense decompositions are successfully tested.
+
+* Most visible fixes:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1144 Bug 1144]: fix regression in x=y+A*x  (aliasing issue)
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1140 Bug 1140]: fix usage of _mm256_set_m128 and _mm256_setr_m128 in AVX support
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1141 Bug 1141]: fix some missing initializations in CholmodSupport
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1143 Bug 1143]: workaround gcc bug #10200
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1145 Bug 1145], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1147 1147],  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1148 1148],  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1149 1149]: numerous fixes in PastixSupport
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1153 Bug 1153]: don't rely on __GXX_EXPERIMENTAL_CXX0X__ to detect C++11 support.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1152 Bug 1152]: fix data race in static initialization of blas routines.
+** fix some buffer overflow in product block size computation.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=96 Bug 96],  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id1006 1006]: fix by value argument in result_of
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=178 Bug 178]: clean several const_cast.
+** Fix compilation in ceil() function.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=698 Bug 698]: fix linspaced for integer types.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1161 Bug 1161]: fix division by zero for huge scalar types in cache block size computation.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=774 Bug 774]: fix a numerical issue in Umeyama algorithm that produced unwanted reflections.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=901 Bug 901]: fix triangular-view with unit diagonal of sparse rectangular matrices.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1166 Bug 1166]: fix shortcoming in gemv when the destination is not a vector at compile-time.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1172 Bug 1172]: make SparseMatrix::valuePtr and innderIndexPtr properly return null for empty matrices
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=537 Bug 537]:  fix a compilation issue in Quaternion with Apples's compiler
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1186 Bug 1186]: fix usage of vreinterpretq_u64_f64 (NEON)
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1190 Bug 1190]: fix usage of __ARM_FEATURE_FMA on Clang/ARM
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1189 Bug 1189]:  fix pow/atan2 compilation for AutoDiffScalar
+** Fix detection of same input-output when applied permutations, or on solve operations.
+** Workaround a division by zero in triangular solve when outerstride==0
+** Fix compilation of sparse.cast<>().transpose().
+** Fix double-conversion warnings throughout the code.
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1207 Bug 1207]: fix logical-op warnings
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1222 Bug 1222],  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1223 1223]: fix compilation in AutoDiffScalar.
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1229 Bug 1229]: fix usage of Derived::Options in MatrixFunctions.
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1224 Bug 1224]: fix regression in (dense*dense).sparseView().
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1231 Bug 1231]: fix compilation regression regarding complex_array/=real_array.
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1221 Bug 1221]: disable gcc 6 warning: ignoring attributes on template argument.
+** Workaround clang/llvm bug 27908
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1236 Bug 1236]: fix possible integer overflow in sparse matrix product.
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1238 Bug 1238]: fix SparseMatrix::sum() overload for un-compressed mode
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1240 Bug 1240]: remove any assumption on NEON vector types
+** Improves support for MKL's PARDISO solver.
+** Fix support for Visual 2010.
+** Fix support for gcc 4.1.
+** Fix support for ICC 2016
+** Various Altivec/VSX fixes: exp, support for clang 3.9,
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1258 Bug 1258]: fix compilation of Map<SparseMatrix>::coeffRef
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1249 Bug 1249]: fix compilation with compilers that do not support__builtin_prefetch .
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1250 Bug 1250]: fix pow() for AutoDiffScalar with custom nested scalar type.
+
+== Eigen 3.3-beta1 ==
+
+Released on December 16, 2015
+
+Main changes since 3.3-alpha1:
+
+* Dense features:
+** Add LU::transpose().solve() and LU::adjoint().solve() API.
+** Add Array::rsqrt() method as a more efficient shorcut for sqrt().inverse().
+** Add Array::sign() method for real and complexes.
+** Add lgamma, erf, and erfc functions for arrays.
+** Add support for row/col-wise lpNorm().
+** Add missing Rotation2D::operator=(Matrix2x2).
+** Add support for permutation * homogenous.
+** Improve numerical accuracy in LLT and triangular solve by using true scalar divisions (instead of x * (1/y)).
+** Add EIGEN_MAPBASE_PLUGIN and EIGEN_QUATERNION_PLUGIN.
+**  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1074 Bug 1074]: forbid the creation of PlainObjectBase objects.
+
+* Sparse features:
+** Add IncompleteCholesky preconditioner.
+** Improve support for [http://eigen.tuxfamily.org/dox/group__MatrixfreeSolverExample.html matrix-free iterative solvers]
+** Extend setFromTripplets API to allow passing a functor object controlling how to collapse duplicated entries.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=918 Bug 918]: add access to UmfPack return code and parameters.
+** Add support for dense.cwiseProduct(sparse), thus enabling (dense*sparse).diagonal() expressions.
+** Add support to directly evaluate the product of two sparse matrices within a dense matrix.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1064 Bug 1064]: add support for Ref<SparseVector>.
+** Add supports for real mul/div sparse<complex> operations.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1086 Bug 1086]: replace deprecated UF_long by SuiteSparse_long.
+** Make Ref<SparseMatrix> more versatile.
+
+* Performance improvements:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1115 Bug 1115]: enable static alignment and thus small size vectorization on ARM.
+** Add temporary-free evaluation of "D.nolias() ?= C + A*B".
+** Add vectorization of round, ceil and floor for SSE4.1/AVX.
+** Optimize assignment into a Block<SparseMatrix> by using Ref and avoiding useless updates in non-compressed mode. This make row-by-row filling of a row-major sparse matrix very efficient.
+** Improve internal cost model leading to faster code in some cases (see changeset [https://bitbucket.org/eigen/eigen/commits/1bcb41187a45 1bcb41187a45]).
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1090 Bug 1090]: improve redux evaluation logic.
+** Enable unaligned vectorization of small fixed size matrix products.
+
+* Misc improvements:
+** Improve support for isfinite/isnan/isinf in fast-math mode.
+** Make the IterativeLinearSolvers module compatible with MPL2-only mode by defaulting to COLAMDOrdering and NaturalOrdering for ILUT and ILLT respectively.
+** Avoid any OpenMP calls if multi-threading is explicitly disabled at runtime.
+** Make abs2 compatible with custom complex types.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1109 Bug 1109]: use noexcept instead of throw for C++11 compilers.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1100 Bug 1100]: Improve cmake/pkg-config support.
+** Countless improvements and fixes in Tensors module.
+
+* Most visible fixes:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1105 Bug 1105]: fix default preallocation when moving from compressed to uncompressed mode in SparseMatrix.
+** Fix UmfPackLU constructor for expressions.
+** Fix degenerate cases in syrk and trsm BLAS API.
+** Fix matrix to quaternion (and angleaxis) conversion for matrix expression.
+** Fix compilation of sparse-triangular to dense assignment.
+** Fix several minor performance issues in the nesting of matrix products.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1092 Bug 1092]: fix iterative solver ctors for expressions as input.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1099 Bug 1099]: fix missing include for CUDA.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1102 Bug 1102]: fix multiple definition linking issue.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1088 Bug 1088]: fix setIdenity for non-compressed sparse-matrix.
+** Fix SparseMatrix::insert/coeffRef for non-empty compressed matrix.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1113 Bug 1113]: fix name conflict with C99's "I".
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1075 Bug 1075]: fix AlignedBox::sample for runtime dimension.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1103 Bug 1103]: fix NEON vectorization of complex<double> multiplication.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1134 Bug 1134]: fix JacobiSVD pre-allocation.
+** Fix ICE with VC2015 Update1.
+** Improve cmake install scripts.
+
+== Eigen 3.3-alpha1 ==
+
+Released on September 4, 2015
+
+Eigen 3.3 alpha-1 was released on September 4, 2015.
+
+Eigen 3.3 alpha-1 can be downloaded from the [[Main_Page#Download|Download]] section on the [[Main Page]].
+Since Eigen 3.2, the 3.3 development branch received more than 1660 commits [1] representing numerous major changes.
+It includes all bug-fixes and improvements of the 3.2 branch,  as detailed in the respective change-logs: [[ChangeLog#Eigen_3.2.1|3.2.1]], [[ChangeLog#Eigen_3.2.2|3.2.2]], [[ChangeLog#Eigen_3.2.3|3.2.3]], [[ChangeLog#Eigen_3.2.4|3.2.4]], [[ChangeLog#Eigen_3.2.5|3.2.5]]
+
+The other major changes are summarized below.
+
+=== Expression evaluators ===
+
+In Eigen 3.3, the evaluation mechanism of expressions has been completely rewritten. Even though this is really a major change, this mostly concerns internal details and most users should not notice it. In a nutshell, until Eigen 3.3, the evaluation strategy of expressions and subexpressions was decided at the construction time of expressions in a bottom-up approach. The novel strategy consists in completely deferring all these choices until the whole expression has to be evaluated. Decisions are now made in a top-down fashion allowing for more optimization opportunities, cleaner internal code, and easier extensibility.
+
+Regarding novel expression-level optimizations, a typical example is the following:
+
+<source lang="cpp">
+MatrixXd A, B, C, D;
+A.noalias() = B + C * D;
+</source>
+
+Prior to Eigen 3.3, the "C*D" subexpression would have been evaluated into a temporary by the expression representing the addition operator. In other words, this expression would have been compiled to the following code:
+<source lang="cpp">
+tmp = C * D;
+A = B + tmp;
+</source>
+In Eigen 3.3, we can now have a view of the complete expression and generate the following temporary-free code:
+<source lang="cpp">
+A = B;
+A.noalias() += C * D;
+</source>
+
+=== Index typedef ===
+
+In Eigen 3.3, the "Index" typedef is now global and defined by default to std::ptrdiff_t:
+<source lang="cpp">
+namespace Eigen {
+  typedef std::ptrdiff_t Index;
+}
+</source>
+This "Index" type is used throughout Eigen as the preferred type for both sizes and indices. It can be controlled globally through the EIGEN_DEFAULT_INDEX_TYPE macro. The usage of Eigen::DenseIndex and AnyExpression::Index are now deprecated. They are always equivalent to Eigen::Index.
+
+For expressions storing an array of indices or sizes, the type for storage can be controlled per object through a template parameter.
+This type is consistently named "StorageIndex", and its default value is "int". See for instance the PermutationMatrix and SparseMatrix classes.
+
+'''Warning:''' these changes might affect codes that used the SparseMatrix::Index type. In Eigen 3.2, this type was not documented and it was improperly defined as the storage index type (e.g., int), whereas it is now deprecated and always defined as Eigen::Index. Codes making use of SparseMatrix::Index, might thus likely have to be changed to use SparseMatrix::StorageIndex instead.
+
+=== Vectorization ===
+
+* Eigen 3.3 adds support for '''AVX''' (x86_64), '''FMA''' (x86_64) and '''VSX''' (PowerPC) SIMD instruction sets.
+** To enable AVX or FMA, you need to compile your code with these instruction sets enabled on the compiler side, for instance using the -mavx and -mfma options with gcc, clang or icc. AVX brings up to a x2 speed up for single and double precision floating point matrices by processing 8 and 4 scalar values at once respectively. Complexes are also supported. To achieve best performance, AVX requires 32 bytes aligned buffers. By default, Eigen's dense objects are thus automatically aligned on 32 bytes when AVX is enabled. Alignment behaviors can be controlled as detailed in this page.
+** FMA stands for Fused-Multiple-Add. Currently, only Intel's FMA instruction set, as introduced in the Haswell micro-architecture, is supported, and it is explicitly exploited in matrix products for which a x1.7 speedup can be expected.
+** When AVX is enabled, Eigen automatically falls back to half register sizes for fixed-size types which are not a multiple of the full AVX register size (256bits). For instance, this concerns Vector4f and Vector2d types.
+
+* Add vectorization of exp and log for AltiVec/VSX.
+* Add vectorization of Quaternion::conjugate for SSE/AVX
+
+=== Dense products ===
+
+* The dense matrix-matrix product kernel has been significantly redesigned to make a best use of recent CPU architectures (i.e., wide SIMD registers, FMA).
+* The heuristic to determine the different cache-level blocking sizes has been significantly improved.
+* The overhead for small products of dynamic sizes has been significantly reduced by falling-back at runtime to a coefficient-based product implementation (aka., lazyProduct).
+** The criterion to switch to lazyProduct is: (m+n+k)<20
+* Enable Mx0 * 0xN matrix products.
+
+=== Dense decompositions ===
+
+* Eigen 3.3 includes a new '''Divide & Conquer SVD''' algorithm through the '''BDCSVD''' class. This new algorithm can be more that one order of magnitude faster than JacobiSVD for large matrices.
+* Various '''numerical robustness improvements''' in JacobiSVD, LDLT, 2x2 and 3x3 direct eigenvalues, ColPivHouseholderQR, FullPivHouseholderQR, and RealSchur.
+* FullPivLU: pivoting strategy can now be customized for any scalar types.
+
+=== Sparse matrices ===
+
+* MappedSparseMatrix is now deprecated and replaced by the more versatile '''Map<SparseMatrix>''' class.
+* Add support for '''Ref<SparseMatrix>'''.
+* Add '''OpenMP''' parallelization of sparse * dense products. Currently, this is limited to row-major sparse matrices.
+
+=== Sparse solvers ===
+
+* Add a '''LeastSquareConjugateGradient''' solver for solving sparse problems of the form argmin_x |A x - b|^2 through the normal equation but without forming A^T A.
+* Improve robustness of SimplicialLDLT to semidefinite problems by correctly handling structural zeros in AMD reordering. Very useful for solving SPD problems with equality constraints.
+* Add '''OpenMP''' support in ConjugateGradient, BiCGSTAB, and LeastSquareConjugateGradient. See the respective class's doc for details on the best use of this feature.
+* ConjugateGradient and BiCGSTAB now properly use a zero vector as the default guess.
+* Allows Lower|Upper as a template argument of ConjugateGradient and MINRES: in this case the full matrix will be considered. This also simplifies the writing of matrix-free wrappers to ConjugateGradient.
+* Improved numerical robustness in BiCGSTAB, SparseLU, SparseQR and SPQR.
+* Add a determinant() method to SparseLU.
+* Improved handling of inputs in both iterative and direct solvers.
+
+=== Experimental CUDA support ===
+
+Starting from Eigen 3.3, it is now possible to use Eigen's objects and algorithms within CUDA kernels. However, only a subset of features are supported to make sure that no dynamic allocation is triggered within a CUDA kernel.
+
+=== Unsupported Tensor module ===
+
+Eigen 3.3 includes a preview of a Tensor module for multi-dimensional arrays and tensors in [https://bitbucket.org/eigen/eigen/src/9b065de03d016d802a25366ff5f0055df6318121/unsupported/Eigen/CXX11/src/Tensor/README.md?at=default unsupported/Eigen/CXX11/Tensor].
+It provides numerous features including slicing, coefficient-wise operations, reductions, contractions, convolution, multi-threading, CUDA, etc.
+This module is mainly developed and used by Google.
+
+=== Miscellaneous ===
+
+* Various numerical robustness improvements in stableNorm(), Hyperplane::Through(a,b,c), Quaternion::angularDistance.
+* Add numerous coefficient-wise methods to Array: isFinite, isNaN, isInf, arg, log10, atan, tanh, sinh, cosh, round, floor, ceil, logical not, and generalize pow(x,e).
+* Add a determinant() method to PermutationMatrix.
+* EIGEN_STACK_ALLOCATION_LIMIT: Raise its default value to 128KB, make use of it to assert on maximal fixed size objects, and allows it to be 0 to mean "no limit"
+* Conversions from Quaternion to AngleAxis implicitly normalize the input quaternion.
+* Improved support of c++11 while preserving a full compatibility with c++98.
+* Support for Eigen 2 as been removed. If you plane to migrate from Eigen 2 to 3, then it is recommended to first do the transition using the facilities offered in Eigen 3.2, drop all Eigen 2 deprecated features, and then move to Eigen 3.3.
+* The BLAS interface library does not require a fortran compiler anymore.
+* The LAPACK interface library has been extended with the following two SVD routines: ?gesdd, ? gesvd.
+
+== Known issues ==
+
+* Slight increase of compiler memory consumption.
+* MSVC might trigger some internal compiler errors. Please help us working around them if you hit one. See:
+** http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1002
+** http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1008
+* There might be some issues with ARM/NEON, see:
+** http://eigen.tuxfamily.org/bz/show_bug.cgi?id=907
+* Unlike JacobiSVD, BDCSVD still involve heap memory allocations during the factorization which might be a problem for embedded systems.
+
+== Eigen 3.2.5 ==
+
+Released on June 16, 2015
+
+Changes since 3.2.4:
+
+* Changes with main impact:
+** Improve robustness of SimplicialLDLT to semidefinite problems by correctly handling structural zeros in AMD reordering
+** Re-enable supernodes in SparseLU (fix a performance regression in SparseLU)
+** Use zero guess in ConjugateGradients::solve
+** Add PermutationMatrix::determinant method
+** Fix SparseLU::signDeterminant() method, and add a SparseLU::determinant() method
+** Allows Lower|Upper as a template argument of CG and MINRES: in this case the full matrix will be considered
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=872 Bug 872]: remove usage of std::bind* functions (deprecated in c++11)
+
+* Numerical robustness improvements:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1014 Bug 1014]: improve numerical robustness of the 3x3 direct eigenvalue solver
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1013 Bug 1013]: fix 2x2 direct eigenvalue solver for identical eigenvalues
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=824 Bug 824]: improve accuracy of Quaternion::angularDistance
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=941 Bug 941]: fix an accuracy issue in ColPivHouseholderQR by continuing the decomposition on a small pivot
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=933 Bug 933]: improve numerical robustness in RealSchur
+** Fix default threshold value in SPQR
+
+* Other changes:
+** Fix usage of EIGEN_NO_AUTOMATIC_RESIZING
+** Improved support for custom scalar types in SparseLU
+** Improve cygwin compatibility
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=650 Bug 650]: fix an issue with sparse-dense product and rowmajor matrices
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=704 Bug 704]: fix MKL support (HouseholderQR)
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=705 Bug 705]: fix handling of Lapack potrf return code (LLT)
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=714 Bug 714]: fix matrix product with OpenMP support
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=949 Bug 949]: add static assertions for incompatible scalar types in many of the dense decompositions
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=957 Bugs 957],  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1000 1000]: workaround MSVC/ICC compilation issues when using sparse blocks
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=969 Bug 969]: fix ambiguous calls to Ref
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=972 Bugs 972], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=986 986]: add support for coefficient-based product with 0 depth
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=980 Bug 980]: fix taking a row (resp. column) of a column-major (resp. row-major) sparse matrix
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=983 Bug 983]: fix an alignement issue in Quaternion
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=985 Bug 985]: fix RealQZ when either matrix had zero rows or columns
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=987 Bug 987]: fix alignement guess in diagonal product
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=993 Bug 993]: fix a pitfall with matrix.inverse()
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=996 Bugs 996], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1016 1016]: fix scalar conversions
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1003 Bug 1003]: fix handling of pointers non aligned on scalar boundary in slice-vectorization
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1010 Bug 1010]: fix member initialization in IncompleteLUT
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1012 Bug 1012]: enable alloca on Mac OS or if alloca is defined as macro
+** Doc and build system: [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=733 733], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=914 914], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=952 952],  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=961 961], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=999 999]
+
+== Eigen 3.2.4 ==
+
+Released on January 21, 2015
+
+Changes since 3.2.3:
+
+* Fix compilation regression in Rotation2D
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=920 Bug 920]: fix compilation issue with MSVC 2015.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=921 Bug 921]: fix utilization of bitwise operation on enums in first_aligned.
+* Fix compilation with NEON on some platforms.
+
+== Eigen 3.2.3 ==
+
+Released on December 16, 2014
+
+Changes since 3.2.2:
+
+* Core:
+** Enable Mx0 * 0xN matrix products.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=859 Bug 859]: fix returned values for vectorized versions of exp(NaN), log(NaN), sqrt(NaN) and sqrt(-1).
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=879 Bug 879]: tri1 = mat * tri2 was compiling and running incorrectly if tri2 was not numerically triangular. Workaround the issue by evaluating mat*tri2 into a temporary.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=854 Bug 854]: fix numerical issue in SelfAdjointEigenSolver::computeDirect for 3x3 matrices.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=884 Bug 884]: make sure there no call to malloc for zero-sized matrices or for a Ref<> without temporaries.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=890 Bug 890]: fix aliasing detection when applying a permutation.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=898 Bug 898]: MSVC optimization by adding inline hint to const_cast_ptr.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=853 Bug 853]: remove enable_if<> in Ref<> ctor.
+
+* Dense solvers:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=894 Bug 894]: fix the sign returned by LDLT for multiple calls to compute().
+** Fix JacobiSVD wrt underflow and overflow.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=791 Bug 791]: fix infinite loop in JacobiSVD in the presence of NaN.
+
+* Sparse:
+** Fix out-of-bounds memory write when the product of two sparse matrices is completely dense and performed using pruning.
+** UmfPack support: fix redundant evaluation/copies when calling compute(), add support for generic expressions as input, and fix extraction of the L and U factors ([http://eigen.tuxfamily.org/bz/show_bug.cgi?id= Bug 911]).
+** Improve SparseMatrix::block for const matrices (the generic path was used).
+** Fix memory pre-allocation when permuting inner vectors of a sparse matrix.
+** Fix SparseQR::rank for a completely empty matrix.
+** Fix SparseQR for row-major inputs.
+** Fix SparseLU::absDeterminant and add respective unit test.
+** BiCGSTAB: make sure that good initial guesses are not destroyed by a bad preconditioner.
+
+* Geometry:
+** Fix Hyperplane::Through(a,b,c) when points are aligned or identical.
+** Fix linking issues in OpenGLSupport.
+
+* OS, build system and doc:
+** Various compilation fixes including: [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=821 bug 821],  [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=822 bug 822], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=857 bug 857], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=871 bug 871], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=873 bug 873].
+** Fix many compilation warnings produced by recent compilers including: [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=909 bug 909].
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=861 Bug 861]: enable posix_memalign with PGI.
+** Fix BiCGSTAB doc example.
+
+== Eigen 3.2.2 ==
+
+Released on August 4, 2014
+
+Changes since 3.2.1:
+
+* Core:
+** Relax Ref such that Ref<MatrixXf> accepts a RowVectorXf which can be seen as a degenerate MatrixXf(1,N)
+** Fix performance regression for the vectorization of sub columns/rows of matrices.
+** EIGEN_STACK_ALLOCATION_LIMIT: Raise its default value to 128KB, make use of it to assert on  maximal fixed size object, and allows it to be 0 to mean "no limit".
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=839 Bug 839]: Fix 1x1 triangular matrix-vector product.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=755 Bug 755]: CommaInitializer produced wrong assertions in absence of Return-Value-Optimization.
+
+* Dense solvers:
+** Add a rank() method with threshold control to JacobiSVD, and make solve uses it to return the minimal norm solution for rank-deficient problems.
+** Various numerical fixes in JacobiSVD, including:[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=843 bug 843], and the move from Lapack to Matlab strategy for the default threshold.
+** Various numerical fixes in LDLT, including the case of semi-definite complex matrices.
+** Fix ColPivHouseholderQR::rank().
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=222 Bug 222]: Make temporary matrix column-major independently of EIGEN_DEFAULT_TO_ROW_MAJOR in BlockHouseholder.
+
+* Sparse:
+** http://eigen.tuxfamily.org/bz/show_bug.cgi?id=838 Bug 838]: Fix dense * sparse and sparse * dense outer products and detect outer products from either the lhs or rhs.
+** Make the ordering method of SimplicialL[D]LT configurable.
+** Fix regression in the restart mechanism of BiCGSTAB.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=836 Bug 836]: extend SparseQR to support more columns than rows.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=808 Bug 808]: Use double instead of float for the increasing size ratio in CompressedStorage::resize, fix implicit conversions from int/longint to float/double, and fix set_from_triplets temporary matrix type.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=647 Bug 647]: Use smart_copy instead of bitwise memcpy in CompressedStorage.
+** GMRES: Initialize essential Householder vector with correct dimension.
+
+* Geometry:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=807 Bug 807]: Missing scalar type cast in umeyama()
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=806 Bug 806]: Missing scalar type cast in Quaternion::setFromTwoVectors()
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=759 Bug 759]: Removed hard-coded double-math from Quaternion::angularDistance.
+
+* OS, build system and doc:
+** Fix compilation with Windows CE.
+** Fix some ICEs with VC11.
+** Check IMKL version for compatibility with Eigen
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=754 Bug 754]: Only inserted (!defined(_WIN32_WCE)) analog to alloc and free implementation.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=803 Bug 803]: Avoid char* to int* conversion.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=819 Bug 819]: Include path of details.h file.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=738 Bug 738]: Use the "current" version of cmake project directories to ease the inclusion of Eigen within other projects.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=815 Bug 815]: Fix doc of FullPivLU wrt permutation matrices.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=632 Bug 632]: doc: Note that dm2 = sm1 + dm1 is not possible
+** Extend AsciiQuickReference (real, imag, conjugate, rot90)
+
+== Eigen 3.2.1 ==
+
+Released on February 26, 2014
+
+Changes since 3.2.0:
+
+* Eigen2 support is now deprecated and will be removed in version 3.3.
+* Core:
+** Bug fix for Ref object containing a temporary matrix.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=654 Bug 654]: Allow construction of row vector from 1D array.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=679 Bug 679]: Support cwiseMin() and cwiseMax() on maps.
+** Support conservativeResize() on vectors.
+** Improve performance of vectorwise and replicate expressions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=642 Bug 642]: Add vectorization of sqrt for doubles, and make sqrt really safe if EIGEN_FAST_MATH is disabled.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=616 Bug 616]: Try harder to align columns when printing matrices and arrays.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=579 Bug 579]: Add optional run-time parameter to fixed-size block methods.
+** Implement .all() and .any() for zero-sized objects
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=708 Bug 708]: Add placement new and delete for arrays.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=503 Bug 503]: Better C++11 support.
+* Dense linear algebra:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=689 Bug 689]: Speed up some matrix-vector products by using aligned loads if possible.
+** Make solve in FullPivHouseholderQR return least-square solution if there is no exact solution.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=678 Bug 678]: Fix fullPivHouseholderQR for rectangular matrices.
+** Fix a 0/0 issue in JacobiSVD.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=736 Bug 736]: Wrong result in LDLT::isPositiveDefinite() for semi-definite matrices.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=740 Bug 740]: Fix overflow issue in stableNorm().
+** Make pivoting HouseholderQR compatible with custom scalar types.
+* Geometry:
+** Fix compilation of Transform * UniformScaling
+* Sparse matrices:
+** Fix elimination tree and SparseQR for fat rectangular matrices.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=635 Bug 635]: add isCompressed to MappedSparseMatrix for compatibility.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=664 Bug 664]: Support iterators without operator< in setFromTriplets().
+** Fixes in SparseLU: infinite loop, aliasing issue when solving, overflow in memory allocation, use exceptions only if enabled ([http://eigen.tuxfamily.org/bz/show_bug.cgi?id=672 bug 672]).
+** Fixes in SparseQR: reduce explicit zero, assigning result to map, assert catching non-conforming sizes, memory leak.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=681 Bug 681]: Uninitialized value in CholmodSupport which may lead to incorrect results.
+** Fix some issues when using a non-standard index type ([http://eigen.tuxfamily.org/bz/show_bug.cgi?id=665 bug 665] and more)
+** Update constrained CG (unsupported module) to Eigen3.
+* OS and build system:
+** MacOS put OpenGL header files somewhere else from where we expected it.
+** Do not assume that alloca() is 16-byte aligned on Windows.
+** Compilation fixes when using ICC with Visual Studio.
+** Fix Fortran compiler detection in CMake files.
+* Fix some of our tests (bugs [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=744 744] and [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=748 748] and more).
+* Fix a few compiler warnings (bug [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=317 317] and more).
+* Documentation fixes (bugs [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=609 609], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=638 638] and [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=739 739] and more).
+
+== Eigen 3.2.0 ==
+
+Released on July 24, 2013.
+
+Major new features and optimizations since 3.1:
+
+* Dense world
+** New [http://eigen.tuxfamily.org/dox-devel/classEigen_1_1Ref.html Ref<>]
+class allowing to write non templated function taking various kind of Eigen
+dense objects without copies.
+** New [http://eigen.tuxfamily.org/dox-devel/classEigen_1_1RealQZ.html RealQZ]
+factorization and
+[http://eigen.tuxfamily.org/dox-devel/classEigen_1_1GeneralizedEigenSolver.html
+GeneralizedEigenSolver].
+** Add vector-wise normalized and normalize functions, and hasNaN/allFinite
+members.
+** Add mixed static/dynamic-size .block<.,.>() functions.
+** Optimize outer products for non rank-1 update operations.
+** Optimize diagonal products (enable vectorization in more cases).
+** Improve robustness and performance in JacobiSVD::solve().
+* Sparse world
+** New [http://eigen.tuxfamily.org/dox-devel/group__SparseLU__Module.html
+SparseLU] module: built-in sparse LU with supernodes and numerical row
+pivoting (port of SuperLU making the SuperLUSupport module obsolete).
+** New [http://eigen.tuxfamily.org/dox-devel/group__SparseQR__Module.html
+SparseQR] module: rank-revealing sparse QR factorization with numerical column
+pivoting.
+** New [http://eigen.tuxfamily.org/dox-devel/classEigen_1_1COLAMDOrdering.html
+COLAMD] ordering and unified
+[http://eigen.tuxfamily.org/dox-devel/group__OrderingMethods__Module.html
+ordering API].
+** Add support for generic blocks of sparse matrices (read-only).
+** Add conservative resize feature on sparse matrices.
+** Add uniform support for solving sparse systems with sparse right hand
+sides.
+** Add support for sparse matrix time sparse self-adjoint view products.
+** Improve BiCGSTAB robustness with restart.
+* Support to external libraries
+** New [http://eigen.tuxfamily.org/dox-devel/group__MetisSupport__Module.html
+MetisSupport] module: wrapper to the famous graph partitioning library.
+** New [http://eigen.tuxfamily.org/dox-devel/group__SPQRSupport__Module.html
+SPQRSupport] module: wrapper to suitesparse's supernodal QR solver.
+
+== Eigen 3.2-rc2 ==
+
+Released on July 19, 2013.
+
+Changes since 3.2-rc1:
+
+* Rename DenseBase::isFinite() to allFinite() to avoid a future naming
+collision.
+* Fix an ICE with ICC 11.1.
+
+== Eigen 3.2-rc1 ==
+
+Released on July 17, 2013.
+
+Main changes since 3.2-beta1:
+* New features:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=562 Bug 562]: Add
+vector-wise normalized and normalize functions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=564 Bug 564]: Add hasNaN and
+isFinite members.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=579 Bug 579]: Add support
+for mixed static/dynamic-size .block().
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=588 Bug 588]: Add support
+for determinant in SparseLU.
+** Add support in SparseLU to solve with L and U factors independently.
+** Allow multiplication-like binary operators to be applied on type
+combinations supported by scalar_product_traits.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=596 Bug 596]: Add conversion
+from SparseQR::matrixQ() to a SparseMatrix.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=553 Bug 553]: Add support
+for sparse matrix time sparse self-adjoint view products.
+
+* Accuracy and performance:
+** Improve BiCGSTAB robustness: fix a divide by zero and allow to restart with
+a new initial residual reference.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=71 Bug 71]: Enable
+vectorization of diagonal products in more cases.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=620 Bug 620]: Fix robustness
+and performance issues in JacobiSVD::solve.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=609 Bug 609]: Improve
+accuracy and consistency of the eulerAngles functions.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=613 Bug 613]: Fix accuracy
+of SSE sqrt for very small numbers.
+** Enable SSE with ICC even when it mimics a gcc version lower than 4.2.
+** Add SSE4 min/max for integers.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=590 Bug 590] &
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=591 591]: Minor improvements in
+NEON vectorization.
+
+* Bug fixes:
+** Fix HouseholderSequence::conjugate() and ::adjoint().
+** Fix SparseLU for dense matrices and matrices in non compressed mode.
+** Fix SparseMatrix::conservativeResize() when one dimension is null.
+** Fix transposeInpPlace for arrays.
+** Fix handmade_aligned_realloc.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=554 Bug 554]: Fix detection
+of the presence of posix_memalign with mingw.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=556 Bug 556]: Workaround
+mingw bug with -O3 or -fipa-cp-clone options.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=608 Bug 608]: Fix sign
+computation in LDLT.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=567 Bug 567]: Fix iterative
+solvers to immediately return when the initial guess is the true solution and
+for trivial solution.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=607 Bug 607]: Fix support
+for implicit transposition from dense to sparse vectors.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=611 Bug 611]: Fix support
+for products of the form diagonal_matrix * sparse_matrix * diagonal_matrix.
+
+* Others:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=583 Bug 583]: Add
+compile-time assertion to check DenseIndex is signed.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=63 Bug 63]: Add lapack unit
+tests. They are automatically downloaded and configured if
+EIGEN_ENABLE_LAPACK_TESTS is ON.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=563 Bug 563]: Assignment to
+Block<SparseMatrix> is now allowed on non-compressed matrices.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=626 Bug 626]: Add assertion
+on input ranges for coeff* and insert members for sparse objects.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=314 Bug 314]: Move special
+math functions from internal to numext namespace.
+** Fix many warnings and compilation issues with recent compiler versions.
+** Many other fixes including
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=230 Bug 230],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=482 Bug 482],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=542 Bug 542],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=561 Bug 561],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=564 Bug 564],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=565 Bug 565],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=566 Bug 566],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=578 Bug 578],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=581 Bug 581],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=595 Bug 595],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=597 Bug 597],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=598 Bug 598],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=599 Bug 599],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=605 Bug 605],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=606 Bug 606],
+[http://eigen.tuxfamily.org/bz/show_bug.cgi?id=615 Bug 615].
+
+== Eigen 3.1.3 ==
+
+Released on April 16, 2013
+
+Changes since 3.1.2:
+
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=526 Bug 526] - Fix linear vectorized transversal in linspace.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=551 Bug 551] - Fix compilation issue when using EIGEN_DEFAULT_DENSE_INDEX_TYPE.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=533 Bug 533] - Fix some missing const qualifiers in Transpose
+* Fix a compilation with CGAL::Gmpq by adding explicit internal:: namespace when calling abs().
+* Fix computation of outer-stride when calling .real() or .imag().
+* Fix handmade_aligned_realloc (affected conservativeResize()).
+* Fix sparse vector assignment from a sparse matrix.
+* Fix log(0) with SSE.
+* Fix bug in aligned_free with windows CE.
+* Fix traits of Map<Quaternion.
+* Fix a few warnings ([http://eigen.tuxfamily.org/bz/show_bug.cgi?id=507 507], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=535 535], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=581 581]).
+* Enable SSE with ICC even when it mimics a gcc version lower than 4.2
+* Workaround [http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53900 gcc-4.7 bug #53900] (too aggressive optimization in our alignment check)
+
+== Eigen 3.2-beta1 ==
+
+Released on March 07, 2013
+
+Main changes since 3.1:
+
+* Dense modules
+** A new [http://eigen.tuxfamily.org/dox-devel/classEigen_1_1Ref.html Ref<>] class allowing to write non templated function taking various kind of Eigen dense objects without copies.
+** New [http://eigen.tuxfamily.org/dox-devel/classEigen_1_1RealQZ.html RealQZ] factorization and [http://eigen.tuxfamily.org/dox-devel/classEigen_1_1GeneralizedEigenSolver.html GeneralizedEigenSolver]
+** Optimized outer products for non rank-1 update operations.
+
+* Sparse modules
+** New [http://eigen.tuxfamily.org/dox-devel/group__SparseLU__Module.html SparseLU] module: built-in sparse LU with supernodes and numerical row pivoting (port of SuperLU making the SuperLUSupport module obsolete).
+** New [http://eigen.tuxfamily.org/dox-devel/group__SparseQR__Module.html SparseQR] module: rank-revealing sparse QR factorization with numerical column pivoting.
+** OrderingMethods: extended with [http://eigen.tuxfamily.org/dox-devel/classEigen_1_1COLAMDOrdering.html COLAMD] ordering and a unified [http://eigen.tuxfamily.org/dox-devel/group__OrderingMethods__Module.html ordering] API.
+** Support for generic blocks of sparse matrices.
+** Add conservative resize feature on sparse matrices.
+** Add uniform support for solving sparse systems with sparse right hand sides.
+
+* Support to external libraries
+** New [http://eigen.tuxfamily.org/dox-devel/group__MetisSupport__Module.html MetisSupport] module: wrapper to the famous graph partitioning library.
+** New [http://eigen.tuxfamily.org/dox-devel/group__SPQRSupport__Module.html SPQRSupport] module: wrapper to suitesparse's supernodal QR solver.
+
+* Misc
+** Improved presentation and clarity of Doxygen generated documentation (modules are now organized into chapters, treeview panel and search engine for quick navagitation).
+** New compilation token EIGEN_INITIALIZE_MATRICES_BY_NAN to help debugging.
+** All bug fixes of the 3.1 branch, plus a couple of other fixes (including 211, 479, 496, 508, 552)
+
+
+== Eigen 3.1.2 ==
+
+Released on Nov 05, 2012
+
+Changes since 3.1.1:
+
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=524 Bug 524] - Pardiso's parameter array does not have to be aligned!
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=521 Bug 521] - Disable __cpuidex on architectures different that x86 or x86-64 with MSVC.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=519 Bug 519] - AlignedBox::dim() was wrong for dynamic dimensions.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=515 Bug 515] - Fix missing explicit scalar conversion.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=511 Bug 511] - Fix pretty printers on windows.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=509 Bug 509] - Fix warnings with gcc 4.7
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=501 Bug 501] - Remove aggressive mat/scalar optimization (was replaced by mat*(1/scalar) for non integer types).
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=479 Bug 479] - Use EISPACK's strategy re max number of iters in Schur decomposition.
+* Add support for scalar multiple of diagonal matrices.
+* Forward resize() function from Array/Matrix wrappers to the nested expression such that mat.array().resize(a,b) is now allowed.
+* Windows CE: fix the lack of the aligned_malloc function on this platform.
+* Fix comma initializer when inserting empty matrices.
+* Fix dense=sparse*diagonal products.
+* Fix compilation with m.array().min(scalar) and m.array().max(scalar).
+* Fix out-of-range memory access in GEMV (the memory was not used for the computation, only to assemble unaligned packets from aligned packet loads).
+* Fix various regressions with MKL support.
+* Fix aliasing issue in sparse matrix assignment.
+* Remove stupid assert in blue norm.
+* Workaround a weird compilation error with MSVC.
+
+
+== Eigen 3.1.1 ==
+
+Released on July 22, 2012
+
+Changes since 3.1.0:
+* [[Main_Page#License|relicense to MPL2]]
+* add a EIGEN_MPL2_ONLY build option to generate compiler errors when including non-MPL2 modules
+* remove dynamic allocation for triangular matrix-matrix products of fixed size objects
+* Fix possible underflow issues in SelfAdjointEigenSolver
+* Fix issues with fixed-size Diagonal (sub/super diagonal size computation was wrong)
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=487 Bug 487] - Geometry module: isometry * scaling compilation error
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=486 Bug 486] - MKL support: fixed multiple-references linker errors with various decompositions
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=480 Bug 480] - work around compilation error on Android NDK due to isfinite being defined as a macro
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=485 Bug 485] - IterativeLinearSolvers: conflict between a typedef and template type parameter
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=479 Bug 479] - Eigenvalues/Schur: Adjust max iterations count to matrix size
+* Fixed Geometry module compilation under MSVC
+* Fixed Sparse module compilation under MSVC 2005
+
+
+== Eigen 3.1.0 ==
+
+Released on June 24, 2012.
+
+Major changes between Eigen 3.0 and Eigen 3.1:
+* New features
+** '''New set of officially supported Sparse Modules'''
+*** This includes sparse matrix storage, assembly, and many built-in (Cholesky, CG, BiCGSTAB, ILU), and third-party (PaStiX, Cholmod, UmfPack, SuperLU, Pardiso) solvers
+*** See this [http://eigen.tuxfamily.org/dox-devel/TutorialSparse.html page] for an overview of the features
+** '''Optional support for Intel MKL'''
+*** This includes the BLAS, LAPACK, VML, and Pardiso components
+*** See this [http://eigen.tuxfamily.org/dox-devel/TopicUsingIntelMKL.html page] for the details
+** Core
+*** New vector-wise operators: *, /, *=, /=
+*** New coefficient-wise operators: &&, ||,  min(Scalar), max(Scalar), pow, operator/(Scalar,ArrayBase)
+** Decompositions
+*** Add incremental rank-updates in LLTand LDLT
+*** New SelfAdjointEigenSolver::computeDirect() function for fast eigen-decomposition through closed-form formulas (only for 2x2 and 3x3 real matrices)
+* Optimizations
+** Memory optimizations in JacobiSVD and triangular solves.
+** Optimization of reductions via partial unrolling (e.g., dot, sum, norm, etc.)
+** Improved performance of small matrix-matrix products and some Transform<> operations
+
+
+== Eigen 3.1.0-rc2 ==
+
+Released on June 21, 2012.
+
+Changes since 3.1.0-rc1:
+* Fix a couple of compilation warnings
+* Improved documentation, in particular regarding the Geometry and Sparse tutorials, and sparse solver modules
+* Fix double preconditioner allocation in JacobiSVD
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=466 Bug 466]:RealSchur failed on a zero matrix
+* Update Adolc and MPReal support modules
+
+== Eigen 3.1.0-rc1 ==
+
+Released on June 14, 2012
+
+Main changes since 3.1.0-beta1:
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=466 Bug 466]: fix a possible race condition issue. from now, multithreaded applications that call Eigen from multiple thread must initialize Eigen by calling initParallel().
+* For consistency, SimplicialLLT and SimplicialLDLT now factorizes P A P^-1 (instead of P^-1 A P).
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=475 Bug 475]: now the vectorized exp operator returns +inf when overflow occurs
+* Fix the use of MKL with MSVC by disabling MKL's pow functions.
+* Avoid dynamic allocation for fixed size triangular solving
+* Fix a compilation issue with ICC 11.1
+* Fix ambiguous calls in the math functors
+* Fix BTL interface.
+
+
+== Eigen 3.1.0-beta1 ==
+
+Released on June 7, 2012
+
+Main changes since 3.0.1-alpha2:
+* '''API changes'''
+** SimplicialLLt and SimplicialLDLt are now renamed SimplicialLLT and SimplicialLDLT for consistency with the other modules.
+** The Pardiso support module is now spelled "PardisoSupport"
+* Dense modules:
+** Add operator/(Scalar,ArrayBase) and coefficient-wise pow operator.
+** Fix automatic evaluation of expressions nested by Replicate (performance improvement)
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=447 Bug 447]  Fix infinite recursion in ProductBase::coeff()
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=455 Bug 455] add support for c++11 in aligned_allocator
+** LinSpace: add a missing variant, and fix the size=1 case
+* Sparse modules:
+** Add an '''IncompleteLU''' preconditioner with dual thresholding.
+** Add an interface to the parallel '''Pastix''' solver
+** Improve applicability of permutations (add SparseMatrixBase::twistedBy, handle non symmetric permutations)
+** CholmodDecomposition now has explicit variants: CholmodSupernodalLLT, CholmodSimplicialLLT, CholmodSimplicialLDLT
+** Add analysePattern/factorize methods to iterative solvers
+** Preserve explicit zero in a sparse assignment
+** Speedup sparse*dense products
+** Fix a couple of issues with Pardiso support
+* Geometry module:
+** Improve performance of some Transform<> operations by better preserving the alignment status.
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=415 Bug 415] wrong return type in Rotation2D::operator*=
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=439 Bug 439] add Quaternion::FromTwoVectors() static constructor
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=362 Bug 362] missing specialization for affine-compact * projective
+* Others:
+** add support for RVCT 3.1 compiler
+** New tutorial page on Map
+** and many other bug fixes such as: [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=417 Bug 417], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=419 Bug 419], [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=450 Bug 450]
+
+
+== Eigen 3.0.5 ==
+
+Released February 10, 2012
+
+Changes since 3.0.4:
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=417 Bug 417] - fix nesting of Map expressions
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=415 Bug 415] - fix return value of Rotation2D::operator*=
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=410 Bug 410] - fix a possible out of range access in EigenSolver
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=406 Bug 406] - fix infinite loop/deadlock when using OpenMP and Eigen
+* Changeset 4462 - fix broken asserts revealed by Clang
+* Changeset 4457 - fix description of rankUpdate() in quick reference guide
+* Changeset 4455 - fix out-of-range int constant in 4x4 inverse
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=398 Bug 398] - fix in slerp: the returned quaternion was not always normalized
+* Changeset 4432 - fix asserts in eigenvalue decompositions
+* Changeset 4416 - fix MSVC integer overflow warning
+
+
+== Eigen 3.1.0-alpha2 ==
+
+Released February 6, 2012
+
+Main changes since 3.0.1-alpha1:
+* New optional support for Intel MKL and other BLAS including: ([http://eigen.tuxfamily.org/dox-devel/TopicUsingIntelMKL.html details])
+** BLAS (arbitrary BLAS)
+** Intel LAPACKE
+** Intel VML (coefficient-wise math operations)
+** Intel PARDISO (sparse direct solver)
+* Dense modules:
+** improved performance of small matrix-matrix products
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=319 Feature 319] - add a rankUpdate function to LDLt and LLT for updates/downdates
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=400 Feature 400] - new coefficient wise min/max functions taking one scalar argument
+* Sparse modules:
+** new fast sparse matrix assembly interface from a random list of triplets (see SparseMatrix::setFromTriplets())
+** new shifting feature in SimplicialCholesky (see SimplicialCholeskyBase::setShift())
+** add checks for positive definiteness in SimplicialCholesky
+** improved heuristic to predict the nnz of a saprse*sparse product
+** add support for uncompressed SparseMatrix in CholmodSupport
+* Geometry module:
+** [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=297 Feature 297] - add ParametrizedLine::intersectionPoint() and intersectionParam() functions
+*Others:
+** fix many warnings and compilation issues with ICC 12 and -strict-ansi
+** fix some ICE with MSVC10
+** add the possibility to disable calls to cpuid (-DEIGEN_NO_CPUID) and other asm directives
+** and many other bug fixes such as: 406, 410, 398, 396, 394, 354, 352, 301,
+
+
+== Eigen 3.1.0-alpha1 ==
+
+Released December 6, 2011
+
+Main changes since 3.0:
+* Officially supported set of sparse modules. See this [http://eigen.tuxfamily.org/dox-devel/TutorialSparse.html page] for an overview of the features. Main changes:
+** new SparseCore module equivalent to the old Sparse module, the Sparse module is now a super module including all sparse-related modules
+*** the SparseMatrix class is now more versatile and supports an uncompressed mode for fast element insertion
+*** the SparseMatrix class now offer a unique and simplified API to insert elements
+*** DynamicSparseMatrix has been deprecated (moved into unsupported/SparseExtra)
+*** new conservative sparse * sparse matrix product which is also used by default
+** new SparseCholesky module featuring the SimplicialLLT and SimplicialLDLT built-in solvers
+** new IterativeLinearSolvers module featuring a conjugate gradient and stabilized bi-conjugate gradient iterative solvers with a basic Jacobi preconditioner
+* New SelfAdjointEigenSolver::computeDirect() function for fast eigen-decomposition through closed-form formulas (only for 2x2 and 3x3 real matrices)
+* New LLT::rankUpdate() function supporting both updates and down-dates
+* Optimization of reduction via partial unrolling (e.g., dot, sum, norm, etc.)
+* New coefficient-wise operators: && and ||
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=157 Feature 157] - New vector-wise operations for arrays: *, /, *=, and /=.
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=206 Feature 206] - Pre-allocation of intermediate buffers in JacobiSVD
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=370 Feature 370] - New typedefs for AlignedBox
+* All the fixes and improvements of the 3.0 branch up to the 3.0.4 release (see below)
+
+
+== Eigen 3.0.4 ==
+
+Released December 6, 2011
+
+Changes since 3.0.3:
+
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=363 Bug 363] - check for integer overflow in size computations
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=369 Bug 369] - Quaternion alignment is broken (and more alignment fixes)
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=354 Bug 354] - Converge better in SelfAdjointEigenSolver, and allow better handling of non-convergent cases
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=347 Bug 347] - Fix compilation on ARM NEON with LLVM 3.0 and iOS SDK 5.0
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=372 Bug 372] - Put unsupported modules documentation at the right place
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=383 Bug 383] - Fix C++11 compilation problem due to some constructs mis-interpreted as c++11 user-defined literals
+* [http://eigen.tuxfamily.org/bz/show_bug.cgi?id=373 Bug 373] - Compilation error with clang 2.9 when exceptions are disabled
+* Fix compilation issue with QuaternionBase::cast
+
+
+== Eigen 3.0.3 ==
+
+Released October 6, 2011
+
+Changes since 3.0.2:
+
+* Fix compilation errors when Eigen2 support is enabled.
+* Fix bug in evaluating expressions of the form matrix1 * matrix2 * scalar1 * scalar2.
+* Fix solve using LDLT for singular matrices if solution exists.
+* Fix infinite loop when computing SVD of some matrices with very small numbers.
+* Allow user to specify pkgconfig destination.
+* Several improvements to the documentation.
+
+
+== Eigen 3.0.2 ==
+
+Released August 26, 2011
+
+Changes since 3.0.1:
+
+* Windows.h: protect min/max calls from macros having the same name (no need to #undef min/max anymore).
+* MinGW: fix compilation issues and pretty gdb printer.
+* Standard compliance: fix aligned_allocator and remove uses of long long.
+* MPReal: updates for the new version.
+* Other fixes:
+** fix aligned_stack_memory_handler for null pointers.
+** fix std::vector support with gcc 4.6.
+** fix linking issue with OpenGL support.
+** fix SelfAdjointEigenSolver for 1x1 matrices.
+** fix a couple of warnings with new compilers.
+** fix a few documentation issues.
+
+
+== Eigen 3.0.1 ==
+
+Released May 30, 2011
+
+Changes since 3.0.0:
+
+* Fix many bugs regarding ARM and NEON (Now all tests succeed on ARM/NEON).
+* Fix compilation on gcc 4.6
+* Improved support for custom scalar types:
+** Fix memory leak issue for scalar types throwing exceptions.
+** Fix implicit scalar type conversion.
+** Math functions can be defined in the scalar type's namespace.
+* Fix bug in trapezoidal matrix time matrix product.
+* Fix asin.
+* Fix compilation with MSVC 2005 (SSE was wrongly enabled).
+* Fix bug in EigenSolver: normalize the eigen vectors.
+* Fix Qt support in Transform.
+* Improved documentation.
+
+
+== Eigen 3.0.0 ==
+
+Released March 19, 2011, at the [[Paris_2011_Meeting|meeting]].
+
+See the [[3.0|Eigen 3.0 release notes]].
+
+Only change since 3.0-rc1:
+* Fixed compilation of the unsupported 'openglsupport' test.
+
+
+== Eigen 3.0-rc1 ==
+
+Released March 14, 2011.
+
+Main changes since 3.0-beta4:
+
+* Core: added new EIGEN_RUNTIME_NO_MALLOC option and new set_is_malloc_allowed() option to finely control where dynamic memory allocation is allowed. Useful for unit-testing of functions that must not cause dynamic memory allocations.
+* Core: SSE performance fixes (follow-up from bug 203).
+* Core: Fixed crashes when using EIGEN_DONT_ALIGN or EIGEN_DONT_ALIGN_STATICALLY (bug 213 and friends).
+* Core: EIGEN_DONT_ALIGN and EIGEN_DONT_ALIGN_STATICALLY are now covered by unit tests.
+* Geometry: Fixed transform * matrix products (bug 207).
+* Geometry: compilation fix for mixing CompactAffine with Homogeneous objects
+* Geometry: compilation fix for 1D transform
+* SVD: fix non-computing constructors (correctly forward computationOptions) (bug 206)
+* Sparse: fix resizing when the destination sparse matrix is row major (bug 37)
+* more Eigen2Support improvements
+* more unit test fixes/improvements
+* more documentation improvements
+* more compiler warnings fixes
+* fixed GDB pretty-printer for dynamic-size matrices (bug 210)
+
+
+== Eigen 3.0-beta4 ==
+
+Released February 28, 2011.
+
+Main changes since 3.0-beta3:
+
+* Non-vectorization bug fixes:
+** fix bug 89: work around an extremely evil compiler bug on old GCC (<= 4.3) with the standard assert() macro
+** fix Umfpack back-end in the complex case
+* Vectorization bug fixes:
+** fix a segfault in "slice vectorization" when the destination might not be aligned on a scalar (complex<double>)
+** fix bug 195: fast SSE unaligned loads fail on GCC/i386 and on Clang
+** fix bug 186: worked around a GCC 4.3 i386 backend issue with SSE
+** fix bug 203: SSE: a workaround used in pset1() resulted in poor assembly
+** worked around a GCC 4.2.4 internal compiler error with vectorization of complex numbers
+** lots of AltiVec compilation fixes
+** NEON compilation fixes
+* API additions and error messages improvements
+** Transform: prevent bad user code from compiling
+** fix bug 190: directly pass Transform Options to Matrix, allowing to use RowMajor. Fix issues in Transform with non-default Options.
+** factorize implementation of standard real unary math functions, and add acos, asin
+* Build/tests system
+** Lots of unit test improvements
+** fix installation of unsupported modules
+** fixed many compiler warnings, especially on the Intel compiler and on LLVM/Clang
+** CTest/CMake improvements
+** added option to build in 32bit mode
+* BLAS/LAPACK implementation improvements
+** The Blas library and tests are now automatically built as part of the tests.
+** expanded LAPACK interface (including syev)
+** now Sparse solver backends use our own BLAS/LAPACK implementation
+** fix bug 189 (cblat1 test failure)
+* Documentation
+** improved conservativeResize methods documentation
+** documented sorting of eigenvalues
+** misc documentation improvements
+** improve documentation of plugins
+
+
+== Eigen 3.0-beta3 ==
+
+Released February 12, 2011.
+
+The biggest news is that the API is now '''100% stable'''.
+
+Main changes since 3.0-beta2:
+
+* The "too many to list them all" category:
+**lots of bug fixes
+**lots of performance fixes
+**lots of compiler support fixes
+**lots of warning fixes
+**lots of unit tests improvements and fixes
+**lots of documentation improvements
+**lots of build system fixes
+*API changes:
+**replaced ei_ prefix by internal:: namespace. For example, ei_cos(x) becomes internal::cos(x).
+**renamed PlanarRotation -> JacobiRotation
+**renamed DenseStorageBase -> PlainObjectBase
+**HouseholderSequence API cleanup
+**refactored internal metaprogramming helpers to follow closely the standard library
+**made UpperBidiagonalization internal
+**made BandMatrix/TridiagonalMatrix internal
+**Core: also see below, "const correctness".
+**Sparse: EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET must be defined to use Eigen/Sparse
+**Core: random<interger type>() now spans over range of width RAND_MAX
+*New API:
+**Core: added Map static methods taking strides
+**SVD: added jacobiSvd() method
+**Sparse: many misc improvements and new features. Improved support for Cholmod, Amd, SuperLU and other back-ends.
+**Core: allow mixed real-complex dot products
+**Geometry: allow mixed real-complex cross products
+**Geometry: allow to pass Options parameters to Transform, Quaternion and other templates, to control memory alignment
+**QR: add threshold API to FullPivHouseholderQR
+**Core: added tan function
+*Const correctness:
+**Eigen now properly enforces const-correctness everywhere, for example with Map objects. This will break compilation of code that relied on former behavior.
+**A new kind of test suite was added to check that, 'failtest'.
+*BLAS/LAPACK:
+**Complete BLAS library built on top of Eigen. Imported BLAS test suite, which allowed to fix many issues.
+**Partial LAPACK implementation. Passing part of the LAPACK test suite, which also allowed to fix some issues.
+*Eigen 2 Support:
+**tons of improvements in EIGEN2_SUPPORT
+**new incremental migration path: see http://eigen.tuxfamily.org/dox-devel/Eigen2SupportModes.html
+**imported a copy of the Eigen 2 test suite, made sure that Eigen 3 passes it. That also allowed to fix several issues.
+
+
+== Eigen 3.0-beta2 ==
+
+Released October 15, 2010.
+
+Main changes since 3.0-beta1:
+
+* Add support for the vectorization of std::complex<> with SSE, AltiVec and NEON.
+* Add support for mixed real * complex matrix products with vectorization.
+* Finalize the JacobiSVD class with: compile time options, thin/full decompositions, and least-square solving.
+* Several improvement of the Transform class. In particular, there is no default mode anymore.
+* New methods: middleRows(), middleCols(), TriangularMatrix::conjugate()
+* New unsupported modules: OpenGL, MPFR C++
+* Many improvements in the support of empty objects.
+* Many improvements of the vectorization logic.
+* Add the possibility to extend QuaternionBase.
+* Vectorize Quaternion multiplication with double.
+* Significant improvements of the documentation.
+* Improved compile time errors.
+* Enforce static allocation of temporary buffers in gemm (when possible).
+* Fix aligned_delete for null pointers and non trivial dtors.
+* Fix eigen decomposition of 3x3 float matrices.
+* Fix 4x4 matrix inversions (vectorization).
+* Many fixes in QR: solving with m>n, use of rank, etc.
+* Fixes for MSVC for windows mobile and CLang.
+* Remove the Taucs backend (obsolete).
+* Remove the old SVD class (was causing too much troubles, a new decompozition based on bidiagonalisation/householder should come back soon, JacobiSVD can be used meanwhile).
+
+
+== Eigen 3.0-beta1 ==
+
+Released July 5, 2010

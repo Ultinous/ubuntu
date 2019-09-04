@@ -1,0 +1,4 @@
+version=3
+opts=uversionmangle=s/(\d)[_\.\-\+]?((RC|rc|pre|dev|beta|alpha|b|a)\d*)$/$1~$2/,dversionmangle=s/\+(debian|dfsg|ds|deb)\d*$// \
+http://eigen.tuxfamily.org/ .*/eigen/get/(\d\S+)\.(?:tgz|tbz2|txz|tar\.(?:gz|bz2|xz))
+# Bart Martens <bartm@debian.org>  Sun, 10 Mar 2013 20:58:43 +0000

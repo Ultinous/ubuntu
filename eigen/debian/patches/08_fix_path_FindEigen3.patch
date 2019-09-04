@@ -1,0 +1,16 @@
+Description: fix installation path for cmake-files
+Author: Anton Gladky <gladk@debian.org>
+Last-Update: 2015-12-18
+Index: eigen-eigen-323c052e1731/CMakeLists.txt
+===================================================================
+--- eigen-eigen-323c052e1731.orig/CMakeLists.txt
++++ eigen-eigen-323c052e1731/CMakeLists.txt
+@@ -393,7 +393,7 @@ else()
+       )
+ endif()
+ set(CMAKEPACKAGE_INSTALL_DIR
+-    "${CMAKE_INSTALL_DATADIR}/eigen3/cmake"
++    "/usr/lib/cmake/eigen3"
+     CACHE PATH "The directory relative to CMAKE_PREFIX_PATH where Eigen3Config.cmake is installed"
+     )
+ set(PKGCONFIG_INSTALL_DIR

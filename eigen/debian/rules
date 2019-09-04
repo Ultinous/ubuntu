@@ -1,0 +1,33 @@
+#! /usr/bin/make -f
+BUILDDIR = $(CURDIR)/debian/build
+
+%:
+	dh $@ --buildsystem=cmake --builddirectory=$(BUILDDIR)
+
+export DEB_BUILD_MAINT_OPTIONS := hardening=+all
+
+sse_archs = amd64 i386 kfreebsd-amd64 kfreebsd-i386
+
+extra_flags += -DDART_TESTING_TIMEOUT=300
+
+ifneq (,$(filter $(DEB_HOST_ARCH),$(sse_archs)))
+	extra_flags += \
+		-DEIGEN_TEST_SSE2=ON \
+		-DEIGEN_TEST_SSE3=ON
+endif
+	
+override_dh_auto_configure:
+	dh_auto_configure -- $(extra_flags)
+
+override_dh_installchangelogs:
+	dh_installchangelogs debian/Changelog_upstream
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	cd $(BUILDDIR); $(MAKE) buildtests
+	dh_auto_test ARGS=-VV || true
+endif
+
+override_dh_auto_build-indep:
+	cd $(BUILDDIR); $(MAKE) doc
+	rm -f $(BUILDDIR)/doc/html/unsupported/installdox

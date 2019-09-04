@@ -1,0 +1,16 @@
+Description: Do not set HTML_TIMESTAMP in documentation
+Author: Anton Gladky <gladk@debian.org>
+Last-Update: 2015-06-17
+Index: eigen-eigen-323c052e1731/doc/Doxyfile.in
+===================================================================
+--- eigen-eigen-323c052e1731.orig/doc/Doxyfile.in
++++ eigen-eigen-323c052e1731/doc/Doxyfile.in
+@@ -1014,7 +1014,7 @@ HTML_COLORSTYLE_GAMMA  = 80
+ # page will contain the date and time when the page was generated. Setting
+ # this to NO can help when comparing the output of multiple runs.
+ 
+-HTML_TIMESTAMP         = YES
++HTML_TIMESTAMP         = NO
+ 
+ # If the HTML_DYNAMIC_SECTIONS tag is set to YES then the generated HTML
+ # documentation will contain sections that can be hidden and shown after the

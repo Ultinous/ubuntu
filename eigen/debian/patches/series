@@ -1,0 +1,8 @@
+02_remove_buildtype_check.patch
+04_remove_piwik.patch
+05_remove_html_timestamp.patch
+06_remove_doc_matrix.patch
+07_remove_compressed_doc.patch
+08_fix_path_FindEigen3.patch
+12_grammar_tweak.patch
+14_fix_alignment_mips.patch

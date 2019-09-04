@@ -1,0 +1,13 @@
+Description: Remove the line, which causes unreproducible builds
+Author: Anton Gladky <gladk@debian.org>
+Last-Update: 2015-06-18
+Index: eigen-eigen-323c052e1731/doc/snippets/Matrix_resize_int_int.cpp
+===================================================================
+--- eigen-eigen-323c052e1731.orig/doc/snippets/Matrix_resize_int_int.cpp
++++ eigen-eigen-323c052e1731/doc/snippets/Matrix_resize_int_int.cpp
+@@ -6,4 +6,4 @@ m.resize(3,2);
+ cout << "here's the 3x2 matrix m:" << endl << m << endl;
+ cout << "now let's resize m to size 2x2. This is NOT a conservative resizing, so it becomes uninitialized:" << endl;
+ m.resize(2,2);
+-cout << m << endl;
++
