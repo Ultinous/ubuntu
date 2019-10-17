@@ -1,3 +1,9 @@
+libjpeg-turbo (1.5.2-0ubuntu6+ultinous2) bionic; urgency=medium
+
+  * Add 'X-Ultinous-Upstream-Release' attribute to control.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 17 Oct 2019 14:02:31 +0000
+
 libjpeg-turbo (1.5.2-0ubuntu6+ultinous1) xenial; urgency=medium
 
   * Backported to xenial

@@ -17,6 +17,7 @@ Standards-Version: 3.9.8
 Vcs-Browser: https://salsa.debian.org/science-team/eigen3
 Vcs-Git: https://salsa.debian.org/science-team/eigen3.git
 Homepage: http://eigen.tuxfamily.org
+X-Ultinous-Upstream-Release: http://bitbucket.org/eigen/eigen/get/3.3.7.tar.gz
 
 Package: libeigen3-dev
 Architecture: all

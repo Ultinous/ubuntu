@@ -13,6 +13,7 @@ Standards-Version: 4.1.4
 Vcs-Browser: https://salsa.debian.org/debian/libuv1
 Vcs-Git: https://salsa.debian.org/debian/libuv1.git
 Homepage: https://github.com/libuv/libuv
+X-Ultinous-Upstream-Release: https://dist.libuv.org/dist/v1.24.1/libuv-v1.24.1.tar.gz
 
 Package: libuv1-dev
 Architecture: any

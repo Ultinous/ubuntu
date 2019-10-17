@@ -23,7 +23,7 @@
     <target name="compile" depends="generate">
         <mkdir dir="${classesdir}"/>
         <javac srcdir="${generateddir}:${javasrcdir}/main/java"
-               destdir="${classesdir}" source="1.6" target="1.6"
+               destdir="${classesdir}" source="1.7" target="1.7"
                includeantruntime="false" />
     </target>
 

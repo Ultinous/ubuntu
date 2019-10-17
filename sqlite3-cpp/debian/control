@@ -7,6 +7,7 @@ Build-Depends: debhelper (>= 11), cmake, libsqlite3-dev, libgtest-dev
 Standards-Version: 4.1.4
 Vcs-Git: https://github.com/SRombauts/SQLiteCpp.git
 Vcs-Browser: https://github.com/SRombauts/SQLiteCpp
+X-Ultinous-Upstream-Release: https://github.com/SRombauts/SQLiteCpp/archive/2.2.0.tar.gz
 
 Package: libsqlite3-cpp2
 Architecture: any

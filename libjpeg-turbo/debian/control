@@ -8,6 +8,7 @@ Build-Depends: debhelper (>= 9), dh-autoreconf, nasm [amd64 i386], quilt
 Standards-Version: 3.9.7
 Vcs-Bzr: lp:libjpeg-turbo
 Homepage: http://libjpeg-turbo.virtualgl.org/
+X-Ultinous-Upstream-Release: https://netcologne.dl.sourceforge.net/project/libjpeg-turbo/1.5.2/libjpeg-turbo-1.5.2.tar.gz
 
 Package: libjpeg-turbo8-dev
 Architecture: any

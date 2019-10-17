@@ -78,6 +78,7 @@ Build-Depends:
  nasm,
 # autodetected zlib
  zlib1g-dev
+X-Ultinous-Upstream-Release: https://ffmpeg.org/releases/ffmpeg-3.4.6.tar.xz
 
 Package: ffmpeg
 Architecture: any

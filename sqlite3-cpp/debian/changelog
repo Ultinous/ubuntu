@@ -1,3 +1,9 @@
+sqlite3-cpp (2.2.0-1ultinous2) bionic; urgency=medium
+
+  * Add 'X-Ultinous-Upstream-Release' attribute to control.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 17 Oct 2019 14:02:42 +0000
+
 sqlite3-cpp (2.2.0-1ultinous1) bionic; urgency=medium
 
   * Ported sqlite3-cpp (2.2.0-1) to bionic.

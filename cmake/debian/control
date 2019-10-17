@@ -25,6 +25,7 @@ Standards-Version: 4.1.4
 Vcs-Git: https://salsa.debian.org/cmake-team/cmake.git
 Vcs-Browser: https://salsa.debian.org/cmake-team/cmake
 Homepage: https://cmake.org/
+X-Ultinous-Upstream-Release: https://cmake.org/files/v3.13/cmake-3.13.4.tar.gz
 
 Package: cmake
 Architecture: any

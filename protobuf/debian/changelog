@@ -1,3 +1,10 @@
+protobuf (3.7.0-1ultinous2) bionic; urgency=medium
+
+  * Add 'X-Ultinous-Upstream-Release' attribute to control.
+  * Fix java-build.xml
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 17 Oct 2019 14:02:34 +0000
+
 protobuf (3.7.0-1ultinous1) bionic; urgency=medium
 
   * ultinous ported to bionic

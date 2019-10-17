@@ -1,3 +1,9 @@
+ffmpeg (7:3.4.6-1ultinous3) bionic; urgency=medium
+
+  * Add 'X-Ultinous-Upstream-Release' attribute to control.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 17 Oct 2019 14:02:29 +0000
+
 ffmpeg (7:3.4.6-1ultinous2) bionic; urgency=medium
 
   * Applied ultinous patches

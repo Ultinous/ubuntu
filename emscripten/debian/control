@@ -9,6 +9,7 @@ Standards-Version: 3.9.7
 Homepage: http://emscripten.org/
 Vcs-Svn: svn://anonscm.debian.org/pkg-llvm/emscripten/trunk/
 Vcs-Browser: http://svn.debian.org/viewsvn/pkg-llvm/emscripten/trunk/
+X-Ultinous-Upstream-Release: https://github.com/emscripten-core/emscripten/archive/1.38.32.tar.gz
 
 Package: emscripten
 # Not set to "any". See bug #723129

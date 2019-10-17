@@ -9,6 +9,7 @@ Section: libs
 Homepage: https://github.com/rollbear/trompeloeil
 Vcs-Git: https://github.com/ultinous/ubuntu.git
 Vcs-Browser: https://github.com/ultinous/ubuntu
+X-Ultinous-Upstream-Release: https://github.com/rollbear/trompeloeil/archive/v34.tar.gz
 
 Package: trompeloeil-dev
 Section: libdevel

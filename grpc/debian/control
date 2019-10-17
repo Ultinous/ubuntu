@@ -19,6 +19,7 @@ Section: libs
 Homepage: http://www.grpc.io/
 Vcs-Git: https://salsa.debian.org/debian/grpc.git
 Vcs-Browser: https://salsa.debian.org/debian/grpc
+X-Ultinous-Upstream-Release: https://github.com/grpc/grpc/archive/v1.17.2.tar.gz
 
 Package: libgrpc-dev
 Section: libdevel

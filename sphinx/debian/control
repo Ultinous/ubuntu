@@ -59,6 +59,7 @@ Build-Depends-Indep: dh-python (>= 3.20180313~),
 Standards-Version: 4.1.4
 Vcs-Git: https://salsa.debian.org/python-team/modules/sphinx.git
 Vcs-Browser: https://salsa.debian.org/python-team/modules/sphinx
+X-Ultinous-Upstream-Release: https://pypi.debian.net/Sphinx/Sphinx-1.8.5.tar.gz
 
 Package: python-sphinx
 Architecture: all

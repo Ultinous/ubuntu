@@ -1,3 +1,9 @@
+pybind11 (2.2.4-2ultinous3) bionic; urgency=medium
+
+  * Add 'X-Ultinous-Upstream-Release' attribute to control.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 17 Oct 2019 14:02:34 +0000
+
 pybind11 (2.2.4-2ultinous2) bionic; urgency=medium
 
   * Rebuilt with libeigen3 3.3.7-1ultinous2
