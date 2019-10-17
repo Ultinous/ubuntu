@@ -1,3 +1,9 @@
+trompeloeil (34-1ultinous4) bionic; urgency=medium
+
+  * Change source format to quilt
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 17 Oct 2019 14:23:29 +0000
+
 trompeloeil (34+1ultinous3) bionic; urgency=medium
 
   * Add 'X-Ultinous-Upstream-Release' attribute to control.
