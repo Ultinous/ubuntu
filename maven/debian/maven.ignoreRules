@@ -1,5 +1,0 @@
-org.codehaus.mojo animal-sniffer-maven-plugin * * * *
-org.codehaus.mojo buildnumber-maven-plugin * * * *
-org.apache.maven.plugins maven-assembly-plugin * * * *
-org.apache.maven.plugins maven-enforcer-plugin * * * *
-#org.apache.rat apache-rat-plugin * * * *
