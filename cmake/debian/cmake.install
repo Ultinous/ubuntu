@@ -1,4 +1,3 @@
-debian/debtoolchainfilegen usr/share/cmake/
 usr/bin/cmake
 usr/bin/cpack
 usr/bin/ctest

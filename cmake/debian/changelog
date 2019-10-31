@@ -1,45 +1,23 @@
-cmake (3.13.4-1ultinous2) bionic; urgency=medium
+cmake (3.14.0-1ultinous2) bionic; urgency=medium
 
-  *  Add 'X-Ultinous-Upstream-Release' attribute to control.
+  * Ported to Bionic
+  * Add 'X-Ultinous-Upstream-Release' attribute to control.
 
- -- Kozák Miklós <garmine@ultinous.com>  Thu, 17 Oct 2019 14:02:23 +0000
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 31 Oct 2019 13:59:13 +0000
 
-cmake (3.13.4-1ultinous1) bionic; urgency=medium
-
-  * Ported to bionic.
-
- -- Lengyel Zsolt <zsolt@ultinous.com>  Tue, 26 Feb 2019 10:21:58 +0000
-
-cmake (3.13.4-1) unstable; urgency=medium
+cmake (3.14.0-1ultinous1) stretch; urgency=medium
 
   * New upstream release.
 
- -- Felix Geyer <fgeyer@debian.org>  Sun, 10 Feb 2019 11:33:12 +0100
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Wed, 20 Mar 2019 10:07:29 +0000
 
-cmake (3.13.2-1) unstable; urgency=medium
+cmake (3.13.0-1ultinous1) stretch; urgency=medium
 
-  * New upstream release.
-    - No longer passes implicit include directories to the moc tool,
-      fixing kio FTBFS. (Closes: #915391)
+  * Ported to stretch
+  * Source obtained from github.com
+  * Debian packaging obtained from tracker.debian.org
 
- -- Felix Geyer <fgeyer@debian.org>  Fri, 14 Dec 2018 19:07:46 +0100
-
-cmake (3.13.1-1) unstable; urgency=medium
-
-  [ Jelmer Vernooĳ ]
-  * Use secure copyright file specification URI.
-  * Trim trailing whitespace.
-
-  [ Lisandro Damián Nicanor Pérez Meyer ]
-  * Add Helmut Grohne's script to generate toolchain files based on
-    Ubuntu/Debian's Multi-Arch as debtoolchainfilegen.
-
-  [ Felix Geyer ]
-  * New upstream release.
-    - Adds support for the Boost Stacktrace component. (Closes: #912074)
-  * Drop FindBoost_add_-lpthread_#563479.diff, fixed upstream.
-
- -- Felix Geyer <fgeyer@debian.org>  Fri, 30 Nov 2018 07:33:06 +0100
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Tue, 27 Nov 2018 13:44:34 +0100
 
 cmake (3.13.0~rc2-1) experimental; urgency=medium
 
@@ -75,6 +53,12 @@ cmake (3.12.3-1) unstable; urgency=medium
     - Cherry-pick upstream fix in hurd_so_noexec.patch
 
  -- Felix Geyer <fgeyer@debian.org>  Sun, 07 Oct 2018 16:38:46 +0200
+
+cmake (3.12.1-1.2ultinous1) stretch; urgency=medium
+
+  * ultinous ported to stretch
+
+ -- Kristof Frank <oturw@ultinous.com>  Mon, 08 Oct 2018 14:56:02 +0000
 
 cmake (3.12.1-1.1) unstable; urgency=medium
 
@@ -280,7 +264,7 @@ cmake (3.4.1-2) unstable; urgency=medium
 
 cmake (3.4.1-1) experimental; urgency=medium
 
-  * New upstream release.
+  * New upstream release. 
 
  -- Felix Geyer <fgeyer@debian.org>  Thu, 03 Dec 2015 18:45:35 +0100
 
@@ -507,7 +491,7 @@ cmake (2.8.12.1-1.5) unstable; urgency=medium
 cmake (2.8.12.1-1.4) unstable; urgency=medium
 
   * Non-maintainer upload.
-  * Add support for mips64 mips64el mipsn32 mipsn32el in
+  * Add support for mips64 mips64el mipsn32 mipsn32el in 
     Modules/FindJNI.cmake.
     Add FindJNI.cmake.mips.patch.
     Patch by Yunqiang Su.
@@ -1171,7 +1155,7 @@ cmake (2.8.0~rc3-1) experimental; urgency=low
     - FindJNI.cmake-more-arches.diff - remove, was taken from upstream;
     - FindVTK.cmake-vtk-5.4.diff - remove, was taken from upstream.
   * Update install files.
-  * Call dpkg with --print-architecture rather than obsolete
+  * Call dpkg with --print-architecture rather than obsolete 
     --print-installation-architecture.
   * Fix lintian override cmake-data: extra-license-file.
   * Remove obsolete README.Debian.
@@ -1392,7 +1376,7 @@ cmake (2.6.0-1) experimental; urgency=low
 
 cmake (2.6.0~rc8-1.1) experimental; urgency=low
 
-  * Non-maintainer upload with permission from DadCoder.
+  * Non-maintainer upload with permission from DadCoder. 
     Happy Prague visit.
   * Fix FindQt4.cmake (Closes: #477110)
 
@@ -1484,7 +1468,7 @@ cmake (2.4.5-1) unstable; urgency=low
     Do not depend on optimized libraries for a debug build and visa versa.
     Fix target name matching custom command output conflict.
     Fix FindQt3 so that it does not find qt4
-    Fix FindKDE4 so that it only looks for kde4-config
+    Fix FindKDE4 so that it only looks for kde4-config 
 
  -- A. Maitland Bottoms <bottoms@debian.org>  Mon,  4 Dec 2006 16:29:44 -0500
 
