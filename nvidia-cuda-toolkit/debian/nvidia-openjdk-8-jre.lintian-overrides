@@ -1,0 +1,20 @@
+# this package is only meant as a temporary measure
+# until upstream supports a current jdk
+
+binary-has-unneeded-section
+copyright-file-contains-full-apache-2-license
+embedded-library
+executable-not-elf-or-script
+extra-license-file
+font-in-non-font-package
+font-outside-font-dir
+hardening-no-bindnow
+hardening-no-fortify-functions
+hardening-no-pie
+hardening-no-relro
+image-file-in-usr-lib
+package-contains-documentation-outside-usr-share-doc
+shlib-calls-exit
+spelling-error-in-binary
+spelling-error-in-copyright
+unstripped-binary-or-object

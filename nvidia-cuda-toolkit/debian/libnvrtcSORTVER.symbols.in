@@ -1,0 +1,6 @@
+libnvrtc-builtins.so.#RTSOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ (symver)libnvrtc-builtins.so.#RTSOVERSION# 0
+libnvrtc.so.#RTSOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ (symver)libnvrtc.so.#RTSOVERSION# 0

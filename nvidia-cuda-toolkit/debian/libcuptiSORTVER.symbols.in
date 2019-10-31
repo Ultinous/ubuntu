@@ -1,0 +1,3 @@
+libcupti.so.#RTSOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: libcupti-dev
+ (symver)libcupti.so.#RTSOVERSION# 0

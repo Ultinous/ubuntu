@@ -1,0 +1,3 @@
+libnppig.so.#SOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ (symver)libnppig.so.#SOVERSION# 0

@@ -1,0 +1,3 @@
+etc/nvcc.profile	usr/lib/nvidia-cuda-toolkit/bin/nvcc.profile
+
+usr/lib/nvidia-cuda-toolkit/libdevice	usr/lib/cuda/nvvm/libdevice

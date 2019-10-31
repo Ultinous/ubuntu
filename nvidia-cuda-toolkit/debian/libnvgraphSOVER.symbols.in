@@ -1,0 +1,3 @@
+libnvgraph.so.#SOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ (symver)libnvgraph.so.#SOVERSION# 0

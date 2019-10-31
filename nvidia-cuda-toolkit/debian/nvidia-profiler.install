@@ -1,0 +1,2 @@
+usr/bin/nvprof			usr/lib/nvidia-cuda-toolkit/bin/
+debian/nvprof			usr/bin/

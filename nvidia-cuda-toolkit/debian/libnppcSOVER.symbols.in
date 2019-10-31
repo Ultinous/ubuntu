@@ -1,0 +1,3 @@
+libnppc.so.#SOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ (symver)libnppc.so.#SOVERSION# 0

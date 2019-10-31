@@ -1,0 +1,5 @@
+# upstream provides no signatures
+debian-watch-does-not-check-gpg-signature
+
+# patching is done manually after unpacking the .run files
+patch-file-present-but-not-mentioned-in-series

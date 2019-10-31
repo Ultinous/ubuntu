@@ -1,0 +1,16 @@
+libnvvm.so.3 #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ __nvvmHandle@Base 5.5
+ nvvmAddModuleToProgram@Base 5.5
+ nvvmCompileProgram@Base 5.5
+ nvvmCreateProgram@Base 5.5
+ nvvmDestroyProgram@Base 5.5
+ nvvmGetCompiledResult@Base 5.5
+ nvvmGetCompiledResultSize@Base 5.5
+ nvvmGetErrorString@Base 5.5
+ nvvmGetProgramLog@Base 5.5
+ nvvmGetProgramLogSize@Base 5.5
+ nvvmIRVersion@Base 7.0
+ nvvmLazyAddModuleToProgram@Base 10.0
+ nvvmVerifyProgram@Base 5.5
+ nvvmVersion@Base 5.5

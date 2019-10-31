@@ -1,0 +1,3 @@
+libcurand.so.#SOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ (symver)libcurand.so.#SOVERSION# 0

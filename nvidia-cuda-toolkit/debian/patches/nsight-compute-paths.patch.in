@@ -1,0 +1,17 @@
+Description: adjust paths for nsight-compute
+Author: Andreas Beckmann <anbe@debian.org>
+
+--- a/nvidia-cuda/NsightCompute-#NSIGHT_COMPUTE_VERSION#/nv-nsight-cu
++++ b/nvidia-cuda/NsightCompute-#NSIGHT_COMPUTE_VERSION#/nv-nsight-cu
+@@ -1,3 +1,4 @@
+ #!/bin/bash
+ APPDIR="$(dirname "${0}")"
++APPDIR=/usr/lib/nsight-compute
+ "$APPDIR/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/nv-nsight-cu" $@
+--- a/nvidia-cuda/NsightCompute-#NSIGHT_COMPUTE_VERSION#/nv-nsight-cu-cli
++++ b/nvidia-cuda/NsightCompute-#NSIGHT_COMPUTE_VERSION#/nv-nsight-cu-cli
+@@ -1,3 +1,4 @@
+ #!/bin/bash
+ APPDIR="$(dirname "${0}")"
++APPDIR=/usr/lib/nsight-compute
+ "$APPDIR/target/#NSIGHT_COMPUTE_DESKTOP_DIR#/nv-nsight-cu-cli" $@

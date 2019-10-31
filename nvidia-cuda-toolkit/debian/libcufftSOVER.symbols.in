@@ -1,0 +1,3 @@
+libcufft.so.#SOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ (symver)libcufft.so.#SOVERSION# 0

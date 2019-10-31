@@ -1,0 +1,103 @@
+nvidia-cuda-toolkit for Debian
+------------------------------
+Contents:
+  1. Getting NVCC Working with the Compiler
+  2. Installing the CUDA Code Samples
+
+Getting NVCC Working with the Compiler
+======================================
+
+It is worth noting that not all compilers can be used together with NVCC.
+Here is a list of possible combinations:
+
+    ```
+                 |  CUDA Toolkit Version                         |
+    CXX compiler |  7.5  |  8.0  |  9.0  |  9.1  |  9.2  | 10.0  |
+    -------------+-------+-------+-------+-------+-------+-------+
+    GCC-9        |   -   |   -   |   -   |   -   |   -   |   -   |
+    GCC-8        |   -   |   -   |   -   |   -   |   -   |   -   |
+    GCC-7        |   -   |   -   |   -   |   -   |  OK   |  OK   |
+    GCC-6        |   -   |   -   |  OK   |  OK   |  OK   |  OK   |
+    GCC-5        | OK[1] |  OK   |  OK   |  OK   |  OK   |  OK   |
+    -------------+-------+-------+-------+-------+-------+-------+
+    CLANG-8      |   -   |   -   |   -   |   -   |   -   |   -   |
+    CLANG-7      |   -   |   -   |   -   |   -   |   -   |   -   |
+    CLANG-6.0    |   -   |   -   |   -   |   -   |   -   |  OK   |
+    CLANG-5.0    |   -   |   -   |   -   |   -   |  OK   |  OK   |
+    CLANG-4.0    |   -   |   -   |   -   |  OK   |  OK   |  OK   |
+    CLANG-3.9    |   -   |   -   |  OK   |  OK   |  OK   |  OK   |
+    CLANG-3.8    |   -   |  OK   |  OK   |  OK   |  OK   |  OK   |
+    ```
+
+In the above table, '?' means 'not tested', '-' means 'never work',
+'OK' means 'should work'.
+
+CUDA 8.0 Specific
+-----------------
+
+The recommended way, as declared in NEWS, to compile your CUDA application
+with CUDA 8.0 is to globally use clang-3.8/clang++-3.8 as the C/CXX compiler
+for your project. Example:
+
+  CC=clang-3.8 make
+
+However, when you have to mix the use of GCC and CLANG, things differ.
+Due to the difference on the default options of the two compilers, you
+may have to add flags such as -fPIC/-fPIE or alike to CLANG's argument
+list, to avoid the linkage failure as reported in BUG #861878 [2].
+See [3] for detail about these compiler options. Example:
+
+  nvcc -ccbin clang-3.8 --compiler-options -fPIC ...
+
+Sidenotes
+---------
+
+Debian Stretch ships CUDA 8.0, and the same time its default GCC is
+GCC-6. So we changed the default compiler to clang-3.8 for the CUDA 8.0
+package because Stretch ships no GCC-5.
+
+[1] CUDA 7.5 works with GCC-5 after begin patched.
+[2] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=861878
+[3] https://gcc.gnu.org/onlinedocs/gcc/Code-Gen-Options.html
+
+
+Installing the CUDA Code Samples
+=================================
+
+The CUDA Code Samples come with non-redistributable media files (images,
+videos, ...) and therefore cannot be packaged.
+(See https://bugs.debian.org/702948 for details.)
+
+To install the CUDA Code Samples, download the RUN installer for Linux from
+https://developer.nvidia.com/cuda-downloads#linux
+This download includes an old driver and the full toolkit, but unfortunately
+there is no separate download available for the Samples.
+
+Install the Samples to ~/NVIDIA_CUDA-9.2_Samples with
+
+  sh cuda_9.2.148_396.37_linux.run --silent --samples --samplespath=$HOME --toolkitpath=/usr
+
+(Adjust the version numbers if you downloaded a different version.)
+
+The following Debian packages are needed to build the examples:
+  * freeglut3-dev
+  * libgles2-mesa-dev
+  * libnvcuvid1 (not on Ubuntu based systems)
+This optional package will be used if it is installed, too:
+  * mpi-default-dev
+For using clang as host compiler, this package is needed as well:
+  * libomp-dev
+
+To build the example programs, change to the directory where the Samples were
+installed (by default: ~/NVIDIA_CUDA-9.2_Samples/) and run
+
+    MA_LIBDIR=/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)
+    make CUDA_SEARCH_PATH=$MA_LIBDIR GLPATH=$MA_LIBDIR
+
+Optionally add HOST_COMPILER=... to select a different compiler for the host
+parts of the code. Currently up to g++-7 and clang++-5.0 are supported.
+
+For more information on the Samples, please see
+https://developer.nvidia.com/cuda-code-samples
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 01 Aug 2018 00:30:30 +0200

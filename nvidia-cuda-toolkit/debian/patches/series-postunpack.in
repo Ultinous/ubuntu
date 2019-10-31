@@ -1,0 +1,6 @@
+man-sections.patch
+man-typos.patch
+#!ppc64el#typos-amd64.patch
+man-hyphenation.patch
+debianize.patch
+#!ppc64el#nsight-compute-paths.patch
