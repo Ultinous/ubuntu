@@ -3,6 +3,7 @@ Priority: optional
 Maintainer: Zsolt Salamon <zsolt.salamon@ultinous.com>
 Uploaders: Kristof Frank <oturw@ultinous.com>
  , Lengyel Zsolt <zsolt@ultinous.com>
+ , Kozák Miklós <garmine@ultinous.com>
 Build-Depends: debhelper (>= 11), cmake
 Standards-Version: 4.1.4
 Section: libs

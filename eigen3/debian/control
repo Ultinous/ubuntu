@@ -2,6 +2,7 @@ Source: eigen3
 Maintainer: Debian Science Maintainers <debian-science-maintainers@lists.alioth.debian.org>
 Uploaders: Anton Gladky <gladk@debian.org>
  , Lengyel Zsolt <zsolt@ultinous.com>
+ , Kozák Miklós <garmine@ultinous.com>
 Section: libdevel
 Priority: optional
 Build-Depends: cmake,

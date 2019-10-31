@@ -4,7 +4,8 @@ Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 XSBC-Original-Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
 Uploaders: Dmitry Shachnev <mitya57@debian.org>,
-           Lengyel Zsolt <zsolt@ultinous.com>
+           Lengyel Zsolt <zsolt@ultinous.com>,
+           Kozák Miklós <garmine@ultinous.com>
 Homepage: http://sphinx-doc.org/
 Build-Depends: debhelper (>= 11)
 Build-Depends-Indep: dh-python (>= 3.20180313~),

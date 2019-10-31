@@ -5,6 +5,7 @@ Maintainer: Steve M. Robbins <smr@debian.org>
 Uploaders: Fredrik Hallenberg <hallon@debian.org>,
            Kristof Frank <oturw@ultinous.com>
            , Lengyel Zsolt <zsolt@ultinous.com>
+           , Kozák Miklós <garmine@ultinous.com>
 Priority: optional
 Build-Depends: debhelper (>= 11), cmake, python:native
 Standards-Version: 4.1.4

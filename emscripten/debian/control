@@ -4,6 +4,7 @@ Priority: extra
 Maintainer: LLVM Packaging Team <pkg-llvm-team@lists.alioth.debian.org>
 Uploaders: Sylvestre Ledru <sylvestre@debian.org>
  , Lengyel Zsolt <zsolt@ultinous.com>
+ , Kozák Miklós <garmine@ultinous.com>
 Build-Depends: debhelper (>= 10.0.0), python-all, help2man, node-uglify
 Standards-Version: 3.9.7
 Homepage: http://emscripten.org/

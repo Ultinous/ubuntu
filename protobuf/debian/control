@@ -3,6 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Laszlo Boszormenyi (GCS) <gcs@debian.org>
 Uploaders: Kristof Frank <oturw@ultinous.com>,
+ Kozák Miklós <garmine@ultinous.com>
 Build-Depends:
 # Debian build system
  , cmake

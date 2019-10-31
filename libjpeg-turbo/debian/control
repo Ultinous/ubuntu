@@ -3,7 +3,8 @@ Priority: optional
 Section: graphics
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Uploaders: Tom Gall <tom.gall@linaro.org>,
-           Fathi Boudra <fathi.boudra@linaro.org>
+           Fathi Boudra <fathi.boudra@linaro.org>,
+           Kozák Miklós <garmine@ultinous.com>
 Build-Depends: debhelper (>= 9), dh-autoreconf, nasm [amd64 i386], quilt
 Standards-Version: 3.9.7
 Vcs-Bzr: lp:libjpeg-turbo

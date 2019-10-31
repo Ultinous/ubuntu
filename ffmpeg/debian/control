@@ -9,6 +9,7 @@ Uploaders: Andreas Cadhalpun <Andreas.Cadhalpun@googlemail.com>,
  Balint Reczey <balint@balintreczey.hu>,
  James Cowgill <jcowgill@debian.org>
  , Lengyel Zsolt <zsolt@ultinous.com>
+ , Kozák Miklós <garmine@ultinous.com>
 Rules-Requires-Root: no
 Homepage: https://ffmpeg.org/
 Standards-Version: 4.1.4

@@ -1,6 +1,7 @@
 Source: libuv1
 Maintainer: Dominique Dumont <dod@debian.org>
 Uploaders: Luca Bruno <lucab@debian.org>
+ , Kozák Miklós <garmine@ultinous.com>
 Section: libs
 Priority: optional
 Build-Depends: debhelper (>= 11~),
