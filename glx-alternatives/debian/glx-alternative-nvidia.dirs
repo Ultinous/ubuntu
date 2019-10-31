@@ -1,0 +1,8 @@
+etc/modprobe.d
+etc/modules-load.d
+usr/lib/nvidia
+usr/lib/nvidia/bumblebee
+usr/lib/xorg/modules/drivers
+usr/lib/xorg/modules/extensions
+usr/lib/xorg/modules/linux
+usr/share/X11/xorg.conf.d

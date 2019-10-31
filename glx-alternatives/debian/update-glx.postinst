@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+
+if [ "$1" = "triggered" ]; then
+
+	for trigger in $2
+	do
+		case $trigger in
+			*--ping)
+				dpkg-trigger --no-await ${trigger%--ping}--pong
+				;;
+		esac
+	done
+
+fi
+
+
+#DEBHELPER#

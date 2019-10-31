@@ -1,0 +1,9 @@
+# The magic is in the maintainer scripts.
+empty-binary-package
+package-contains-no-arch-dependent-files
+# We don't ship libraries, but we divert them.
+maintscript-calls-ldconfig postinst
+# The diversions are placed here.
+package-contains-empty-directory usr/lib/mesa-diverted/i386-linux-gnu/
+package-contains-empty-directory usr/lib/mesa-diverted/x86_64-linux-gnu/
+package-contains-empty-directory usr/lib/mesa-diverted/arm-linux-gnueabihf/

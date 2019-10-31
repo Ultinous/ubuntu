@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+%:
+	dh $@
+
+debian/glx-alternative-mesa.triggers: debian/glx-alternative-mesa.triggers.sh
+	sh $< > $@
+
+override_dh_auto_build: debian/glx-alternative-mesa.triggers ;
+
+override_dh_auto_clean:
+	dh_auto_clean
+	$(RM) debian/glx-alternative-mesa.triggers
+
+override_dh_bugfiles:
+	dh_bugfiles -A

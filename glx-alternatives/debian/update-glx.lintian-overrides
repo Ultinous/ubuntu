@@ -1,0 +1,2 @@
+# this package only exists for architectures with proprietary graphics drivers
+package-contains-no-arch-dependent-files

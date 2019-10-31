@@ -1,0 +1,9 @@
+# We don't ship libraries, but we manipulate links.
+maintscript-calls-ldconfig postinst
+# This directory is used as the master alternative.
+package-contains-empty-directory usr/lib/nvidia/bumblebee/
+# The alternatives put slave links in these directories.
+package-contains-empty-directory usr/lib/xorg/modules/drivers/
+package-contains-empty-directory usr/lib/xorg/modules/extensions/
+package-contains-empty-directory usr/lib/xorg/modules/linux/
+package-contains-empty-directory usr/share/X11/xorg.conf.d/

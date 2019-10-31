@@ -1,0 +1,4 @@
+rm_conffile /etc/nvidia/nvidia-drm-outputclass.conf 0.6.91~
+rm_conffile /etc/nvidia/nvidia-blacklists-nouveau.conf 0.6.91~
+rm_conffile /etc/nvidia/nvidia-load.conf 0.6.91~
+symlink_to_dir /usr/share/doc/glx-alternative-nvidia glx-diversions 0.7.4~

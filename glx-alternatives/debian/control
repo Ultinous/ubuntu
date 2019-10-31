@@ -1,0 +1,115 @@
+Source: glx-alternatives
+Section: contrib/libs
+Priority: optional
+Maintainer: Debian NVIDIA Maintainers <pkg-nvidia-devel@lists.alioth.debian.org>
+Uploaders:
+ Andreas Beckmann <anbe@debian.org>,
+ Lengyel Zsolt <zsolt@ultinous.com>,
+ Kozak Miklos <garmine@ultinous.com>
+Build-Depends:
+ debhelper (>= 10),
+Standards-Version: 3.9.8
+Vcs-Browser: https://salsa.debian.org/nvidia-team/glx-alternatives
+Vcs-Git: https://salsa.debian.org/nvidia-team/glx-alternatives.git
+X-Ultinous-Upstream-Release: https://salsa.debian.org/nvidia-team/glx-alternatives/-/archive/debian/0.9.1/glx-alternatives-debian-0.9.1.tar.gz
+
+Package: update-glx
+Section: contrib/x11
+Architecture: i386 amd64 armhf
+Multi-Arch: foreign
+Pre-Depends:
+ dpkg (>= 1.17.21),
+ ${misc:Pre-Depends}
+Depends:
+ ${misc:Depends}
+Description: utility for switching the GLX implementation
+ In setups with several GLX providers (e.g. the free MESA implementation and
+ proprietary graphics hardware vendor implementations) this utility
+ allows one to switch between the different implementations.
+ .
+ Use 'update-glx --config glx' to select an implementation.
+ .
+ In addition to updating the alternatives, this will trigger further actions
+ needed to complete the switch.
+
+Package: glx-diversions
+Architecture: i386 amd64 armhf
+Multi-Arch: foreign
+Pre-Depends:
+ nvidia-installer-cleanup,
+Depends:
+ dpkg (>= 1.15),
+ glx-alternative-mesa (= ${binary:Version}),
+ ${misc:Depends}
+Conflicts:
+ libgl1-mesa-swx11,
+Description: prepare for using accelerated GLX implementations from GPU vendors
+ Diverts the free libGL.so implementation (MESA) and the xserver module
+ libglx.so (Xorg), preparing the system for plugging in accelerated
+ implementations from GPU vendors via alternatives, see the
+ glx-alternative-* packages.
+
+Package: glx-alternative-mesa
+Architecture: i386 amd64 armhf
+Multi-Arch: foreign
+Pre-Depends:
+ dpkg (>= 1.17.21),
+ ${misc:Pre-Depends}
+Depends:
+ update-glx (= ${binary:Version}),
+ ${misc:Depends}
+Recommends:
+ glx-diversions,
+Suggests:
+ libgl1-mesa-glx | libgl1,
+Breaks:
+# libGLX_indirect.so.0 alternative
+ nvidia-alternative (<< 390.67-3~),
+Description: allows the selection of MESA as GLX provider
+ In setups with several GLX providers (e.g. the free MESA implementation and
+ proprietary graphics hardware vendor implementations) this metapackage
+ allows one to switch back to MESA.
+ .
+ Use 'update-glx --config glx' to select an implementation.
+ .
+ This package does not depend on the corresponding MESA libraries.
+ In order to install the MESA libraries, install the libgl1-mesa-glx package
+ instead.
+
+Package: glx-alternative-nvidia
+Architecture: i386 amd64 armhf
+Multi-Arch: foreign
+Pre-Depends:
+ dpkg (>= 1.17.21),
+ ${misc:Pre-Depends}
+Depends:
+ update-glx (= ${binary:Version}),
+ glx-diversions (= ${binary:Version}),
+ glx-alternative-mesa,
+ ${misc:Depends}
+Suggests:
+ nvidia-driver,
+Breaks:
+# does not use the nvidia/bumblebee glx alternative
+ bumblebee-nvidia (<< 3.2.1-10~),
+# old-style modprobe configuration snippets
+# nvidia-alternative (<< 352.55),
+ nvidia-legacy-340xx-alternative (<< 340.93-2~),
+ nvidia-legacy-304xx-alternative (<< 304.132-1~),
+# ancient drivers
+#nvidia-alternative (<< 304),
+ nvidia-alternative-legacy-173xx (<< 304),
+ nvidia-alternative-legacy-96xx (<< 304),
+ nvidia-alternative-legacy-71xx (<< 304),
+# libGLX_indirect.so.0 alternative
+ nvidia-alternative (<< 390.67-3~),
+Description: allows the selection of NVIDIA as GLX provider
+ In setups with several GLX providers (e.g. the free MESA implementation and
+ proprietary graphics hardware vendor implementations) this metapackage
+ allows one to switch to the non-free NVIDIA driver and libraries.
+ .
+ Use 'update-glx --config glx' to select an implementation.
+ .
+ This package does not depend on the corresponding NVIDIA libraries.
+ In order to install the NVIDIA driver and libraries, install the
+ nvidia-driver package instead.

@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+
+if [ "$1" = "remove" ] || [ "$1" = "deconfigure" ]; then
+
+	update-alternatives --remove libGL.so-master /usr/lib/mesa-diverted
+	update-alternatives --remove glx /usr/lib/mesa-diverted
+
+fi
+
+
+#DEBHELPER#
