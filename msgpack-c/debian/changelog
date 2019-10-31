@@ -1,0 +1,231 @@
+msgpack-c (3.1.1-1ultinous2) bionic; urgency=medium
+
+  * Ported to bionic
+  * Add 'X-Ultinous-Upstream-Release' attribute to control.
+  * rules: Fix googletest install command so tests can run
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 31 Oct 2019 14:04:40 +0000
+
+msgpack-c (3.1.1-1ultinous1) stretch; urgency=medium
+
+  * ultinous ported to stretch
+  * New upstream release
+  * Add force endian set functionality (#736)
+  * Fix vrefbuffer memory management problem (#733)
+  * Fix msvc specific problem (#731, #732)
+  * Update boost from 1.61.0 to 1.68.0 (#730)
+  * Fix msgpack_timestamp type mismatch bug (#726)
+  * Improve documents (#687, #718)
+  * Add fuzzer support (#689)
+  * Fix msgpack::object union member access bug (#694)
+  * Improve cross platform configuration (#704)
+  * Fix out of range dereference bug of EXT (#705)
+  * Add timestamp support. std::chrono::system_clock::time_point is mapped to TIMESTAMP (#706)
+  * Add minimal timestamp support for C. The type msgpack_timestamp and the function msgpack_object_to_timestamp() are introduced (#707)
+  * Improve MSGPACK_DEFINE family name confliction probability (#710)
+  * Add no static-library build option (BUILD_SHARED_LIBS=ON) (#713, #717, #722)
+  * Add header only cmake target (#721)
+  * Add std::byte adaptor (#719)
+  * Remove some warnings (#720)
+
+ -- Zsolt Salamon <zsolt.salamon@ultinous.com>  Tue, 25 Sep 2018 12:03:35 +0200
+
+
+msgpack-c (3.0.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Use cmake+ninja dh buildsystem
+  * rules: Build googletest so tests can run
+
+ -- James McCoy <jamessan@debian.org>  Sat, 12 May 2018 07:34:55 -0400
+
+msgpack-c (3.0.0-1) unstable; urgency=medium
+
+  * New upstream release
+    + Fixes FTBFS with gcc8 (Closes: #897815)
+    + New v3 C++ API
+  * copyright: Bump years for debian/* and *
+  * Declare compliance with Policy 4.1.4, no changes needed
+  * control: Differentiate libmsgpack-dev short description from libmsgpackc2
+  * Build/run some of upstream's examples as basic autopkgtests
+
+ -- James McCoy <jamessan@debian.org>  Thu, 10 May 2018 23:08:20 -0400
+
+msgpack-c (2.1.5-2) unstable; urgency=medium
+
+  * control:
+    + Change Vcs-* to salsa.debian.org
+    + Declare compliance with Policy 4.1.3
+    + Set myself as maintainer.  Thanks to Taku YASUI for all his work on the
+      package
+    + Set Rules-Requires-Root to no
+  * Bump debhelper compat to 11
+  * Install doxygen docs using dh_installdocs
+  * rules: Remove -pie from hardening build options for dpkg >= 1.18.23
+  * Stop installing duplicate copy of upstream README
+  * Register API documentation with doc-base
+
+ -- James McCoy <jamessan@debian.org>  Wed, 28 Mar 2018 21:07:03 -0400
+
+msgpack-c (2.1.5-1) unstable; urgency=medium
+
+  * New upstream release
+  * Upload to unstable
+  * Declare compliance with Policy 4.1.0
+    + Change Priority from extra to optional
+
+ -- James McCoy <jamessan@debian.org>  Sun, 17 Sep 2017 08:53:26 -0400
+
+msgpack-c (2.1.3-1) experimental; urgency=medium
+
+  * New upstream release
+    + Fix FTBFS with gcc-7 (Closes: #853564)
+    + Bump minimum CMake version to 2.8.12
+    + Provide CMake config files to assist building against msgpack-c.
+
+ -- James McCoy <jamessan@debian.org>  Sun, 18 Jun 2017 22:15:47 -0400
+
+msgpack-c (2.1.1-1) experimental; urgency=medium
+
+  * New upstream release (Closes: #845066)
+    + Incompatible changes in v2 API
+      - Removed pointer versions of msgpack::unpack APIs.
+      - Removed pointer versions of msgpack::convert APIs.
+      - Removed msgpack::type::nil in favor of msgpack::type::nil_t.
+      - Removed std::string specialization for msgpack::object conversion.
+    + New FLOAT32/FLOAT64 object types, the latter of which is the same as the
+      existing FLOAT type.
+      - This also introduces explicit (un)pack functions that handle C's float
+        instead of coercing them to double.
+  * debian/rules: Rework to use CMake instead of autotools
+  * Update symbols for new APIs/object types
+  * Declare compliance with policy 3.9.8, no changes needed
+
+ -- James McCoy <jamessan@debian.org>  Thu, 01 Jun 2017 23:59:45 -0400
+
+msgpack-c (1.4.2-5) unstable; urgency=medium
+
+  * Backport upstream patches to fix FTBFS with GCC-7. (Closes: #871140)
+
+ -- James McCoy <jamessan@debian.org>  Mon, 21 Aug 2017 07:00:24 -0400
+
+msgpack-c (1.4.2-4) unstable; urgency=medium
+
+  * Apply another upstream patch to fix FTBFS on sparc64.
+
+ -- James McCoy <jamessan@debian.org>  Sat, 17 Sep 2016 13:53:14 -0400
+
+msgpack-c (1.4.2-3) unstable; urgency=medium
+
+  * Upload to unstable
+
+ -- James McCoy <jamessan@debian.org>  Fri, 02 Sep 2016 21:52:39 -0400
+
+msgpack-c (1.4.2-2) experimental; urgency=medium
+
+  * Apply upstream patch to fix FTBFS on sparc64.
+
+ -- James McCoy <jamessan@debian.org>  Thu, 21 Jul 2016 23:00:26 -0400
+
+msgpack-c (1.4.2-1) experimental; urgency=medium
+
+  * New upstream release
+    + Fix FTBFS with gcc6
+
+ -- James McCoy <jamessan@debian.org>  Tue, 28 Jun 2016 21:51:41 -0400
+
+msgpack-c (1.4.0-2) experimental; urgency=medium
+
+  * Bump minimum symbols version of APIs which deal with the object types.
+    (Closes: #814096)
+
+ -- James McCoy <jamessan@debian.org>  Sun, 14 Feb 2016 15:07:31 -0500
+
+msgpack-c (1.4.0-1) experimental; urgency=medium
+
+  * New upstream release
+    + libmsgpack.so no longer exists, since the C++ code is header-only.
+      libmsgpackc.so is the C library.
+  * Remove libmsgpack4 package.
+  * Build and include documentation in libmsgpack-doc
+
+ -- James McCoy <jamessan@debian.org>  Sat, 23 Jan 2016 02:12:45 -0500
+
+msgpack-c (1.3.0-3) experimental; urgency=medium
+
+  * Cherry-pick upstream patch to fix FTBFS on big-endian architectures.
+
+ -- James McCoy <jamessan@debian.org>  Fri, 15 Jan 2016 20:56:59 -0500
+
+msgpack-c (1.3.0-2) experimental; urgency=medium
+
+  * Cherry-pick upstream patch to fix FTBFS when “char” is unsigned.
+  * Enable all hardening build flags.
+
+ -- James McCoy <jamessan@debian.org>  Wed, 13 Jan 2016 20:03:40 -0500
+
+msgpack-c (1.3.0-1) experimental; urgency=medium
+
+  * New upstream release
+    + Fix FTBFS on ARM (Closes: #749079)
+    + License change from Apache 2.0 to Boost Software License 1.0
+    + Support for msgpack v5 format
+    + C++11 support
+    + Rewritten README with current links to msgpack information.  (Closes:
+      #703657)
+  * Point watch file to GitHub releases.
+  * Bump debhelper compat to 9
+  * Switch from cdbs to dh
+    + Use autotools-dev addon to update config.{sub,guess}.  (Closes: #734569)
+  * Add libgtest-dev and zlib1g-dev to Build-Depends, so the test suite can be
+    run.
+  * Enable C++11 support
+  * Mark libmsgpack4 and libmsgpackc2 as Multi-Arch: same
+  * Declare compliance with policy 3.9.6
+  * Include msgpack.pc in libmsgpack-dev
+
+ -- James McCoy <jamessan@debian.org>  Sun, 10 Jan 2016 22:45:48 -0500
+
+msgpack (0.5.7-3) unstable; urgency=low
+
+  * Migration from Subversion to Git
+  * Bump Standards-Version to 3.9.4.
+
+ -- Taku YASUI <tach@debian.org>  Fri, 16 Aug 2013 18:13:02 +0900
+
+msgpack (0.5.7-2) unstable; urgency=low
+
+  * Fix big-endian problem
+    - Add patch 20_fix_bigendian
+      https://github.com/msgpack/msgpack/commit/b8aa93ce30d11d091b339bff0e10ddf3a8d08daf
+
+ -- Taku YASUI <tach@debian.org>  Mon, 16 Apr 2012 03:23:53 +0900
+
+msgpack (0.5.7-1) unstable; urgency=low
+
+  * New upstream release
+  * Remove needless README.source
+  * Move repository to svn.debian.org
+    - Vcs-Svn: svn://svn.debian.org/svn/collab-maint/deb-maint/msgpack
+  * Bump Standards-Version to 3.9.3
+
+ -- Taku YASUI <tach@debian.org>  Sat, 31 Mar 2012 05:53:02 +0900
+
+msgpack (0.5.4-2) unstable; urgency=low
+
+  * Remove *.la file from libmsgpack-dev (closes: #622438)
+  * Change Standard-Version to 3.9.2
+
+ -- Taku YASUI <tach@debian.org>  Sat, 18 Jun 2011 12:31:24 +0900
+
+msgpack (0.5.4-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Taku YASUI <tach@debian.org>  Fri, 10 Sep 2010 23:49:13 +0900
+
+msgpack (0.5.1-1) unstable; urgency=low
+
+  * Initial release (closes: #588387)
+
+ -- Taku YASUI <tach@debian.org>  Mon, 12 Jul 2010 02:27:55 +0900

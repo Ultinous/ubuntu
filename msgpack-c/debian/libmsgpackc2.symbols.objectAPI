@@ -1,0 +1,11 @@
+# These functions are directly affected by changes to the
+# msgpack_object_type enum and msgpack_object_union type
+ msgpack_object_equal@Base 2.1.0
+ msgpack_object_print@Base 2.1.0
+ msgpack_object_print_buffer@Base 2.1.0
+ msgpack_pack_object@Base 2.1.0
+ msgpack_unpack@Base 2.1.0
+ msgpack_unpack_next@Base 2.1.0
+ msgpack_unpacker_next@Base 2.1.0
+ msgpack_unpacker_next_with_size@Base 2.1.0
+ msgpack_version_revision@Base 2.1.0

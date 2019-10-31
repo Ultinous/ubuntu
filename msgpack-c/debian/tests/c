@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+SRCDIR=$(pwd)
+
+cd "$AUTOPKGTEST_TMP"
+for example in lib_buffer_unpack simple_c user_buffer_unpack; do
+  echo "Testing c example '$example'"
+  cc -Wall -O2 $(pkg-config --cflags msgpack) $(pkg-config --libs msgpack) -o "$example" "$SRCDIR"/example/c/"$example".c
+  ./"$example"
+done

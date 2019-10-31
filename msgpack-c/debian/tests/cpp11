@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+
+SRCDIR=$(pwd)
+
+cd "$AUTOPKGTEST_TMP"
+for example in container non_def_con_class socket_stream_example; do
+  for v in 1 2 3; do
+    if [ "$example" = socket_stream_example ] && [ "$v" -eq 1 ]; then
+      continue
+    fi
+    echo "Testing cpp11 example '$example' with API version $v"
+    c++ -Wall -O2 -DMSGPACK_DEFAULT_API_VERSION="$v" -std=c++11 -o "$example" "$SRCDIR"/example/cpp11/"$example".cpp
+    ./"$example"
+  done
+done

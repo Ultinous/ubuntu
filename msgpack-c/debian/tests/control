@@ -1,0 +1,8 @@
+Tests: c
+Depends: @, build-essential, pkg-config
+
+Tests: cpp03
+Depends: @, build-essential
+
+Tests: cpp11
+Depends: @, build-essential

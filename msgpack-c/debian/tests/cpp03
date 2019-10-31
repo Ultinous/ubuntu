@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+SRCDIR=$(pwd)
+
+cd "$AUTOPKGTEST_TMP"
+for example in custom enum reuse_zone simple; do
+  for v in 1 2 3; do
+    echo "Testing cpp03 example '$example' with API version $v"
+    c++ -Wall -O2 -DMSGPACK_DEFAULT_API_VERSION="$v" -std=c++03 -pthread -o "$example" "$SRCDIR"/example/cpp03/"$example".cpp
+    ./"$example"
+  done
+done

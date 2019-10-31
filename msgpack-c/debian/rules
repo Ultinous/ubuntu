@@ -1,0 +1,44 @@
+#!/usr/bin/make -f
+
+DPKG_VER = $(shell dpkg-query --show --showformat '$${source:Version}' dpkg-dev)
+
+ifeq (yes,$(shell dpkg --compare-versions '$(DPKG_VER)' ge 1.18.23 && printf 'yes'))
+  export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+else
+  export DEB_BUILD_MAINT_OPTIONS=hardening=+all,-pie
+endif
+include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/buildflags.mk
+
+export CFLAGS CXXFLAGS CPPFLAGS LDFLAGS
+
+%:
+	dh $@ --buildsystem=cmake --builddirectory=build
+
+override_dh_auto_configure:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	mkdir build-gtest
+	cd build-gtest && \
+	  cmake -Wno-dev -DCMAKE_INSTALL_PREFIX=$(CURDIR)/build-gtest/install /usr/src/googletest/googletest && \
+	  make && \
+	  cmake -P cmake_install.cmake
+endif
+	env GTEST_ROOT=$(CURDIR)/build-gtest/install dh_auto_configure -- -DMSGPACK_CXX11=ON -DMSGPACK_ENABLE_SHARED=ON -DMSGPACK_ENABLE_CXX=ON -DCMAKE_INSTALL_LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
+
+override_dh_auto_build-indep:
+	dh_auto_build -- doxygen
+
+override_dh_install-indep:
+	dh_install -i
+	dh_doxygen
+
+override_dh_installdocs-indep:
+	mkdir -p build/html
+	mv build/doc_c/html build/html/msgpack-c
+	mv build/doc_cpp/html build/html/msgpack-cpp
+	dh_installdocs
+
+override_dh_auto_test-indep:
+
+override_dh_install:
+	dh_install --list-missing

@@ -1,0 +1,9 @@
+Document: msgpack-cpp
+Title: msgpack-c C++ API
+Author: FURUHASHI Sadayuki
+Section: Programming/C++
+Abstract: Documentation of msgpack-c's C++ API
+
+Format: HTML
+Index: /usr/share/doc/libmsgpack-dev/html/msgpack-cpp/index.html
+Files: /usr/share/doc/libmsgpack-dev/html/msgpack-cpp/*.html
