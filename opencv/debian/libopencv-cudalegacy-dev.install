@@ -1,0 +1,4 @@
+usr/include/opencv2/cudalegacy/*
+usr/include/opencv2/cudalegacy.hpp
+usr/lib/*/libopencv_cudalegacy.a
+usr/lib/*/libopencv_cudalegacy.so

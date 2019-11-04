@@ -1,0 +1,12 @@
+Index: opencv-3.4.0/CMakeLists.txt
+===================================================================
+--- opencv-3.4.0.orig/CMakeLists.txt
++++ opencv-3.4.0/CMakeLists.txt
+@@ -548,6 +548,7 @@ if(UNIX)
+   endif()
+   include(CheckFunctionExists)
+   include(CheckIncludeFile)
++  include(GNUInstallDirs)
+   include(CheckSymbolExists)
+ 
+   if(NOT APPLE)

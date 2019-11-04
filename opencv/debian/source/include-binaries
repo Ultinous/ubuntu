@@ -1,0 +1,2 @@
+.cache/dnn_face_detector/afbb6037fd180e8d2acb3b58ca737b9e-res10_300x300_ssd_iter_140000.caffemodel
+samples/dnn/face_detector/res10_300x300_ssd_iter_140000.caffemodel
