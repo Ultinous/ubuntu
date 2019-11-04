@@ -1,0 +1,17 @@
+# Useless stubs are commented out and should never be installed.
+usr/bin/convert_imageset
+usr/bin/caffe
+usr/bin/convert_cifar_data
+#usr/bin/test_net
+#usr/bin/finetune_net
+usr/bin/compute_image_mean
+usr/bin/convert_mnist_siamese_data
+usr/bin/upgrade_net_proto_binary
+usr/bin/extract_features
+#usr/bin/device_query
+#usr/bin/train_net
+#usr/bin/net_speed_benchmark
+usr/bin/upgrade_solver_proto_text
+usr/bin/classification
+usr/bin/upgrade_net_proto_text
+usr/bin/convert_mnist_data

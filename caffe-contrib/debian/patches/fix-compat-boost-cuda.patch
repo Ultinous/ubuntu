@@ -1,0 +1,14 @@
+diff --git a/include/caffe/common.hpp b/include/caffe/common.hpp
+index 4904d1d..fa22de2 100644
+--- a/include/caffe/common.hpp
++++ b/include/caffe/common.hpp
+@@ -1,6 +1,9 @@
+ #ifndef CAFFE_COMMON_HPP_
+ #define CAFFE_COMMON_HPP_
+ 
++#undef __CUDACC_VER__
++#define __CUDACC_VER__ 90000
++
+ #include <boost/shared_ptr.hpp>
+ #include <gflags/gflags.h>
+ #include <glog/logging.h>

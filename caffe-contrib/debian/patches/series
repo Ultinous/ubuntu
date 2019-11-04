@@ -1,0 +1,3 @@
+cmake-fix-python-module-installdir
+cmake-link-correct-python-lib.patch
+fix-compat-boost-cuda.patch

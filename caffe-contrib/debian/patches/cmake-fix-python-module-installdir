@@ -1,0 +1,30 @@
+Purpose: fix python package file installation directory
+Author: Zhou Mo
+Forward: Don't forward, Debian-specific.
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -28,7 +28,7 @@
+ 
+ # module
+ install(DIRECTORY caffe
+-    DESTINATION python
++    DESTINATION lib/python3/dist-packages
+     FILES_MATCHING
+     PATTERN "*.py"
+     PATTERN "ilsvrc_2012_mean.npy"
+@@ -36,5 +36,5 @@
+     )
+ 
+ # _caffe.so
+-install(TARGETS pycaffe  DESTINATION python/caffe)
++install(TARGETS pycaffe  DESTINATION lib/python3/dist-packages/caffe)
+ 
+--- a/src/caffe/CMakeLists.txt
++++ b/src/caffe/CMakeLists.txt
+@@ -46,5 +46,5 @@
+ 
+ file(WRITE ${PROJECT_BINARY_DIR}/__init__.py)
+ list(APPEND proto_python ${PROJECT_BINARY_DIR}/__init__.py)
+-install(PROGRAMS ${proto_python} DESTINATION python/caffe/proto)
++install(PROGRAMS ${proto_python} DESTINATION lib/python3/dist-packages/caffe/proto)
+ 

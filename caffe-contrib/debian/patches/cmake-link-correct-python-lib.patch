@@ -1,0 +1,22 @@
+Description: fix BTBFS bug #850989
+Forward: keep it here.
+Updates:
+  * fix the old dirty hack which used a fixed python3 version to 3.5
+    Jan 26 2018
+Index: caffe/cmake/Dependencies.cmake
+===================================================================
+--- caffe.orig/cmake/Dependencies.cmake        2018-01-26 03:02:50.092131001 +0000
++++ caffe/cmake/Dependencies.cmake     2018-01-26 03:02:50.088130953 +0000
+@@ -166,7 +166,11 @@
+       endif()
+     endwhile()
+     if(NOT Boost_PYTHON_FOUND)
+-      find_package(Boost 1.46 COMPONENTS python)
++      execute_process(COMMAND py3versions -d -v
++                      OUTPUT_VARIABLE py3versions)
++      STRING(REGEX REPLACE "[^0-9]" "" py3versions ${py3versions})
++      find_package(Boost 1.46 COMPONENTS "python-py${py3versions}")
++      set(Boost_PYTHON_FOUND ${Boost_PYTHON-PY${py3versions}_FOUND})
+     endif()
+   else()
+     # disable Python 3 search
