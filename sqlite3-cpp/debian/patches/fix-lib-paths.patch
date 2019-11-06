@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4a3e492..4862c0a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -179,10 +179,11 @@ if (UNIX AND (CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Cla
+ endif (UNIX AND (CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang"))
+ 
+ # Allow the library to be installed via "make install" and found with "find_package"
++include(GNUInstallDirs)
+ install(TARGETS SQLiteCpp
+     EXPORT ${PROJECT_NAME}Config
+-    LIBRARY DESTINATION lib
+-    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     COMPONENT libraries)
+ target_include_directories(SQLiteCpp PUBLIC 
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

@@ -1,3 +1,11 @@
+sqlite3-cpp (2.2.0-1ultinous4) bionic; urgency=medium
+
+  * Disable patches/rename_libsqlite3_cpp_so.patch.
+  * Rename library to match upstream library name.
+  * Fix library path.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Wed, 06 Nov 2019 10:02:34 +0000
+
 sqlite3-cpp (2.2.0-1ultinous2) bionic; urgency=medium
 
   * Add 'X-Ultinous-Upstream-Release' attribute to control.

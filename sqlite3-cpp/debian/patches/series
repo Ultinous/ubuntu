@@ -1,2 +1,3 @@
+fix-lib-paths.patch
 googletest-dependency.patch
-rename_libsqlite3_cpp_so.patch
+so_suffix.patch
