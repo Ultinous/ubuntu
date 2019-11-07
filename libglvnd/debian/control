@@ -1,0 +1,201 @@
+Source: libglvnd
+Priority: optional
+Maintainer: Debian X Strike Force <debian-x@lists.debian.org>
+Uploaders: Timo Aaltonen <tjaalton@debian.org>
+ , Kozák Miklós <garmine@ultinous.com>
+Build-Depends:
+ debhelper (>= 10),
+ pkg-config,
+ libx11-dev,
+ libxext-dev,
+ python-dev,
+ python-libxml2,
+ x11proto-gl-dev,
+ xauth,
+ xvfb,
+Standards-Version: 4.1.2
+Section: libs
+Homepage: https://github.com/NVIDIA/libglvnd
+Vcs-Git: https://salsa.debian.org/xorg-team/lib/libglvnd.git
+Vcs-Browser: https://salsa.debian.org/xorg-team/lib/libglvnd.git
+X-Ultinous-Upstream-Release: https://salsa.debian.org/xorg-team/lib/libglvnd/-/archive/libglvnd-1.1.0-1/libglvnd-libglvnd-1.1.0-1.tar.gz
+
+Package: libglvnd-dev
+Section: libdevel
+Architecture: any
+Depends:
+ libglvnd0 (= ${binary:Version}),
+ libglvnd-core-dev (= ${binary:Version}),
+ libegl1 (= ${binary:Version}),
+ libgles1 (= ${binary:Version}),
+ libgles2 (= ${binary:Version}),
+ libgl1 (= ${binary:Version}),
+ libglx0 (= ${binary:Version}),
+ libopengl0 (= ${binary:Version}),
+ ${misc:Depends},
+Breaks:
+ libegl1-mesa-dev (<< 17.2.0~rc4-1),
+ libgl1-mesa-dev (<< 17.2.0~rc4-1),
+ libgles1-mesa-dev (<< 17.0.0~rc3-1),
+ libgles2-mesa-dev (<< 17.2.0~rc4-1),
+Replaces:
+ libegl1-mesa-dev (<< 17.2.0~rc4-1),
+ libgl1-mesa-dev (<< 17.2.0~rc4-1),
+ libgles1-mesa-dev (<< 17.0.0~rc3-1),
+ libgles2-mesa-dev (<< 17.2.0~rc4-1),
+Multi-Arch: same
+Description: Vendor neutral GL dispatch library -- development files
+ This is an implementation of the vendor-neutral dispatch layer for
+ arbitrating OpenGL API calls between multiple vendors on a per-screen basis.
+ .
+ This package contains the development files for libglvnd.
+
+Package: libglvnd-core-dev
+Section: libdevel
+Architecture: any
+Depends:
+ ${misc:Depends},
+Breaks: libglvnd-dev (<< 0.2.999+git20170201-1)
+Replaces: libglvnd-dev (<< 0.2.999+git20170201-1)
+Multi-Arch: same
+Description: Vendor neutral GL dispatch library -- core development files
+ This is an implementation of the vendor-neutral dispatch layer for
+ arbitrating OpenGL API calls between multiple vendors on a per-screen basis.
+ .
+ This package contains the header files for libglvnd split in a separate
+ package for Mesa.
+
+Package: libglvnd0
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends},
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends}
+Breaks:
+ libgldispatch0-nvidia,
+Replaces:
+ libgldispatch0-nvidia,
+Multi-Arch: same
+Description: Vendor neutral GL dispatch library
+ This is an implementation of the vendor-neutral dispatch layer for
+ arbitrating OpenGL API calls between multiple vendors on a per-screen basis.
+ .
+ This package contains the GL dispatch library.
+
+Package: libegl1
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends},
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libglvnd0 (= ${binary:Version}),
+ libegl-mesa0,
+Replaces:
+ libegl1-mesa (<< 17.2.0~rc4-1),
+ libglvnd0 (<< 0.2.999+git20170201-1)
+Breaks:
+ libegl1-mesa (<< 17.2.0~rc4-1),
+ libglvnd0 (<< 0.2.999+git20170201-1)
+Multi-Arch: same
+Description: Vendor neutral GL dispatch library -- EGL support
+ This is an implementation of the vendor-neutral dispatch layer for
+ arbitrating OpenGL API calls between multiple vendors on a per-screen basis.
+ .
+ This package contains support for EGL.
+
+Package: libgles1
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends},
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libglvnd0 (= ${binary:Version}),
+Replaces:
+ libgles1-mesa (<< 17.0.0~rc3-1),
+ libgles2 (<< 1.0.0+git20180308-5),
+Breaks:
+ libgles1-mesa (<< 17.0.0~rc3-1),
+ libgles2 (<< 1.0.0+git20180308-5),
+Multi-Arch: same
+Description: Vendor neutral GL dispatch library -- GLESv1 support
+ This is an implementation of the vendor-neutral dispatch layer for
+ arbitrating OpenGL API calls between multiple vendors on a per-screen basis.
+ .
+ This package contains support for GLESv1.
+
+Package: libgles2
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends},
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libglvnd0 (= ${binary:Version}),
+Replaces:
+ libgles2-mesa (<< 17.2.0~rc4-1),
+Breaks:
+ libgles2-mesa (<< 17.2.0~rc4-1),
+Multi-Arch: same
+Description: Vendor neutral GL dispatch library -- GLESv2 support
+ This is an implementation of the vendor-neutral dispatch layer for
+ arbitrating OpenGL API calls between multiple vendors on a per-screen basis.
+ .
+ This package contains support for GLESv2.
+
+Package: libgl1
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends},
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libglvnd0 (= ${binary:Version}),
+ libglx0 (= ${binary:Version}),
+Replaces:
+ libgl1-mesa-glx (<< 17.2.0~rc4-1),
+ libglvnd0 (<< 0.2.999+git20170201-1)
+Breaks:
+ libgl1-mesa-glx (<< 17.2.0~rc4-1),
+ libglvnd0 (<< 0.2.999+git20170201-1),
+ glx-diversions (<< 0.8),
+Multi-Arch: same
+Description: Vendor neutral GL dispatch library -- legacy GL support
+ This is an implementation of the vendor-neutral dispatch layer for
+ arbitrating OpenGL API calls between multiple vendors on a per-screen basis.
+ .
+ This package contains support for old libGL for compatibility reasons.
+
+Package: libglx0
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends},
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libglvnd0 (= ${binary:Version}),
+ libglx-mesa0,
+Replaces:
+ libgl1-mesa-glx (<< 17.2.0~rc4-1),
+ libglvnd0 (<< 0.2.999+git20170201-1)
+Breaks:
+ libgl1-mesa-glx (<< 17.2.0~rc4-1),
+ libglvnd0 (<< 0.2.999+git20170201-1)
+Multi-Arch: same
+Description: Vendor neutral GL dispatch library -- GLX support
+ This is an implementation of the vendor-neutral dispatch layer for
+ arbitrating OpenGL API calls between multiple vendors on a per-screen basis.
+ .
+ This package contains support for GLX.
+
+Package: libopengl0
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends},
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libglvnd0 (= ${binary:Version}),
+Replaces: libglvnd0 (<< 0.2.999+git20170201-1)
+Breaks: libglvnd0 (<< 0.2.999+git20170201-1)
+Multi-Arch: same
+Description: Vendor neutral GL dispatch library -- OpenGL support
+ This is an implementation of the vendor-neutral dispatch layer for
+ arbitrating OpenGL API calls between multiple vendors on a per-screen basis.
+ .
+ This package contains support for OpenGL.
