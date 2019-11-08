@@ -212,7 +212,6 @@ Depends:
  libnpps${cuda:SoVersion} (= ${binary:Version}),
  libnvgraph${cuda:SoVersion} (= ${binary:Version}),
  libnvjpeg${cuda:SoVersion} (= ${binary:Version}) [!ppc64el],
- libnvidia-ml1 (>= ${nvidia:MinVersion}) [${cuda:arch:has-driver}],
  libthrust-dev,
  ${misc:Depends}
 Recommends:
@@ -719,3 +718,10 @@ Description: Thrust - Parallel Algorithms Library
  programmer productivity while enabling performance portability between GPUs
  and multicore CPUs. Interoperability with established technologies (such as
  CUDA, TBB, and OpenMP) facilitates integration with existing software.
+
+Package: no-libnvidia-compute
+Architecture: all
+Conflicts: libnvidia-compute-430, libnvidia-compute-435
+Depends:
+Provides: libcuda1, libcuda-10.0-1, libnvidia-ml1
+Description: Do not install driver files in a container.

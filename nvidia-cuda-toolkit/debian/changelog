@@ -1,3 +1,9 @@
+nvidia-cuda-toolkit (10.0.130-3ultinous4) bionic; urgency=medium
+
+  * Prevent nvidia-compute-* from being installed.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Fri, 08 Nov 2019 11:42:01 +0000
+
 nvidia-cuda-toolkit (10.0.130-3ultinous1) bionic; urgency=medium
 
   * Ported to bionic
