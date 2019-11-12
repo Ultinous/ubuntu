@@ -1,5 +1,0 @@
-nvidia-cudnn (7.4.2.24-1+cuda10.0) bionic; urgency=medium
-
-  * Initial release.
-
- -- Kozák Miklós <garmine@ultinous.com>  Mon, 04 Nov 2019 11:48:45 +0000
