@@ -1,4 +1,11 @@
 */*
+
+!equivs/*
+equivs/pool/*
+!equivs/pool/.gitkeep
+
+!*/.gitkeep
 !*/debian
+!pool/files.txt
 
 *.log
