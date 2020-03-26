@@ -1,0 +1,15 @@
+diff --git a/include/msgpack/v2/create_object_visitor.hpp
+b/include/msgpack/v2/create_object_visitor.hpp
+index 3cd8fcea..84ac5dc9 100644
+--- a/include/msgpack/v2/create_object_visitor.hpp
++++ b/include/msgpack/v2/create_object_visitor.hpp
+@@ -115,7 +115,8 @@ public:
+         }
+         else {
+             char* tmp = static_cast<char*>(zone().allocate_align(size, MSGPACK_ZONE_ALIGNOF(char)));
+-            std::memcpy(tmp, v, size);
++            if(size > 0)
++                std::memcpy(tmp, v, size);
+             obj->via.str.ptr = tmp;
+         }
+         obj->via.str.size = size;

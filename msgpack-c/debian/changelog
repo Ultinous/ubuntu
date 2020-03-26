@@ -1,3 +1,9 @@
+msgpack-c (3.2.1-1ultinous1) bionic; urgency=medium
+
+  * New upstream release - 3.2.1
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Thu, 26 Mar 2020 09:37:35 +0100
+
 msgpack-c (3.1.1-1ultinous2) bionic; urgency=medium
 
   * Ported to bionic
