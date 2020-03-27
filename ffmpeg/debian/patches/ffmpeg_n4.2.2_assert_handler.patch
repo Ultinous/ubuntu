@@ -1,8 +1,8 @@
 diff --git a/libavutil/Makefile b/libavutil/Makefile
-index 65e285a..edd3a2a 100644
+index 8a7a44e4b5..b5a27f3386 100644
 --- a/libavutil/Makefile
 +++ b/libavutil/Makefile
-@@ -89,7 +89,8 @@ ARCH_HEADERS = bswap.h                                                  \
+@@ -91,7 +91,8 @@ ARCH_HEADERS = bswap.h                                                  \
  BUILT_HEADERS = avconfig.h                                              \
                  ffversion.h
  
@@ -14,7 +14,7 @@ index 65e285a..edd3a2a 100644
         audio_fifo.o                                                     \
 diff --git a/libavutil/avassert.c b/libavutil/avassert.c
 new file mode 100644
-index 0000000..288fb98
+index 0000000000..288fb98beb
 --- /dev/null
 +++ b/libavutil/avassert.c
 @@ -0,0 +1,16 @@
@@ -35,7 +35,7 @@ index 0000000..288fb98
 +  handler(condition, file, line, function);
 +}
 diff --git a/libavutil/avassert.h b/libavutil/avassert.h
-index 46f3fea..290b843 100644
+index 9abeadea4a..fe45adc784 100644
 --- a/libavutil/avassert.h
 +++ b/libavutil/avassert.h
 @@ -31,6 +31,10 @@
@@ -49,17 +49,16 @@ index 46f3fea..290b843 100644
  /**
   * assert() equivalent, that is always enabled.
   */
-@@ -38,7 +42,7 @@
+@@ -38,6 +42,7 @@
      if (!(cond)) {                                                      \
          av_log(NULL, AV_LOG_PANIC, "Assertion %s failed at %s:%d\n",    \
                 AV_STRINGIFY(cond), __FILE__, __LINE__);                 \
--        abort();                                                        \
-+        callAssertHandler(AV_STRINGIFY(cond), __FILE__, __LINE__, __func__);abort();\
++        callAssertHandler(AV_STRINGIFY(cond), __FILE__, __LINE__, __func__); \
+         abort();                                                        \
      }                                                                   \
  } while (0)
- 
 diff --git a/libavutil/libavutil.v b/libavutil/libavutil.v
-index fb17058..4039d73 100644
+index fb17058df5..4039d732fc 100644
 --- a/libavutil/libavutil.v
 +++ b/libavutil/libavutil.v
 @@ -1,6 +1,8 @@

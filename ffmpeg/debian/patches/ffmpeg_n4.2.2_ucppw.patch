@@ -1,21 +1,23 @@
 diff --git a/libavcodec/avcodec.h b/libavcodec/avcodec.h
-index 18c3e3e..4a48af7 100644
+index ab4e253c3a..e564696a95 100644
 --- a/libavcodec/avcodec.h
 +++ b/libavcodec/avcodec.h
-@@ -1607,6 +1607,11 @@ enum AVPacketSideDataType {
-     AV_PKT_DATA_A53_CC,
- 
-     /**
-+     * Custom info filled by ucppw demuxer.
-+     */
-+    AV_PKT_DATA_UCPPW,
+@@ -1412,7 +1412,12 @@ enum AVPacketSideDataType {
+      * If its value becomes huge, some code using it
+      * needs to be updated as it assumes it to be smaller than other limits.
+      */
+-    AV_PKT_DATA_NB
++    AV_PKT_DATA_NB,
 +
 +    /**
-      * The number of side data elements (in fact a bit more than it).
-      * This is not part of the public API/ABI in the sense that it may
-      * change when new side data types are added.
++     * Custom info filled by ucppw demuxer.
++     */
++    AV_PKT_DATA_UCPPW
+ };
+ 
+ #define AV_PKT_DATA_QUALITY_FACTOR AV_PKT_DATA_QUALITY_STATS //DEPRECATED
 diff --git a/libavformat/Makefile b/libavformat/Makefile
-index df709c29..979dc92 100644
+index a434b005a4..fdc5c42426 100644
 --- a/libavformat/Makefile
 +++ b/libavformat/Makefile
 @@ -3,6 +3,7 @@ DESC = FFmpeg container format library
@@ -35,20 +37,20 @@ index df709c29..979dc92 100644
  OBJS-$(CONFIG_AA_DEMUXER)                += aadec.o
  OBJS-$(CONFIG_AAC_DEMUXER)               += aacdec.o apetag.o img2.o rawdec.o
 diff --git a/libavformat/allformats.c b/libavformat/allformats.c
-index 405ddb5..fff5349 100644
+index cd00834807..f4e441cdca 100644
 --- a/libavformat/allformats.c
 +++ b/libavformat/allformats.c
-@@ -47,6 +47,7 @@ static void register_all(void)
-     avcodec_register_all();
+@@ -28,6 +28,7 @@
+ #include "version.h"
  
-     /* (de)muxers */
-+    REGISTER_DEMUXER (UCPPW,            ucppw);
-     REGISTER_MUXER   (A64,              a64);
-     REGISTER_DEMUXER (AA,               aa);
-     REGISTER_DEMUXER (AAC,              aac);
+ /* (de)muxers */
++extern AVInputFormat  ff_ucppw_demuxer;
+ extern AVOutputFormat ff_a64_muxer;
+ extern AVInputFormat  ff_aa_demuxer;
+ extern AVInputFormat  ff_aac_demuxer;
 diff --git a/libavformat/ucppw.c b/libavformat/ucppw.c
 new file mode 100644
-index 0000000..ac553ea
+index 0000000000..ac553ea5a6
 --- /dev/null
 +++ b/libavformat/ucppw.c
 @@ -0,0 +1,91 @@
@@ -145,7 +147,7 @@ index 0000000..ac553ea
 +};
 diff --git a/libavformat/ucppw.h b/libavformat/ucppw.h
 new file mode 100644
-index 0000000..fa24c3f
+index 0000000000..fa24c3fc21
 --- /dev/null
 +++ b/libavformat/ucppw.h
 @@ -0,0 +1,78 @@

@@ -1,3 +1,300 @@
+ffmpeg (7:4.2.2-1ultinous1) bionic; urgency=medium
+
+  * Backported 7:4.2.2-1ubuntu1 to bionic
+  * Applied ultinous patches
+  * Built with ultinous flags
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Fri, 27 Mar 2020 09:47:03 +0000
+
+ffmpeg (7:4.2.2-1ubuntu1) focal; urgency=medium
+
+  * Build with external nv-codec-headers for NVENC accelerated video
+    encoding. (LP: #1810649)
+    - debian/control:
+      + Add B-D libffmpeg-nvenc-dev
+    - debian/rules:
+      + Add --enable-nvenc for amd64 only
+
+ -- Martin Wimpress <martin.wimpress@ubuntu.com>  Sat, 07 Mar 2020 08:39:35 +0000
+
+ffmpeg (7:4.2.2-1build1) focal; urgency=medium
+
+  * No-change rebuild for libmysofa soname change.
+
+ -- Matthias Klose <doko@ubuntu.com>  Thu, 13 Feb 2020 02:12:37 +0100
+
+ffmpeg (7:4.2.2-1) unstable; urgency=medium
+
+  [ James Cowgill ]
+  * New upstream release.
+
+  * d/control:
+    - Change lib*-extra packages to arch any.
+    - Tighten dependencies from libav*-extra packages.
+    - Bump standards version to 4.5.0.
+  * d/rules: Enable opencl (Closes: #944005)
+
+  [ Steve Langasek ]
+  * d/tests: Make autopkgtests cross-test-friendly. (Closes: #946241)
+
+ -- James Cowgill <jcowgill@debian.org>  Sat, 25 Jan 2020 16:22:32 +0000
+
+ffmpeg (7:4.2.1-2) unstable; urgency=medium
+
+  * d/patches:
+    - avcodec/libtwolame: fix mono default bitrate. (Closes: #943900)
+  * d/tests:
+    - Replace remaining occurrences of ADTTMP.
+
+ -- James Cowgill <jcowgill@debian.org>  Sat, 02 Nov 2019 01:17:31 +0000
+
+ffmpeg (7:4.2.1-1) unstable; urgency=medium
+
+  * New upstream release.
+    - avcodec/vqavideo: Set video size. (CVE-2019-17542)
+    - avcodec/utils: Check close before calling it. (CVE-2019-17539)
+
+  * d/copyright: Various copyright updates for 4.2.
+  * d/patches: Add patch to fix sbcenc segfault on armhf.
+  * d/rules:
+    - Enable libartbb24.
+    - Disable MSA2.
+    - Update list of non-enabled libraries.
+  * d/*.symbols: Updates for 4.2.
+  * d/tests: Update encdec lists with 4.2 additions.
+
+ -- James Cowgill <jcowgill@debian.org>  Mon, 28 Oct 2019 18:14:56 +0000
+
+ffmpeg (7:4.1.4-1) unstable; urgency=medium
+
+  [ James Cowgill ]
+  * New upstream release. (LP: #1837480)
+    - avformat/aadec: Check for scanf() failure (CVE-2019-12730)
+      (Closes: #932469)
+
+  * d/copyright: Remove paragraph containing license files.
+  * d/control: Bump standards version to 4.4.0.
+  * d/ffmpeg-doc.doc-base*:
+    - Move API docs to Programming/C section.
+    - Index the main manual pages as well.
+      Thanks to 積丹尼 Dan Jacobson for the suggestion. (Closes: #924528)
+  * d/rules:
+    - Disable crystalhd. (Closes: #917292)
+    - Generate index.html file for the HTML manual pages.
+
+  [ Ondřej Nový ]
+  * d/control:
+    - Use debhelper-compat instead of debian/compat.
+
+ -- James Cowgill <jcowgill@debian.org>  Sat, 27 Jul 2019 11:24:18 +0100
+
+ffmpeg (7:4.1.3-1) unstable; urgency=high
+
+  * Team upload.
+  * New upstream release. (Closes: #926666)
+    - Fix bug in subtitle decoder enabling DoS attacks (CVE-2019-9718,
+      CVE-2019-9721)
+    - Fix bug in studio profile decoder enabling DoS attacks (CVE-2019-11339)
+    - Fix bug mishandling HEVC data enabling DoS attacks (CVE-2019-11338)
+
+ -- Sebastian Ramacher <sramacher@debian.org>  Sun, 19 May 2019 17:22:10 +0200
+
+ffmpeg (7:4.1.1-1) unstable; urgency=medium
+
+  * New upstream release.
+    - cbs_av1: Fix reading of overlong uvlc codes (CVE-2019-1000016)
+      (Closes: #922066)
+
+ -- James Cowgill <jcowgill@debian.org>  Fri, 15 Feb 2019 09:35:05 +0000
+
+ffmpeg (7:4.1-1) unstable; urgency=low
+
+  * New upstream release.
+    - Fixes DSF decoding noise at end of file. (Closes: #896190)
+
+  * d/control:
+    - Add version restriction to libva-dev build dependency.
+  * d/copyright: Updates for 4.1.
+  * d/rules:
+  * - Disable opencv. (Closes: #915544)
+    - Enable liblensfun in libavfilter-extra.
+    - Update list of disabled libraries.
+  * d/*.symbols: Update symbols files for 4.1.
+  * d/tests: Update encdec_list.txt.
+  * d/upstream/signing-key.asc: Minimize key.
+
+ -- James Cowgill <jcowgill@debian.org>  Sat, 22 Dec 2018 13:25:13 +0000
+
+ffmpeg (7:4.0.3-1) unstable; urgency=medium
+
+  * New upstream release.
+    - avformat/flvenc: Check audio packet size. (CVE-2018-15822)
+
+  * d/control: Bump standards to 4.2.1.
+  * d/*.symbols: Add missing Build-Depends-Package fields.
+  * d/rules: Enable libvidstab. (Closes: #781938)
+
+ -- James Cowgill <jcowgill@debian.org>  Sat, 03 Nov 2018 20:36:20 +0000
+
+ffmpeg (7:4.0.2-2) unstable; urgency=medium
+
+  [ James Cowgill ]
+  * Enable libaom. (Closes: #907032)
+    - d/tests: Enable libaom-av1 codec tests in encdec_list.
+  * Use versioned Provides instead of alternatives for -extra package
+    dependencies.  (Closes: #904163)
+
+  [ Fabian Greffrath ]
+  * Handle internal library dependencies by generating a
+    debian/shlibs.local file.
+
+ -- James Cowgill <jcowgill@debian.org>  Sat, 22 Sep 2018 14:52:46 +0100
+
+ffmpeg (7:4.0.2-1) unstable; urgency=medium
+
+  [ James Cowgill ]
+  * New upstream release.
+    - avformat/movenc: Do not pass AVCodecParameters in avpriv_request_sample.
+      (CVE-2018-13300)
+    - avcodec/mpeg4videodec: Check read profile before setting it.
+      (CVE-2018-13301)
+    - avformat/movenc: Check that frame_types other than
+      EAC3_FRAME_TYPE_INDEPENDENT have a supported substream id.
+      (CVE-2018-13302)
+    - avcodec/ac3_parser: Check init_get_bits8() for failure.
+      (CVE-2018-13303)
+    - avcodec/mpeg4videodec: Remove use of FF_PROFILE_MPEG4_SIMPLE_STUDIO as
+      indicator of studio profile. (CVE-2018-13304)
+    - avformat/movenc: Check input sample count. (CVE-2018-14394)
+    - avformat/movenc: Write version 2 of audio atom if channels is not known.
+      (CVE-2018-14395)
+
+  * debian/control:
+    - Add winff Breaks. (See: #904141)
+  * debian/rules:
+    - Only pass --target-os when cross compiling. (Closes: #904052)
+
+  [ YunQiang Su ]
+  * debian/rules: Fix FTBFS with MIPS R6. (Closes: #904178)
+
+ -- James Cowgill <jcowgill@debian.org>  Sat, 21 Jul 2018 19:45:52 +0100
+
+ffmpeg (7:4.0.1-2) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- James Cowgill <jcowgill@debian.org>  Wed, 18 Jul 2018 11:49:42 +0100
+
+ffmpeg (7:4.0.1-1) experimental; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+    - avcodec/mpeg4videodec: Clear bits_per_raw_sample if it has originated
+      from a previous instance. (CVE-2018-12459)
+    - avcodec/idctdsp: Transmit studio_profile to init instead of using
+      AVCodecContext profile. (CVE-2018-12460)
+    - avcodec/mpeg4videoenc: Use 64 bit for times in
+      mpeg4_encode_gop_header(). (CVE-2018-12458)
+  * debian/control: Bump Standards-Version.
+  * debian/patches: Remove patches integrated upstream.
+
+ -- Sebastian Ramacher <sramacher@debian.org>  Wed, 11 Jul 2018 19:25:32 +0200
+
+ffmpeg (7:4.0-3) experimental; urgency=medium
+
+  * debian/control:
+    - Tighten inter-library dependencies.
+  * debian/rules:
+    - Unconditionally pass --arch and --target-os.
+  * debian/*.symbols:
+    - Add symbols files.
+
+ -- James Cowgill <jcowgill@debian.org>  Wed, 06 Jun 2018 14:40:56 +0100
+
+ffmpeg (7:4.0-2) experimental; urgency=medium
+
+  * debian/control:
+    - Add version constraint to libopenjp2-7-dev build dependency.
+  * debian/libavfilter7.lintian-overrides:
+    - Fix override which was not updated as part of the library rename in
+      7:4.0-1.
+  * debian/patches:
+    - Add upstream patch to fix segfault in dash encoder.
+  * debian/rules:
+    - Revert "Use dh_listpackages to calculate EXTRA_PKGS variable".
+    - Only install documentation in arch indep install target.
+    - Read config.log from ffbuild/ directory.
+    - Ignore hapenc tests on i386, m68k and s390x.
+  * debian/tests:
+    - Disable encdec test for mov;vp8.
+
+ -- James Cowgill <jcowgill@debian.org>  Sun, 06 May 2018 22:39:20 +0100
+
+ffmpeg (7:4.0-1) experimental; urgency=medium
+
+  * New upstream release.
+
+  [ James Cowgill ]
+  * debian/control:
+    - Set maintainer to debian-multimedia@lists.d.o.
+    - Remove mention of ffserver.
+  * debian/copyright: Update for 4.0.
+  * debian/ffmpeg.install:
+    - Restore RELEASE_NOTES file.
+  * debian/rules:
+    - Fix FTBFS caused by nodejs setting O_NONBLOCK on the build log pipe.
+      (Closes: #895154)
+    - Use dh_listpackages to calculate EXTRA_PKGS variable.
+    - Rename stage1 build profile to pkg.ffmpeg.stage1.
+    - Enable libcodec2.
+  * debian/tests: Update encdec_list.txt.
+
+  [ Sebastian Ramacher ]
+  * Drop libav-tools. (Closes: #873182)
+
+  [ Ondřej Nový ]
+  * d/tests: Use AUTOPKGTEST_TMP instead of ADTTMP.
+
+ -- James Cowgill <jcowgill@debian.org>  Sun, 22 Apr 2018 22:42:50 +0100
+
+ffmpeg (7:3.5~git20180113-1) experimental; urgency=medium
+
+  * New upstream development snapshot.
+  * Bump SONAMEs of all libraries.
+  * Remove ffserver (removed upstream).
+
+  * debian/compat:
+    - Use debhelper compat 11.
+  * debian/control:
+    - Remove obsolete Breaks.
+    - Bump standards version to 4.1.3.
+    - Drop build-dependency on libleptonica-dev.
+    - Drop dependencies on libavresample-dev.
+    - Migrate VCS to salsa.debian.org.
+  * debian/copyright:
+    - Update copyright holders.
+  * debian/ffmpeg.install:
+    - Temporarily remove RELEASE_NOTES (only available in releases).
+    - Install ffprobe.xsl.
+  * debian/ffmpeg-doc.install:
+    - Install html manual from debian/tmp instead of build directory.
+  * debian/ffmpeg-doc.examples:
+    - Use dh_installexamples to install examples.
+  * debian/patches:
+    - Drop patches applied upstream.
+  * debian/rules:
+    - Enable dh_missing.
+    - Manually enable libjack.
+    - Enable LV2 filter.
+    - Disable resample filter.
+    - Disable mips optimizations on all mips variants.
+  * debian/tests:
+    - Update encdec lists.
+    - Use old examples test build target now that the correct Makefile is
+      installed.
+
+ -- James Cowgill <jcowgill@debian.org>  Mon, 22 Jan 2018 20:20:39 +0000
+
 ffmpeg (7:3.4.6-1ultinous3) bionic; urgency=medium
 
   * Add 'X-Ultinous-Upstream-Release' attribute to control.
@@ -10,44 +307,6 @@ ffmpeg (7:3.4.6-1ultinous2) bionic; urgency=medium
   * Built with ultinous flags
 
  -- Lengyel Zsolt <zsolt@ultinous.com>  Tue, 06 Aug 2019 12:43:17 +0000
-
-ffmpeg (7:3.4.6-0ubuntu0.18.04.1) bionic-security; urgency=medium
-
-  * SECURITY UPDATE: New upstream bugfix release. (LP: #1823786)
-    - Fixes CVE-2019-9718, CVE-2019-9721, CVE-2018-15822.
-
- -- Eduardo Barretto <eduardo.barretto@canonical.com>  Wed, 24 Apr 2019 14:39:22 -0300
-
-ffmpeg (7:3.4.4-0ubuntu0.18.04.1) bionic-security; urgency=medium
-
-  * SECURITY UPDATE: New upstream release.
-    - Fixes CVE-2018-7557, CVE-2018-7751, CVE-2018-10001,
-      CVE-2018-12458, CVE-2018-13300, CVE-2018-13302, CVE-2018-14394 and
-      CVE-2018-14395.
-
- -- Eduardo Barretto <eduardo.barretto@canonical.com>  Wed, 22 Aug 2018 17:19:37 -0300
-
-ffmpeg (7:3.4.2-2) unstable; urgency=medium
-
-  [ James Cowgill ]
-  * Fix FTBFS caused by nodejs setting O_NONBLOCK on the build log pipe.
-    (Closes: #895154)
-  * Set maintainer to debian-multimedia@lists.d.o.
-
-  [ Sebastian Ramacher ]
-  * Drop libav-tools. (Closes: #873182)
-
-  [ Ondřej Nový ]
-  * d/control: Set Vcs-* to salsa.debian.org.
-
- -- James Cowgill <jcowgill@debian.org>  Mon, 09 Apr 2018 12:24:40 +0100
-
-ffmpeg (7:3.4.2-1) unstable; urgency=medium
-
-  * New upstream release.
-    - Fixes CVE-2018-6392, CVE-2018-6621.
-
- -- James Cowgill <jcowgill@debian.org>  Mon, 12 Feb 2018 20:08:34 +0000
 
 ffmpeg (7:3.4.1-1) unstable; urgency=medium
 

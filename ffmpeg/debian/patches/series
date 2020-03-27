@@ -1,6 +1,5 @@
-0001-arm-thumb2-blx.patch
-0004-avformat-dashenc-fix-min_seg_duration-option-size.patch
-0005-float-dsp-i386.patch
-ffmpeg_n3.4.6_assert_handler.patch
-ffmpeg_n3.4.6_rtp_ntp.patch
-ffmpeg_n3.4.6_ucppw.patch
+0001-avcodec-arm-sbcenc-avoid-callee-preserved-vfp-regist.patch
+0002-avcodec-libtwolame-fix-mono-default-bitrate.patch
+ffmpeg_n4.2.2_assert_handler.patch
+ffmpeg_n4.2.2_rtp_ntp.patch
+ffmpeg_n4.2.2_ucppw.patch
