@@ -1,3 +1,9 @@
+opencv (3.4.0-1cuda10ultinous4) bionic; urgency=medium
+
+  * Rebuilt with ffmpeg 4.2.2-1ultinous1
+
+ -- Lengyel Zsolt <zsolt@ultinous.com>  Mon, 30 Mar 2020 07:49:00 +0000
+
 opencv (3.4.0-1cuda10ultinous3) bionic; urgency=medium
 
   * Ported to bionic.
