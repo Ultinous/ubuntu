@@ -1,0 +1,96 @@
+Source: gst-libav1.0
+Section: libs
+Priority: optional
+Maintainer: Maintainers of GStreamer packages <pkg-gstreamer-maintainers@lists.alioth.debian.org>
+Uploaders: Loic Minier <lool@dooz.org>,
+           Sebastian Dröge <slomo@debian.org>,
+           Sjoerd Simons <sjoerd@debian.org>,
+           Kozák Miklós <garmine@ultinous.com>
+Build-Depends: debhelper (>= 9),
+               cdbs (>= 0.4.93),
+               dpkg-dev (>= 1.16.1~),
+               autotools-dev,
+               dh-autoreconf,
+               autoconf (>= 2.69),
+               automake (>= 1.14),
+               libtool (>= 2.2.6),
+               autopoint (>= 0.17),
+               gtk-doc-tools (>= 1.12),
+               zlib1g-dev,
+               liblzma-dev,
+               libglib2.0-dev (>= 2.40),
+               pkg-config (>= 0.11.0),
+               libgstreamer1.0-dev (>= 1.14.0),
+               libgstreamer-plugins-base1.0-dev (>= 1.14.0),
+               liborc-0.4-dev (>= 1:0.4.16),
+               libavutil-dev (= 7:3.4.6-1ultinous3),
+               libavcodec-dev (= 7:3.4.6-1ultinous3),
+               libavfilter-dev (= 7:3.4.6-1ultinous3),
+               libavformat-dev (= 7:3.4.6-1ultinous3),
+               libswscale-dev (= 7:3.4.6-1ultinous3),
+               libswresample-dev (= 7:3.4.6-1ultinous3),
+               libavresample-dev (= 7:3.4.6-1ultinous3),
+               libpostproc-dev (= 7:3.4.6-1ultinous3),
+               libbz2-dev,
+               yasm
+Standards-Version: 3.9.3
+Vcs-Git: git://anonscm.debian.org/pkg-gstreamer/gst-libav1.0.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-gstreamer/gst-libav1.0.git;a=summary
+Homepage: http://gstreamer.freedesktop.org/modules/gst-libav.html
+X-Ultinous-Upstream-Release: https://gitlab.freedesktop.org/gstreamer/gst-libav/-/archive/1.14.0/gst-libav-1.14.0.tar.gz
+
+Package: gstreamer1.0-libav
+Architecture: any
+Multi-Arch: same
+Section: libs
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+XB-GStreamer-Version: ${gstreamer:Version}
+XB-GStreamer-Elements: ${gstreamer:Elements}
+XB-GStreamer-URI-Sources: ${gstreamer:URISources}
+XB-GStreamer-URI-Sinks: ${gstreamer:URISinks}
+XB-GStreamer-Encoders: ${gstreamer:Encoders}
+XB-GStreamer-Decoders: ${gstreamer:Decoders}
+Provides: ${gstreamer:Provides}
+Description: libav plugin for GStreamer
+ This GStreamer plugin supports a large number of audio and video compression
+ formats through the use of the libav library.  The plugin contains GStreamer
+ elements for encoding 40+ formats (MPEG, DivX, MPEG4, AC3, DV, ...), decoding
+ elements for decoding 90+ formats (AVI, MPEG, OGG, Matroska, ASF, ...),
+ demuxing 30+ formats and colorspace conversion.
+ .
+ http://www.libav.org/
+ http://gstreamer.freedesktop.org/
+ http://gstreamer.freedesktop.org/modules/gst-libav.html
+
+Package: gstreamer1.0-libav-dbg
+Architecture: any
+Multi-Arch: same
+Section: debug
+Priority: extra
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         gstreamer1.0-libav (= ${binary:Version})
+XB-GStreamer-Version: ${gstreamer:Version}
+XB-GStreamer-Elements: ${gstreamer:Elements}
+XB-GStreamer-URI-Sources: ${gstreamer:URISources}
+XB-GStreamer-URI-Sinks: ${gstreamer:URISinks}
+XB-GStreamer-Encoders: ${gstreamer:Encoders}
+XB-GStreamer-Decoders: ${gstreamer:Decoders}
+Provides: ${gstreamer:Provides}
+Description: libav plugin for GStreamer (debug symbols)
+ This GStreamer plugin supports a large number of audio and video compression
+ formats through the use of the libav library.  The plugin contains GStreamer
+ elements for encoding 40+ formats (MPEG, DivX, MPEG4, AC3, DV, ...), decoding
+ elements for decoding 90+ formats (AVI, MPEG, OGG, Matroska, ASF, ...),
+ demuxing 30+ formats and colorspace conversion.
+ .
+ http://www.libav.org/
+ http://gstreamer.freedesktop.org/
+ http://gstreamer.freedesktop.org/modules/gst-libav.html
+ .
+ This package contains unstripped shared libraries. It is provided primarily
+ to provide a backtrace with names in a debugger, this makes it somewhat
+ easier to interpret core dumps. The libraries are installed in
+ /usr/lib/debug and are automatically used by gdb.
+
