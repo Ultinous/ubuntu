@@ -37,7 +37,8 @@ Standards-Version: 3.9.3
 Vcs-Git: git://anonscm.debian.org/pkg-gstreamer/gst-libav1.0.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-gstreamer/gst-libav1.0.git;a=summary
 Homepage: http://gstreamer.freedesktop.org/modules/gst-libav.html
-X-Ultinous-Upstream-Release: https://gitlab.freedesktop.org/gstreamer/gst-libav/-/archive/1.14.0/gst-libav-1.14.0.tar.gz
+X-Ultinous-Debian-Origtars: http://archive.ubuntu.com/ubuntu/pool/universe/g/gst-libav1.0/gst-libav1.0_1.14.0.orig.tar.xz
+#X-Ultinous-Upstream-Release: https://gitlab.freedesktop.org/gstreamer/gst-libav/-/archive/1.14.0/gst-libav-1.14.0.tar.gz
 
 Package: gstreamer1.0-libav
 Architecture: any
