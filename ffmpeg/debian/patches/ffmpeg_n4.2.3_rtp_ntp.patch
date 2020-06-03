@@ -1,3 +1,9 @@
+commit caddc7eb7b52f676fe3ab771a111e6e54de9b303
+Author: Szabó Attila <attila@ultinous.com>
+Date:   2020-03-16 10:11:08 +0100
+
+    rtp_ntp
+
 diff --git a/libavcodec/avcodec.h b/libavcodec/avcodec.h
 index d234271c5b..ab4e253c3a 100644
 --- a/libavcodec/avcodec.h

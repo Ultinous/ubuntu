@@ -186,7 +186,7 @@ Build-Depends:
  nasm,
 # autodetected zlib
  zlib1g-dev
-X-Ultinous-Upstream-Release: https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.xz
+X-Ultinous-Upstream-Release: https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.xz
 
 Package: ffmpeg
 Architecture: any

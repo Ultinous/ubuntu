@@ -1,3 +1,9 @@
+ffmpeg (7:4.2.3-1ultinous1) bionic; urgency=medium
+
+  * New upstream release
+
+ -- Kozák Miklós <garmine@ultinous.com>  Wed, 03 Jun 2020 10:46:10 +0000
+
 ffmpeg (7:4.2.2-1ultinous1) bionic; urgency=medium
 
   * Backported 7:4.2.2-1ubuntu1 to bionic

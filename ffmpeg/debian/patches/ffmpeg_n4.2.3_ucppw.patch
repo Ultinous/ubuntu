@@ -1,3 +1,9 @@
+commit 30f734e72efd5584b4650d584b88f7e2008ce0c5
+Author: Szabó Attila <attila@ultinous.com>
+Date:   2020-03-16 10:11:39 +0100
+
+    ucppw
+
 diff --git a/libavcodec/avcodec.h b/libavcodec/avcodec.h
 index ab4e253c3a..e564696a95 100644
 --- a/libavcodec/avcodec.h
