@@ -1,0 +1,62 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/default.mk
+include /usr/share/python/python.mk
+
+PYVERS := $(shell pyversions --requested -v debian/control) $(shell py3versions --supported -v)
+FLAVOURS := $(PYVERS) $(patsubst %,%-dbg,$(PYVERS))
+
+TESTSUITE_FAIL_CMD=exit 1
+NON_FATAL=( echo "*** test-suite FAILED but continuing anyway ***"; true; )
+ifneq ($(filter $(DEB_BUILD_ARCH), ),)
+# tests currently fail on these architectures
+    TESTSUITE_FAIL_CMD=$(NON_FATAL)
+endif
+
+export PYBUILD_BEFORE_TEST = {interpreter} {dir}/setup.py build_tests
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+%:
+	dh $@ --with python2,python3,gnome --buildsystem=pybuild
+
+# don't run the tests under fakeroot, otherwise they will try to connect to
+# root's session D-BUS
+override_dh_auto_test:
+ifeq (,$(filter nocheck, $(DEB_BUILD_OPTIONS)))
+ifeq ($(DEB_HOST_ARCH_OS), linux)
+	set -e; \
+	LC_ALL=C.UTF-8; \
+	export HOME=$(CURDIR)/debian/tmp/home; \
+	mkdir -p $$HOME/.local/share; \
+	unset LD_PRELOAD; \
+	xvfb-run \
+	dh_auto_test || $(TESTSUITE_FAIL_CMD); \
+	while [ -e /tmp/.X99-lock ]; do \
+		echo "Waiting for xvfb to finish..."; \
+		sleep 0.5; \
+	done
+	# run the pep8 test but don't fail on it
+	python3 setup.py quality || $(NON_FATAL)
+endif
+endif
+
+override_dh_auto_install:
+	dh_auto_install
+	mkdir debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
+	mv debian/tmp/usr/lib/pkgconfig debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
+
+override_dh_strip-arch:
+	dh_strip -ppython-gi --dbg-package=python-gi-dbg
+	dh_strip -ppython-gi-cairo --dbg-package=python-gi-dbg
+	dh_strip -ppython3-gi --dbg-package=python3-gi-dbg
+	dh_strip -a --remaining-packages --no-automatic-dbgsym
+
+# Do not run dh_makeshlibs, for some reasons the python bindings are build with
+# a SONAME set and this causes dh_makeshlibs to create a shlibs file and to
+# trigger ldconfig.
+override_dh_makeshlibs:
+
+override_dh_installchangelogs:
+	dh_installchangelogs -XChangeLog

@@ -1,0 +1,5 @@
+usr/lib/python3*/*-packages/gi/_gi.*-3[0-9]m-*.so
+usr/lib/python3*/*-packages/gi/*.py
+usr/lib/python3*/*-packages/gi/*/*.py
+usr/lib/python3*/*-packages/*.egg-info
+usr/lib/python3*/*-packages/pygtkcompat/*.py

@@ -1,0 +1,5 @@
+usr/lib/python2*/*-packages/gi/_gi.*so
+usr/lib/python2*/*-packages/gi/*.py
+usr/lib/python2*/*-packages/gi/*/*.py
+usr/lib/python2*/*-packages/*.egg-info
+usr/lib/python2*/*-packages/pygtkcompat/*.py
