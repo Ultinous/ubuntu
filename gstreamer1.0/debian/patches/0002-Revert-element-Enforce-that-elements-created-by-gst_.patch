@@ -1,0 +1,31 @@
+From a515698da06512dfe8658eb3811b3b27bc39e35b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Wed, 4 Dec 2019 14:01:37 +0200
+Subject: [PATCH 2/2] Revert "element: Enforce that elements created by
+ gst_element_factory_create/make() are floating"
+
+This reverts commit 9cf764b2ec5d03c89e7c13f3244210c3d9141d7b.
+---
+ gst/gstelementfactory.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/gst/gstelementfactory.c b/gst/gstelementfactory.c
+index 547fbd5a1..332b38462 100644
+--- a/gst/gstelementfactory.c
++++ b/gst/gstelementfactory.c
+@@ -386,12 +386,6 @@ gst_element_factory_create (GstElementFactory * factory, const gchar * name)
+     /* This ref will never be dropped as the class is never destroyed */
+     GST_OBJECT_FLAG_SET (factory, GST_OBJECT_FLAG_MAY_BE_LEAKED);
+ 
+-  /* Ensure that the reference is floating. Bindings might have a hard time
+-   * making sure that the reference is indeed still floating after returning
+-   * here */
+-  if (element)
+-    g_object_force_floating ((GObject *) element);
+-
+   GST_DEBUG ("created element \"%s\"", GST_OBJECT_NAME (factory));
+ 
+   return element;
+-- 
+2.24.0
+

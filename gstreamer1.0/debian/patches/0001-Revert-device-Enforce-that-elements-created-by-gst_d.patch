@@ -1,0 +1,42 @@
+From a1b164997f63b056dd3883dcbb312e2fd4edcdb9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Wed, 4 Dec 2019 14:01:10 +0200
+Subject: [PATCH 1/2] Revert "device: Enforce that elements created by
+ gst_device_create_element() are floating"
+
+This reverts commit 341ee451558cfcf82cce4c3de1116eed3112f0d5.
+---
+ gst/gstdevice.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
+
+diff --git a/gst/gstdevice.c b/gst/gstdevice.c
+index 64f5ba530..60407823f 100644
+--- a/gst/gstdevice.c
++++ b/gst/gstdevice.c
+@@ -205,20 +205,13 @@ GstElement *
+ gst_device_create_element (GstDevice * device, const gchar * name)
+ {
+   GstDeviceClass *klass = GST_DEVICE_GET_CLASS (device);
+-  GstElement *element = NULL;
+ 
+   g_return_val_if_fail (GST_IS_DEVICE (device), NULL);
+ 
+   if (klass->create_element)
+-    element = klass->create_element (device, name);
+-
+-  /* Ensure that the reference is floating. Bindings might have a hard time
+-   * making sure that the reference is indeed still floating after returning
+-   * here */
+-  if (element)
+-    g_object_force_floating ((GObject *) element);
+-
+-  return element;
++    return klass->create_element (device, name);
++  else
++    return NULL;
+ }
+ 
+ /**
+-- 
+2.24.0
+
