@@ -1,11 +1,9 @@
 Source: gst-libav1.0
 Section: libs
 Priority: optional
-Maintainer: Maintainers of GStreamer packages <pkg-gstreamer-maintainers@lists.alioth.debian.org>
-Uploaders: Loic Minier <lool@dooz.org>,
-           Sebastian Dröge <slomo@debian.org>,
-           Sjoerd Simons <sjoerd@debian.org>,
-           Kozák Miklós <garmine@ultinous.com>
+Maintainer: Maintainers of GStreamer packages <gst-libav1.0@packages.debian.org>
+Uploaders: Sebastian Dröge <slomo@debian.org>,
+           Sjoerd Simons <sjoerd@debian.org>
 Build-Depends: debhelper (>= 9),
                cdbs (>= 0.4.93),
                dpkg-dev (>= 1.16.1~),
@@ -20,25 +18,21 @@ Build-Depends: debhelper (>= 9),
                liblzma-dev,
                libglib2.0-dev (>= 2.40),
                pkg-config (>= 0.11.0),
-               libgstreamer1.0-dev (>= 1.14.0),
-               libgstreamer-plugins-base1.0-dev (>= 1.14.0),
+               libgstreamer1.0-dev (>= 1.16.2),
+               libgstreamer-plugins-base1.0-dev (>= 1.16.2),
                liborc-0.4-dev (>= 1:0.4.16),
-               libavutil-dev (= 7:3.4.6-1ultinous3),
-               libavcodec-dev (= 7:3.4.6-1ultinous3),
-               libavfilter-dev (= 7:3.4.6-1ultinous3),
-               libavformat-dev (= 7:3.4.6-1ultinous3),
-               libswscale-dev (= 7:3.4.6-1ultinous3),
-               libswresample-dev (= 7:3.4.6-1ultinous3),
-               libavresample-dev (= 7:3.4.6-1ultinous3),
-               libpostproc-dev (= 7:3.4.6-1ultinous3),
+               libavutil-dev (>= 7:4.0),
+               libavcodec-dev (>= 7:4.0),
+               libavfilter-dev (>= 7:4.0),
+               libavformat-dev (>= 7:4.0),
+               libswscale-dev (>= 7:4.0),
                libbz2-dev,
                yasm
 Standards-Version: 3.9.3
-Vcs-Git: git://anonscm.debian.org/pkg-gstreamer/gst-libav1.0.git
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-gstreamer/gst-libav1.0.git;a=summary
-Homepage: http://gstreamer.freedesktop.org/modules/gst-libav.html
-X-Ultinous-Debian-Origtars: http://archive.ubuntu.com/ubuntu/pool/universe/g/gst-libav1.0/gst-libav1.0_1.14.0.orig.tar.xz
-#X-Ultinous-Upstream-Release: https://gitlab.freedesktop.org/gstreamer/gst-libav/-/archive/1.14.0/gst-libav-1.14.0.tar.gz
+Vcs-Git: https://salsa.debian.org/gstreamer-team/gst-libav1.0.git
+Vcs-Browser: https://salsa.debian.org/gstreamer-team/gst-libav1.0/
+Homepage: https://gstreamer.freedesktop.org
+X-Ultinous-Debian-Origtars: http://archive.ubuntu.com/ubuntu/pool/universe/g/gst-libav1.0/gst-libav1.0_1.16.2.orig.tar.xz
 
 Package: gstreamer1.0-libav
 Architecture: any
@@ -53,14 +47,14 @@ XB-GStreamer-URI-Sinks: ${gstreamer:URISinks}
 XB-GStreamer-Encoders: ${gstreamer:Encoders}
 XB-GStreamer-Decoders: ${gstreamer:Decoders}
 Provides: ${gstreamer:Provides}
-Description: libav plugin for GStreamer
+Description: ffmpeg plugin for GStreamer
  This GStreamer plugin supports a large number of audio and video compression
- formats through the use of the libav library.  The plugin contains GStreamer
+ formats through the use of the ffmpeg library.  The plugin contains GStreamer
  elements for encoding 40+ formats (MPEG, DivX, MPEG4, AC3, DV, ...), decoding
  elements for decoding 90+ formats (AVI, MPEG, OGG, Matroska, ASF, ...),
  demuxing 30+ formats and colorspace conversion.
  .
- http://www.libav.org/
+ http://www.ffmpeg.org/
  http://gstreamer.freedesktop.org/
  http://gstreamer.freedesktop.org/modules/gst-libav.html
 
@@ -79,14 +73,14 @@ XB-GStreamer-URI-Sinks: ${gstreamer:URISinks}
 XB-GStreamer-Encoders: ${gstreamer:Encoders}
 XB-GStreamer-Decoders: ${gstreamer:Decoders}
 Provides: ${gstreamer:Provides}
-Description: libav plugin for GStreamer (debug symbols)
+Description: ffmpeg plugin for GStreamer (debug symbols)
  This GStreamer plugin supports a large number of audio and video compression
- formats through the use of the libav library.  The plugin contains GStreamer
+ formats through the use of the ffmpeg library.  The plugin contains GStreamer
  elements for encoding 40+ formats (MPEG, DivX, MPEG4, AC3, DV, ...), decoding
  elements for decoding 90+ formats (AVI, MPEG, OGG, Matroska, ASF, ...),
  demuxing 30+ formats and colorspace conversion.
  .
- http://www.libav.org/
+ http://www.ffmpeg.org/
  http://gstreamer.freedesktop.org/
  http://gstreamer.freedesktop.org/modules/gst-libav.html
  .

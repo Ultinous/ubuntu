@@ -33,9 +33,6 @@ GST_PACKAGE_NAME := "GStreamer libav Plugins (Ubuntu)"
 GST_PACKAGE_ORIGIN="https://launchpad.net/distros/ubuntu/+source/gst-libav1.0"
 endif
 
-
-DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH 2>/dev/null)
-
 DEB_CONFIGURE_EXTRA_FLAGS += --with-system-libav \
                              --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
                              --with-package-name=$(GST_PACKAGE_NAME) \
