@@ -1,0 +1,63 @@
+Source: srt
+Priority: optional
+Maintainer: Federico Ceratto <federico@debian.org>
+Uploaders: Kozák Miklós <garmine@ultinous.com>
+Build-Depends: debhelper-compat (= 12),
+ cmake,
+ chrpath,
+ help2man,
+ libssl-dev,
+ pkg-config,
+ python3-sphinx,
+ tclsh
+Standards-Version: 4.3.1
+Section: libs
+Homepage: https://github.com/Haivision/srt
+Vcs-Browser: https://salsa.debian.org/debian/libsrt
+Vcs-Git: https://salsa.debian.org/debian/libsrt.git
+X-Ultinous-Debian-Origtars: http://archive.ubuntu.com/ubuntu/pool/universe/s/srt/srt_1.4.0.orig.tar.gz
+
+Package: libsrt-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libsrt1 (= ${binary:Version}), ${misc:Depends}
+Suggests: libsrt-doc (= ${binary:Version})
+Description: Secure Reliable Transport UDP streaming library
+ SRT is a latency-aware UDP transport mechanism optimized for video streams.
+ It detects and compensates for jitter and bandwidth fluctuations due to
+ network congestion. It mitigates packet loss and supports AES encryption.
+ .
+ This package contains development files for libsrt1
+
+Package: libsrt-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}, ${sphinxdoc:Depends}
+Description: Secure Reliable Transport UDP streaming library
+ SRT is a latency-aware UDP transport mechanism optimized for video streams.
+ It detects and compensates for jitter and bandwidth fluctuations due to
+ network congestion. It mitigates packet loss and supports AES encryption.
+ .
+ This package contains documentation files for libsrt1
+
+Package: libsrt1
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Secure Reliable Transport UDP streaming library
+ SRT is a latency-aware UDP transport mechanism optimized for video streams.
+ It detects and compensates for jitter and bandwidth fluctuations due to
+ network congestion. It mitigates packet loss and supports AES encryption.
+
+Package: srt-tools
+Architecture: any
+Section: utils
+Multi-Arch: foreign
+Depends: libsrt1 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Secure Reliable Transport UDP streaming library
+ SRT is a latency-aware UDP transport mechanism optimized for video streams.
+ It detects and compensates for jitter and bandwidth fluctuations due to
+ network congestion. It mitigates packet loss and supports AES encryption.
+ .
+ This package contains CLI tool.

@@ -1,0 +1,33 @@
+#!/usr/bin/make -f
+export DH_VERBOSE = 1
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+include /usr/share/dpkg/default.mk  # provides DEB_VERSION
+
+%:
+	dh $@ --with sphinxdoc
+
+override_dh_auto_clean:
+	dh_clean
+	rm -rf CMakeFiles/ debian/html
+
+override_dh_auto_build:
+	dh_auto_build
+	http_proxy='http://127.0.0.1:9/' python3 -m sphinx -N -c debian -bhtml docs debian/html
+
+override_dh_auto_install:
+	dh_auto_install
+	test -f debian/tmp/usr/bin/stransmit || cp debian/tmp/usr/bin/srt-live-transmit debian/tmp/usr/bin/stransmit
+
+override_dh_installman-indep:
+
+override_dh_installman-arch:
+	help2man --no-discard-stderr --no-info --version-string="$(DEB_VERSION)" \
+	--name "" \
+	-o ./debian/srt-file-transmit.1 ./debian/srt-tools/usr/bin/srt-file-transmit
+	help2man --no-discard-stderr --no-info --version-string="$(DEB_VERSION)" \
+	--name "" \
+	-o ./debian/srt-live-transmit.1 ./debian/srt-tools/usr/bin/srt-live-transmit
+	dh_installman
