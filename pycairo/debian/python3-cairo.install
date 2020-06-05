@@ -1,0 +1,3 @@
+usr/lib/python3*/*-packages/cairo/*.py
+usr/lib/python3*/*-packages/cairo/_cairo.cpython-*m-*.so
+usr/lib/python3*/*-packages/pycairo-*.egg-info

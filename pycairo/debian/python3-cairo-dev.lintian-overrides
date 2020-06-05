@@ -1,0 +1,3 @@
+# The package is not installing anything python related,
+# just a header file
+python3-cairo-dev: python-package-missing-depends-on-python
