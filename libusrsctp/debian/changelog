@@ -1,0 +1,38 @@
+libusrsctp (0.9.3.0+20190901-2ultinous1) bionic; urgency=medium
+
+  * Backported to Bionic.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 04 Jun 2020 13:45:42 +0000
+
+libusrsctp (0.9.3.0+20190901-1) unstable; urgency=medium
+
+  [ upstream ]
+  * New development snapshot.
+
+  [ Jonas Smedegaard ]
+  * Update watch file: Use git mode.
+  * Declare compliance with Debian Policy 4.4.0.
+  * Update copyright info: Extend coverage for upstream authors.
+  * Mark shared libraries and development packages as "Multi-Arch: same".
+    Closes: Bug#934985. Thanks to Jens Reyer.
+  * Temporarily suppress GCC address-of-packed-member warnings
+    (see Bug#925763).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 07 Sep 2019 13:49:21 +0200
+
+libusrsctp (0.9.3.0+20190127-2) unstable; urgency=medium
+
+  * Fix Homepage URL.
+    Closes: Bug#921711. Thanks to Michael Becker.
+  * Update watch file:
+    + Rewrite usage comment.
+    + Simplify regular expressions.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 18 Feb 2019 19:52:07 +0100
+
+libusrsctp (0.9.3.0+20190127-1) unstable; urgency=medium
+
+  * Initial packaging release.
+    Closes: Bug#864759.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 02 Feb 2019 15:09:30 +0100
