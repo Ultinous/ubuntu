@@ -1,0 +1,87 @@
+aom (1.0.0.errata1-4ultinous1) bionic; urgency=medium
+
+  * Backported to Bionic.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 04 Jun 2020 13:45:39 +0000
+
+aom (1.0.0.errata1-3build1) focal; urgency=medium
+
+  * No-change rebuild with fixed binutils on arm64.
+
+ -- Matthias Klose <doko@ubuntu.com>  Sat, 08 Feb 2020 10:55:57 +0000
+
+aom (1.0.0.errata1-3) unstable; urgency=medium
+
+  [ James Cowgill ]
+  * d/tests:
+    - Merge pkg-config invocations.
+    - Make library-build test cross test friendly.
+      Thanks to Steve Langasek for the original patch. (Closes: #946236)
+
+  [ Ondřej Nový ]
+  * d/control: Bump Standards-Version to 4.4.1.
+
+ -- James Cowgill <jcowgill@debian.org>  Thu, 02 Jan 2020 19:26:18 +0000
+
+aom (1.0.0.errata1-2) unstable; urgency=medium
+
+  [ James Cowgill ]
+  * d/rules:
+    - Manually set AOM_NEON_INTRIN_FLAG on armhf.
+    - Enable CONFIG_LOWBITDEPTH.
+
+  [ Tom Finegan ]
+  * cmake: Fix arm neon intrinsic flag handling bugs.
+
+ -- James Cowgill <jcowgill@debian.org>  Sun, 01 Sep 2019 13:28:49 +0100
+
+aom (1.0.0.errata1-1) unstable; urgency=medium
+
+  [ James Cowgill ]
+  * New upstream release.
+
+  * d/control:
+    - Add build-dependency on graphviz,
+    - Bump debhelper compat to 12,
+    - Bump standards version to 4.4.0,
+  * d/rules: Manually specify target cpu and enable multithreading.
+  * d/source: Add dgit-maint-merge workflow files,
+  * d/watch: Fix tag URLs and upstream version mangling,
+
+  [ Jan Beich ]
+  * cmake: Assume ELF object format for unknown target systems.
+    (Closes: #934604)
+
+ -- James Cowgill <jcowgill@debian.org>  Sat, 31 Aug 2019 19:21:46 +0100
+
+aom (1.0.0-3) unstable; urgency=medium
+
+  [ John Paul Adrian Glaubitz ]
+  * d/rules: Disable AltVec on powerpcspe. (Closes: #909950)
+
+ -- James Cowgill <jcowgill@debian.org>  Thu, 04 Oct 2018 18:21:30 +0100
+
+aom (1.0.0-2) unstable; urgency=medium
+
+  * Cherry-pick upstream commit to fix FTBFS on ppc64el.
+  * d/control:
+    - Use correct Maintainer.
+    - Bump standards version.
+  * d/rules:
+    - Workaround broken 32-bit ARM architecture detection.
+    - Disable optimizations on x32 to fix FTBFS.
+  * d/tests:
+    - control: make library-build depend on build-essential.
+    - encode-decode: fix target size.
+    - library-build: Remove useless include.
+    - library-build: Make some function args const.
+    - library-build: Test number of generated packets.
+    - library-build: Add copyright notice.
+
+ -- James Cowgill <jcowgill@debian.org>  Thu, 20 Sep 2018 09:58:42 +0100
+
+aom (1.0.0-1) unstable; urgency=medium
+
+  * Initial release. (Closes: #905096)
+
+ -- James Cowgill <jcowgill@debian.org>  Sun, 12 Aug 2018 18:18:57 +0100
