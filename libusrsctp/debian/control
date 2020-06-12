@@ -16,7 +16,7 @@ Vcs-Git: https://salsa.debian.org/pkg-voip-team/libusrsctp.git
 Vcs-Browser: https://salsa.debian.org/pkg-voip-team/libusrsctp
 Homepage: https://github.com/sctplab/usrsctp
 Rules-Requires-Root: no
-#X-Ultinous-Debian-Origtars: http://archive.ubuntu.com/ubuntu/pool/universe/libu/libusrsctp/libusrsctp_0.9.3.0+20190901.orig.tar.xz
+X-Ultinous-Debian-Origtars: http://archive.ubuntu.com/ubuntu/pool/universe/libu/libusrsctp/libusrsctp_0.9.3.0+20190901.orig.tar.xz
 
 Package: libusrsctp1
 Section: libs
