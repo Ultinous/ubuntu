@@ -1,3 +1,0 @@
-#!/bin/sh -e
-mydir=`dirname $0`
-python-dbg $mydir/gitest.py -v 2>&1
