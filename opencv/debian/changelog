@@ -1,3 +1,9 @@
+opencv (3.4.0-1cuda10ultinous5) bionic; urgency=medium
+
+  * Remove Python3.6 hack
+
+ -- Kozak Miklos <garmine@ultinous.com>  Mon, 22 Jun 2020 11:44:51 +0000
+
 opencv (3.4.0-1cuda10ultinous4) bionic; urgency=medium
 
   * Rebuilt with ffmpeg 4.2.2-1ultinous1
