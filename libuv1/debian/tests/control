@@ -1,3 +1,0 @@
-Tests: run-tests
-Restrictions: allow-stderr
-Depends: @, gyp, gcc, libc-dev, g++
