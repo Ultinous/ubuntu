@@ -1,0 +1,29 @@
+#!/bin/sh
+set -e -u
+
+case `dpkg --print-architecture` in
+	s390x|ppc64el)
+		# git/webkit regressed and fails on s390x/ppc64el
+		# but that's not a bug in sphinx docs/js
+		exit 77
+		;;
+esac
+
+cp -r debian/jstest "$AUTOPKGTEST_TMP/"
+cd "$AUTOPKGTEST_TMP"
+for python in python python3
+do
+    for format in rst html
+    do
+        [ "$(readlink -f /usr/share/doc/$python-sphinx/$format)" = "$(readlink -f /usr/share/doc/sphinx-doc/$format)" ]
+    done
+done
+run_js_tests='jstest/run-tests /usr/share/doc/sphinx-doc/html/'
+if [ -n "${DISPLAY:-}" ]
+then
+    $run_js_tests
+else
+    xvfb-run -a $run_js_tests
+fi
+
+# vim:ts=4 sw=4 et
