@@ -1,6 +1,23 @@
+diff --git a/csharp/generate_protos.sh b/csharp/generate_protos.sh
+index 31a4b90..37ddb76 100755
+--- a/csharp/generate_protos.sh
++++ b/csharp/generate_protos.sh
+@@ -17,8 +17,8 @@ if [ -z "$PROTOC" ]; then
+     PROTOC=cmake/build/Debug/protoc.exe
+   elif [ -x cmake/build/Release/protoc.exe ]; then
+     PROTOC=cmake/build/Release/protoc.exe
+-  elif [ -x src/protoc ]; then
+-    PROTOC=src/protoc
++  elif [ -x "../obj-$(uname -m)-linux-gnu/protoc" ]; then
++    PROTOC="../obj-$(uname -m)-linux-gnu/protoc"
+   else
+     echo "Unable to find protocol buffer compiler."
+     exit 1
+diff --git a/generate_descriptor_proto.sh b/generate_descriptor_proto.sh
+index e533d05..fd06fc6 100755
 --- a/generate_descriptor_proto.sh
 +++ b/generate_descriptor_proto.sh
-@@ -62,12 +62,12 @@
+@@ -62,12 +62,7 @@ do
      PROTOC=$BOOTSTRAP_PROTOC
      BOOTSTRAP_PROTOC=""
    else
@@ -10,18 +27,15 @@
 -      exit 1
 -    fi
 -    PROTOC="./protoc"
-+#    make $@ protoc
-+#    if test $? -ne 0; then
-+#      echo "Failed to build protoc."
-+#      exit 1
-+#    fi
-+    PROTOC="../obj-x86_64-linux-gnu/protoc"
++    PROTOC="../obj-$(uname -m)-linux-gnu/protoc"
    fi
  
    $PROTOC --cpp_out=dllexport_decl=PROTOBUF_EXPORT:$TMP ${RUNTIME_PROTO_FILES[@]} && \
+diff --git a/objectivec/generate_well_known_types.sh b/objectivec/generate_well_known_types.sh
+index 36c3460..37400ad 100755
 --- a/objectivec/generate_well_known_types.sh
 +++ b/objectivec/generate_well_known_types.sh
-@@ -29,17 +29,17 @@
+@@ -29,17 +29,8 @@ __EOF__
    exit 1
  fi
  
@@ -32,106 +46,90 @@
 -__EOF__
 -  exit 1
 -fi
-+#if test ! -e src/Makefile; then
-+#  cat >&2 << __EOF__
-+#Could not find src/Makefile.  You must run ./configure (and perhaps
-+#./autogen.sh) first.
-+#__EOF__
-+#  exit 1
-+#fi
- 
+-
 -# Make sure the compiler is current.
-+## Make sure the compiler is current.
  cd src
 -make $@ protoc
-+#make $@ protoc
++PROTOC="../obj-$(uname -m)-linux-gnu/protoc"
  
  declare -a RUNTIME_PROTO_FILES=( \
    google/protobuf/any.proto \
-@@ -56,7 +56,7 @@
+@@ -56,7 +47,7 @@ declare -a RUNTIME_PROTO_FILES=( \
  # Generate to a temp directory to see if they match.
  TMP_DIR=$(mktemp -d)
  trap "rm -rf ${TMP_DIR}" EXIT
 -./protoc --objc_out="${TMP_DIR}" ${RUNTIME_PROTO_FILES[@]}
-+../obj-x86_64-linux-gnu/protoc --objc_out="${TMP_DIR}" ${RUNTIME_PROTO_FILES[@]}
++$PROTOC --objc_out="${TMP_DIR}" ${RUNTIME_PROTO_FILES[@]}
  set +e
  diff -r "${TMP_DIR}/google" "${ProtoRootDir}/objectivec/google" > /dev/null
  if [[ $? -eq 0 ]] ; then
---- a/csharp/generate_protos.sh
-+++ b/csharp/generate_protos.sh
-@@ -17,8 +17,8 @@
-     PROTOC=cmake/build/Debug/protoc.exe
-   elif [ -x cmake/build/Release/protoc.exe ]; then
-     PROTOC=cmake/build/Release/protoc.exe
--  elif [ -x src/protoc ]; then
--    PROTOC=src/protoc
-+  elif [ -x obj-x86_64-linux-gnu/protoc ]; then
-+    PROTOC=obj-x86_64-linux-gnu/protoc
-   else
-     echo "Unable to find protocol buffer compiler."
-     exit 1
+diff --git a/php/generate_descriptor_protos.sh b/php/generate_descriptor_protos.sh
+index 372ad69..fea94cb 100755
 --- a/php/generate_descriptor_protos.sh
 +++ b/php/generate_descriptor_protos.sh
-@@ -11,6 +11,6 @@
+@@ -11,6 +11,8 @@ __EOF__
    exit 1
  fi
  
--pushd src
-+pushd obj-x86_64-linux-gnu
- ./protoc --php_out=internal:../php/src google/protobuf/descriptor.proto
++PROTOC="../obj-$(uname -m)-linux-gnu/protoc"
++
+ pushd src
+-./protoc --php_out=internal:../php/src google/protobuf/descriptor.proto
++$PROTOC --php_out=internal:../php/src google/protobuf/descriptor.proto
  popd
+diff --git a/python/setup.py b/python/setup.py
+index ba74443..43829c9 100755
 --- a/python/setup.py
 +++ b/python/setup.py
-@@ -22,8 +22,8 @@
+@@ -20,10 +20,11 @@ from distutils.command.clean import clean as _clean
+ from distutils.spawn import find_executable
+ 
  # Find the Protocol Compiler.
++machine=os.uname()[4]
  if 'PROTOC' in os.environ and os.path.exists(os.environ['PROTOC']):
    protoc = os.environ['PROTOC']
 -elif os.path.exists("../src/protoc"):
 -  protoc = "../src/protoc"
-+elif os.path.exists("../obj-x86_64-linux-gnu/protoc"):
-+  protoc = "../obj-x86_64-linux-gnu/protoc"
++elif os.path.exists("../obj-"+machine+"-linux-gnu/protoc"):
++  protoc = "../obj-"+machine+"-linux-gnu/protoc"
  elif os.path.exists("../src/protoc.exe"):
    protoc = "../src/protoc.exe"
  elif os.path.exists("../vsprojects/Debug/protoc.exe"):
-@@ -55,6 +55,7 @@
+@@ -54,7 +55,7 @@ def generate_proto(source, require = True):
+   if not require and not os.path.exists(source):
      return
  
-   output = source.replace(".proto", "_pb2.py").replace("../src/", "")
-+#  output = source.replace(".proto", "_pb2.py").replace("../obj-x86_64-linux-gnu/", "")
+-  output = source.replace(".proto", "_pb2.py").replace("../src/", "")
++  output = source.replace(".proto", "_pb2.py").replace("../obj-"+machine+"-linux-gnu/", "")
  
    if (not os.path.exists(output) or
        (os.path.exists(source) and
-@@ -67,11 +68,12 @@
+@@ -67,7 +68,7 @@ def generate_proto(source, require = True):
  
      if protoc is None:
        sys.stderr.write(
 -          "protoc is not installed nor found in ../src.  Please compile it "
-+          "protoc is not installed nor found in ../obj-x86_64-linux-gnu.  Please compile it "
++          "protoc is not installed nor found in ../obj-"+machine+"-linux-gnu/.  Please compile it "
            "or install the binary package.\n")
        sys.exit(-1)
  
-     protoc_command = [ protoc, "-I../src", "-I.", "--python_out=.", source ]
-+#    protoc_command = [ protoc, "-I../obj-x86_64-linux-gnu", "-I." , "-I../src", "--python_out=.", source ]
-     if subprocess.call(protoc_command) != 0:
-       sys.exit(-1)
- 
-@@ -173,8 +175,8 @@
+@@ -173,8 +174,8 @@ if __name__ == '__main__':
      extra_objects = None
      if compile_static_ext:
        libraries = None
 -      extra_objects = ['../src/.libs/libprotobuf.a',
 -                       '../src/.libs/libprotobuf-lite.a']
-+      extra_objects = ['../obj-x86_64-linux-gnu/libprotobuf.a',
-+                       '../obj-x86_64-linux-gnu/libprotobuf-lite.a']
++      extra_objects = ['../obj-'+machine+'-linux-gnu/libprotobuf.a',
++                       '../obj-'+machine+'-linux-gnu/libprotobuf-lite.a']
      test_conformance.target = 'test_python_cpp'
  
      extra_compile_args = []
-@@ -229,7 +231,7 @@
+@@ -229,7 +230,7 @@ if __name__ == '__main__':
              include_dirs=[".", "../src"],
              libraries=libraries,
              extra_objects=extra_objects,
 -            library_dirs=['../src/.libs'],
-+            library_dirs=['../obj-x86_64-linux-gnu'],
++            library_dirs=['../obj-'+machine+'-linux-gnu'],
              extra_compile_args=extra_compile_args,
          ),
          Extension(
