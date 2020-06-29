@@ -1,5 +1,5 @@
 <project name="protobuf-java" default="jar" basedir="..">
-    <property name="srcdir" value="obj-x86_64-linux-gnu" />
+    <!-- <property name="srcdir" value="obj-x86_64-linux-gnu" /> -->
     <property name="javadir" value="java/core" />
     <property name="javasrcdir" value="${javadir}/src/" />
     <property name="targetdir" value="${javadir}/target" />
