@@ -58,6 +58,7 @@ Build-Depends: bc,
 # The above part is synced with main/caffe
 # The following part is CUDA related B-D
                nvidia-cuda-toolkit (>= 10.0) [amd64 ppc64el],
+               cuda-toolkit (>= 10.0) [arm64],
                libcudnn7-dev (>= 7.4.2.24),
                gcc-6,
                g++-6,
