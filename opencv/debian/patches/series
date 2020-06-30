@@ -1,2 +1,3 @@
 add_GNUInstallDirs
 correct_cmake_include
+cuda_gl_interop_fix.patch

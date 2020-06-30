@@ -1,0 +1,15 @@
+diff --git a/modules/core/src/opengl.cpp b/modules/core/src/opengl.cpp
+index 75ee5c7..aef1303 100644
+--- a/modules/core/src/opengl.cpp
++++ b/modules/core/src/opengl.cpp
+@@ -45,6 +45,10 @@
+ #ifdef HAVE_OPENGL
+ #  include "gl_core_3_1.hpp"
+ #  ifdef HAVE_CUDA
++#    include <GL/gl.h>
++#    ifndef GL_VERSION
++#      define GL_VERSION
++#    endif
+ #    include <cuda_gl_interop.h>
+ #  endif
+ #else // HAVE_OPENGL
