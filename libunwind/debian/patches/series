@@ -1,3 +1,8 @@
-01-rpath.patch
 20140507-ppc_lib64.patch
-fix-lzma-linking.patch
+0001-aarch64-Use-__asm__-instead-of-asm-89.patch
+
+# ia64
+#libunwind-1.2-coredump-regs.patch
+#libunwind-1.2-ia64-missing.patch
+#libunwind-1.2-ia64-ptrace-coredump.patch
+#libunwind-1.2-ia64-undwarf.patch
