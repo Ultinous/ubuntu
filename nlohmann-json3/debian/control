@@ -1,0 +1,32 @@
+Source: nlohmann-json3
+Priority: optional
+Maintainer: Hubert Chathi <uhoreg@debian.org>
+Uploaders: Kozák Miklós <garmine@ultinous.com>
+Build-Depends:
+ cmake,
+ debhelper-compat ( =12),
+ doxygen,
+ ghostscript,
+ git,
+ graphviz,
+ texlive-binaries,
+ texlive-latex-base,
+Standards-Version: 4.5.0
+Section: libs
+Homepage: https://nlohmann.github.io/json/
+Vcs-Git: https://salsa.debian.org/debian/nlohmann-json3.git
+Vcs-Browser: https://salsa.debian.org/debian/nlohmann-json3
+X-Ultinous-Upstream-Release: https://github.com/nlohmann/json/archive/v3.8.0.tar.gz
+
+Package: nlohmann-json3-dev
+Section: libdevel
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+Conflicts:
+ nlohmann-json-dev
+Description: JSON for Modern C++
+ JSON library with intuitive syntax, trivial integration and serious
+ testing. Other aspects, as memory efficiency and speed were not so
+ important. The library consists of a single source file json.hpp.

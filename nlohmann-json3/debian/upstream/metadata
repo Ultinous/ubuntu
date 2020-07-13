@@ -1,0 +1,6 @@
+Name: json
+Bug-Database: https://github.com/nlohmann/json/issues
+Bug-Submit: https://github.com/nlohmann/json/issues/new
+Changelog: https://github.com/nlohmann/json/blob/master/ChangeLog.md
+Repository: https://github.com/nlohmann/json
+Homepage: https://nlohmann.github.io/json/

@@ -1,0 +1,10 @@
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index fdf5ac5..712304e 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -188,4 +188,4 @@ add_dependencies(json_unit download_test_data)
+ add_subdirectory(cmake_import)
+ add_subdirectory(cmake_import_minver)
+ add_subdirectory(cmake_add_subdirectory)
+-add_subdirectory(cmake_fetch_content)
++#add_subdirectory(cmake_fetch_content)

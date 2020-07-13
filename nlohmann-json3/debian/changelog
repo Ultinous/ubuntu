@@ -1,0 +1,113 @@
+nlohmann-json3 (3.8.0-1ultinous1) bionic; urgency=medium
+
+  * Backported to Bionic.
+  * New upstream release: 3.8.0
+
+ -- Kozak Miklos <garmine@ultinous.com>  Fri, 10 Jul 2020 11:54:06 +0000
+
+nlohmann-json3 (3.7.3-1) unstable; urgency=medium
+
+  * Team upload (salsa.d.o namespace)
+    - not committing the new tarball on git
+  * New upstream version 3.7.3
+  * Bump std-version to 4.5.0, no changes required
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Wed, 05 Feb 2020 22:38:47 +0100
+
+nlohmann-json3 (3.7.0-2) unstable; urgency=medium
+
+  * Mark as multi-arch: Foreign (thanks to Helmut Grohne) (Closes: #933593)
+  * debian/patches/cmake_archindep: make cmake version config file arch-indep
+
+ -- Hubert Chathi <uhoreg@debian.org>  Thu, 01 Aug 2019 15:03:56 -0400
+
+nlohmann-json3 (3.7.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/control, debian/rules: use cmake, so that it can be found by cmake
+
+ -- Hubert Chathi <uhoreg@debian.org>  Tue, 30 Jul 2019 19:39:51 -0400
+
+nlohmann-json3 (3.6.1-1) unstable; urgency=medium
+
+  * Upload to unstable.
+  * debian/control: add VCS info
+
+ -- Hubert Chathi <uhoreg@debian.org>  Fri, 05 Jul 2019 12:15:55 -0400
+
+nlohmann-json3 (3.6.1-0.1~exp1) experimental; urgency=medium
+
+  * New upstream release
+    - Upload to experimental due to freeze
+  * Update copyright file and years
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Tue, 16 Apr 2019 19:11:27 +0200
+
+nlohmann-json3 (3.5.0-0.1) unstable; urgency=medium
+
+  [ Chris Lamb ]
+  * Make build reproducible (Closes: #900551)
+  * Do not ignore nocheck in testsuite (Closes: #900549)
+
+  [ Gianfranco Costamagna ]
+  * Non-maintainer upload
+  * Update to new release (Closes: #917581)
+  * Strip trailing spaces in changelog, control and rules files
+  * Set compat level to 12
+  * Honour no-check
+  * Bump std-version to 4.3.0, no changes required
+  * Fixup copyright file
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Tue, 08 Jan 2019 22:44:26 +0100
+
+nlohmann-json3 (3.1.2-2) unstable; urgency=medium
+
+  * Add missing copyright info (thanks to wookey).
+  * Ship the multi-file version instead of the single-file version.
+
+ -- Hubert Chathi <uhoreg@debian.org>  Wed, 02 May 2018 08:02:01 -0400
+
+nlohmann-json3 (3.1.2-1) unstable; urgency=medium
+
+  * New maintainer for 3.x branch.
+    * API is incompatible with 2.x branch, so new package name.
+  * New upstream version 3.1.2. (Closes: #886865)
+
+ -- Hubert Chathi <uhoreg@debian.org>  Sat, 17 Mar 2018 17:26:03 -0400
+
+nlohmann-json (2.0.6-1) unstable; urgency=medium
+
+  * New upstream version 2.0.5
+  * New upstream version 2.0.6
+
+ -- Muri Nicanor <muri@immerda.ch>  Sun, 23 Oct 2016 22:49:30 +0200
+
+nlohmann-json (2.0.4-1) unstable; urgency=medium
+
+  * New upstream version 2.0.4
+
+ -- Muri Nicanor <muri@immerda.ch>  Mon, 12 Sep 2016 18:28:54 +0200
+
+nlohmann-json (2.0.3-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Muri Nicanor <muri@immerda.ch>  Sun, 04 Sep 2016 19:29:34 +0200
+
+nlohmann-json (2.0.2-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Muri Nicanor <muri@immerda.ch>  Wed, 03 Aug 2016 14:43:22 +0200
+
+nlohmann-json (2.0.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Muri Nicanor <muri@immerda.ch>  Fri, 08 Jul 2016 21:27:37 +0200
+
+nlohmann-json (1.1.0-1) unstable; urgency=medium
+
+  * Initial release (Closes: #825623)
+
+ -- Muri Nicanor <muri@immerda.ch>  Sat, 28 May 2016 16:44:47 +0200

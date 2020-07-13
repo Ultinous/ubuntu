@@ -1,0 +1,5 @@
+version=2
+opts=\
+dversionmangle=s/\+ds//,\
+filenamemangle=s/.+\/v?(\d\S*)\.tar\.gz/json-$1\.tar\.gz/ \
+  https://github.com/nlohmann/json/tags .*/v?(\d\S*)\.tar\.gz

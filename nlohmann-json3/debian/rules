@@ -1,0 +1,22 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+%:
+	dh $@ --buildsystem=cmake
+
+override_dh_auto_clean:
+	dh_auto_clean --buildsystem=cmake
+	make -C doc clean
+	rm -f -r doc/xml
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DNLOHMANN_JSON_INCLUDE_INSTALL_DIR=include/nlohmann -DJSON_MultipleHeaders=ON -DNLOHMANN_JSON_CONFIG_INSTALL_DIR=lib/cmake/nlohmann_json
+
+override_dh_auto_build:
+	dh_auto_build --buildsystem=cmake
+	make -C doc
+	rm -f doc/html/*.md5
+	rm -f doc/html/jquery.js
