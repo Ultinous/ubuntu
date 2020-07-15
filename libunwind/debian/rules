@@ -20,9 +20,9 @@ debian/libunwind-setjmp0.%: debian/libunwind-setjmp0.%.in
 	sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' $< > $@
 
 ifeq ($(DEB_HOST_ARCH), arm64)
-	CONFIG_CXX_EXCEPTIONS = "--disable-cxx-exceptions"
+  CONFIG_CXX_EXCEPTIONS="--disable-cxx-exceptions"
 else
-	CONFIG_CXX_EXCEPTIONS = "--enable-cxx-exceptions"
+  CONFIG_CXX_EXCEPTIONS="--enable-cxx-exceptions"
 endif
 
 override_dh_auto_configure:
