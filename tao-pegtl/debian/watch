@@ -1,0 +1,4 @@
+# You must remove unused comment lines for the released package.
+version=4
+opts=filenamemangle=s/.+\/v?(\d\S+)\.tar\.gz/PEGTL-$1\.tar\.gz/ \
+  https://github.com/taocpp/PEGTL/tags .*/v?(\d\S+)\.tar\.gz
