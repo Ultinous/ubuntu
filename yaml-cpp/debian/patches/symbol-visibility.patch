@@ -1,0 +1,46 @@
+commit df9206778fe9ff1bdd56d975c29c43dfe1e66de7
+Author: Christopher James Halse Rogers <christopher.halse.rogers@canonical.com>
+Date:   Fri Nov 23 15:26:53 2018 +1100
+
+    Export only YAML_CPP_API-tagged symbols on Linux.
+    
+    This marks classes tagged with YAML_CPP_API with visibility("default"), to
+    explicitly export them, and then makes the default visibility "hidden" via
+    -fvisibility=hidden.
+    
+    This reduces the number of exported symbols by more than 50%, which has
+    a small application start-up time and memory useage benefit. It also
+    makes it more feasible to audit the set of exported symbols in automated
+    ABI compatibility systems.
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -137,6 +137,14 @@
+ 	endif()
+ endif()
+ 
++if(CMAKE_SYSTEM_NAME MATCHES "Linux")
++	set(CMAKE_CXX_VISIBILITY_PRESET hidden)
++	if (POLICY CMP0063)
++		cmake_policy(SET CMP0063 NEW)
++	endif()
++	add_definitions(-DYAML_CPP_USE_VISIBILITY)
++endif()
++
+ # GCC or Clang or Intel Compiler specialities
+ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR
+    (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT "x${CMAKE_CXX_SIMULATE_ID}" STREQUAL "xMSVC") OR
+--- a/include/yaml-cpp/dll.h
++++ b/include/yaml-cpp/dll.h
+@@ -27,7 +27,11 @@
+ #define YAML_CPP_API __declspec(dllimport)
+ #endif  // yaml_cpp_EXPORTS
+ #else   // YAML_CPP_DLL
++#ifdef YAML_CPP_USE_VISIBILITY
++#define YAML_CPP_API __attribute__ ((visibility("default")))
++#else
+ #define YAML_CPP_API
++#endif // YAML_CPP_USE_VISIBILITY
+ #endif  // YAML_CPP_DLL
+ 
+ #endif  // DLL_H_62B23520_7C8E_11DE_8A39_0800200C9A66

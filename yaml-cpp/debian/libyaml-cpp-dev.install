@@ -1,0 +1,5 @@
+usr/include/yaml-cpp/
+usr/lib/*/*.a
+usr/lib/*/*.so
+usr/lib/*/cmake/
+usr/lib/*/pkgconfig/

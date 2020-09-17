@@ -1,0 +1,72 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+include /usr/share/dpkg/architecture.mk
+
+CPPFLAGS :=$(shell dpkg-buildflags --get CPPFLAGS)
+ifneq (,$(filter $(DEB_BUILD_ARCH),mipsel))
+    CFLAGS   :=$(shell dpkg-buildflags --get CFLAGS) -g1
+    CXXFLAGS :=$(shell dpkg-buildflags --get CXXFLAGS) -g1
+else
+    CFLAGS   :=$(shell dpkg-buildflags --get CFLAGS)
+    CXXFLAGS :=$(shell dpkg-buildflags --get CXXFLAGS)
+endif
+LDFLAGS  :=$(shell dpkg-buildflags --get LDFLAGS)
+
+export DEB_HOST_MULTIARCH CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
+
+COMMON_CMAKE_FLAGS = \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DLIB_INSTALL_DIR=/usr/lib/$(DEB_HOST_MULTIARCH) \
+	-DYAML_CPP_BUILD_TOOLS=ON \
+	-DYAML_CPP_BUILD_TESTS=$(if $(filter nocheck,$(DEB_BUILD_OPTIONS)),OFF,ON) \
+	-Dgtest_disable_pthreads=$(if $(filter $(DEB_HOST_ARCH_OS),kfreebsd hurd),ON,OFF)
+
+override_dh_auto_configure:
+	dh_testdir
+	dh_auto_configure --builddirectory=build-static -- $(COMMON_CMAKE_FLAGS)
+	dh_auto_configure --builddirectory=build-shared -- $(COMMON_CMAKE_FLAGS) \
+				 -DYAML_BUILD_SHARED_LIBS=ON
+
+override_dh_auto_build:
+	dh_testdir
+	$(MAKE) -C build-static VERBOSE=1
+	$(MAKE) -C build-shared VERBOSE=1
+	# It might make sense to also provide the utils in a separate package
+	# $(MAKE) -C build-shared util
+
+override_dh_auto_install:
+	dh_testdir
+	dh_prep
+	$(MAKE) -C build-static install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C build-shared install DESTDIR=$(CURDIR)/debian/tmp
+
+ifeq ($(filter nocheck,$(DEB_BUILD_OPTIONS)),)
+override_dh_auto_test:
+	$(MAKE) -C build-static test
+	$(MAKE) -C build-shared test
+endif
+
+debian/weak-symbols: override_dh_auto_build
+	# All the weak symbols are either template instantiations of the STL
+	# or are optional symbols for inline functions.
+	nm --dynamic --defined-only build-shared/libyaml-cpp.so | awk '$$2 ~ /W/ { print " " $$3 "@Base 0.6.2" } ' > $@
+
+override_dh_makeshlibs: debian/weak-symbols
+	dh_makeshlibs -VNone
+
+clean:
+	dh_testdir
+	dh_auto_clean
+	dh_clean
+	rm -rf build-static build-shared
+
+%:
+	dh $@
+
+.PHONY: clean

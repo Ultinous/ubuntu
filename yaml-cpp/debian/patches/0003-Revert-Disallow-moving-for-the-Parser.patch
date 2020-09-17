@@ -1,0 +1,31 @@
+From c6ae5659621322e5ec8085d1e04a269e3fac6705 Mon Sep 17 00:00:00 2001
+From: Adrian Bunk <bunk@debian.org>
+Date: Sun, 10 May 2020 11:39:29 +0300
+Subject: Revert "Disallow moving for the Parser."
+
+This reverts commit bd7f8c60c82614bb0bd1c526db2cbc39dac02fec.
+---
+ include/yaml-cpp/parser.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/include/yaml-cpp/parser.h b/include/yaml-cpp/parser.h
+index 2f403c3..e9fba0c 100644
+--- a/include/yaml-cpp/parser.h
++++ b/include/yaml-cpp/parser.h
+@@ -28,10 +28,11 @@ class YAML_CPP_API Parser {
+   /** Constructs an empty parser (with no input. */
+   Parser();
+ 
++  /** non copyable but movable */
+   Parser(const Parser&) = delete;
+-  Parser(Parser&&) = delete;
++  Parser(Parser&&) = default;
+   Parser& operator=(const Parser&) = delete;
+-  Parser& operator=(Parser&&) = delete;
++  Parser& operator=(Parser&&) = default;
+ 
+   /**
+    * Constructs a parser from the given input stream. The input stream must
+-- 
+2.20.1
+

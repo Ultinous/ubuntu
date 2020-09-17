@@ -1,0 +1,3 @@
+version=4
+
+https://github.com/jbeder/yaml-cpp/releases .*/[relasymcp.-]*(\d\S*)\.tar\.gz

@@ -1,0 +1,1571 @@
+From 6452cb9b826df569c396e7c645d874fc068607d6 Mon Sep 17 00:00:00 2001
+From: Adrian Bunk <bunk@debian.org>
+Date: Sun, 10 May 2020 11:39:29 +0300
+Subject: Revert "Apply formatting/style tweaks to comply with compile time
+ diagnostics for g++ and clang++ (#686)"
+
+This reverts commit 0d5c57150cebb430fcc216d8066dbb28aeaafe8e.
+---
+ CMakeLists.txt                        |  2 +-
+ include/yaml-cpp/binary.h             | 10 ++---
+ include/yaml-cpp/contrib/anchordict.h |  3 +-
+ include/yaml-cpp/emitter.h            |  7 ++--
+ include/yaml-cpp/node/detail/memory.h |  5 +--
+ include/yaml-cpp/node/detail/node.h   | 12 +++---
+ include/yaml-cpp/node/impl.h          | 36 ++++++++--------
+ include/yaml-cpp/noncopyable.h        | 25 +++++++++++
+ include/yaml-cpp/ostream_wrapper.h    |  8 +---
+ include/yaml-cpp/parser.h             | 11 ++---
+ src/collectionstack.h                 |  5 +--
+ src/contrib/graphbuilderadapter.h     | 16 ++-----
+ src/directives.cpp                    |  9 +++-
+ src/emitfromevents.cpp                |  7 ++--
+ src/emitter.cpp                       |  4 +-
+ src/emitterstate.cpp                  | 40 ++++++++----------
+ src/emitterstate.h                    |  9 +---
+ src/emitterutils.cpp                  | 20 ++++-----
+ src/exp.h                             | 60 +++++++++++++--------------
+ src/node_data.cpp                     | 19 ++++-----
+ src/nodebuilder.cpp                   |  9 +---
+ src/nodebuilder.h                     |  6 +--
+ src/nodeevents.cpp                    |  4 +-
+ src/nodeevents.h                      |  8 +---
+ src/ostream_wrapper.cpp               |  9 +---
+ src/parser.cpp                        |  6 +--
+ src/ptr_vector.h                      | 12 +++---
+ src/regex_yaml.cpp                    | 20 +++++----
+ src/regex_yaml.h                      |  8 ++--
+ src/scanner.cpp                       |  7 +---
+ src/scantoken.cpp                     |  4 +-
+ src/setting.h                         | 24 ++++-------
+ src/singledocparser.cpp               |  9 ++--
+ src/singledocparser.h                 |  7 +---
+ src/stream.cpp                        | 32 ++++++++------
+ src/stream.h                          |  9 ++--
+ src/streamcharsource.h                |  8 ++--
+ src/tag.cpp                           |  5 +--
+ src/token.h                           | 13 +++---
+ test/regex_test.cpp                   | 18 ++++----
+ 40 files changed, 241 insertions(+), 285 deletions(-)
+ create mode 100644 include/yaml-cpp/noncopyable.h
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4732a45..85de975 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -159,7 +159,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR
+ 		set(GCC_EXTRA_OPTIONS "${GCC_EXTRA_OPTIONS} -fPIC")
+ 	endif()
+ 	#
+-	set(FLAG_TESTED "-Wextra -Wshadow -Weffc++ -pedantic -pedantic-errors")
++	set(FLAG_TESTED "-Wextra")
+ 	check_cxx_compiler_flag(${FLAG_TESTED} FLAG_WEXTRA)
+ 	if(FLAG_WEXTRA)
+ 		set(GCC_EXTRA_OPTIONS "${GCC_EXTRA_OPTIONS} ${FLAG_TESTED}")
+diff --git a/include/yaml-cpp/binary.h b/include/yaml-cpp/binary.h
+index 0267a3a..29d5dbd 100644
+--- a/include/yaml-cpp/binary.h
++++ b/include/yaml-cpp/binary.h
+@@ -19,13 +19,9 @@ YAML_CPP_API std::vector<unsigned char> DecodeBase64(const std::string &input);
+ 
+ class YAML_CPP_API Binary {
+  public:
++  Binary() : m_unownedData(0), m_unownedSize(0) {}
+   Binary(const unsigned char *data_, std::size_t size_)
+-      : m_data{}, m_unownedData(data_), m_unownedSize(size_) {}
+-  Binary() : Binary(nullptr, 0) {}
+-  Binary(const Binary &) = default;
+-  Binary(Binary &&) = default;
+-  Binary &operator=(const Binary &) = default;
+-  Binary &operator=(Binary &&) = default;
++      : m_unownedData(data_), m_unownedSize(size_) {}
+ 
+   bool owned() const { return !m_unownedData; }
+   std::size_t size() const { return owned() ? m_data.size() : m_unownedSize; }
+@@ -66,6 +62,6 @@ class YAML_CPP_API Binary {
+   const unsigned char *m_unownedData;
+   std::size_t m_unownedSize;
+ };
+-}  // namespace YAML
++}
+ 
+ #endif  // BASE64_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/include/yaml-cpp/contrib/anchordict.h b/include/yaml-cpp/contrib/anchordict.h
+index 1b7809b..78db9ec 100644
+--- a/include/yaml-cpp/contrib/anchordict.h
++++ b/include/yaml-cpp/contrib/anchordict.h
+@@ -22,7 +22,6 @@ namespace YAML {
+ template <class T>
+ class AnchorDict {
+  public:
+-  AnchorDict() : m_data{} {}
+   void Register(anchor_t anchor, T value) {
+     if (anchor > m_data.size()) {
+       m_data.resize(anchor);
+@@ -35,6 +34,6 @@ class AnchorDict {
+  private:
+   std::vector<T> m_data;
+ };
+-}  // namespace YAML
++}
+ 
+ #endif  // ANCHORDICT_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/include/yaml-cpp/emitter.h b/include/yaml-cpp/emitter.h
+index 6f142b0..bf723ab 100644
+--- a/include/yaml-cpp/emitter.h
++++ b/include/yaml-cpp/emitter.h
+@@ -19,6 +19,7 @@
+ #include "yaml-cpp/dll.h"
+ #include "yaml-cpp/emitterdef.h"
+ #include "yaml-cpp/emittermanip.h"
++#include "yaml-cpp/noncopyable.h"
+ #include "yaml-cpp/null.h"
+ #include "yaml-cpp/ostream_wrapper.h"
+ 
+@@ -30,12 +31,10 @@ struct _Null;
+ namespace YAML {
+ class EmitterState;
+ 
+-class YAML_CPP_API Emitter {
++class YAML_CPP_API Emitter : private noncopyable {
+  public:
+   Emitter();
+   explicit Emitter(std::ostream& stream);
+-  Emitter(const Emitter&) = delete;
+-  Emitter& operator=(const Emitter&) = delete;
+   ~Emitter();
+ 
+   // output
+@@ -274,6 +273,6 @@ inline Emitter& operator<<(Emitter& emitter, _Indent indent) {
+ inline Emitter& operator<<(Emitter& emitter, _Precision precision) {
+   return emitter.SetLocalPrecision(precision);
+ }
+-}  // namespace YAML
++}
+ 
+ #endif  // EMITTER_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/include/yaml-cpp/node/detail/memory.h b/include/yaml-cpp/node/detail/memory.h
+index a4df0f7..8f2bc26 100644
+--- a/include/yaml-cpp/node/detail/memory.h
++++ b/include/yaml-cpp/node/detail/memory.h
+@@ -22,7 +22,6 @@ namespace YAML {
+ namespace detail {
+ class YAML_CPP_API memory {
+  public:
+-  memory() : m_nodes{} {}
+   node& create_node();
+   void merge(const memory& rhs);
+ 
+@@ -41,7 +40,7 @@ class YAML_CPP_API memory_holder {
+  private:
+   shared_memory m_pMemory;
+ };
+-}  // namespace detail
+-}  // namespace YAML
++}
++}
+ 
+ #endif  // VALUE_DETAIL_MEMORY_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/include/yaml-cpp/node/detail/node.h b/include/yaml-cpp/node/detail/node.h
+index a2cc52b..8a776f6 100644
+--- a/include/yaml-cpp/node/detail/node.h
++++ b/include/yaml-cpp/node/detail/node.h
+@@ -7,18 +7,18 @@
+ #pragma once
+ #endif
+ 
+-#include "yaml-cpp/dll.h"
+ #include "yaml-cpp/emitterstyle.h"
+-#include "yaml-cpp/node/detail/node_ref.h"
+-#include "yaml-cpp/node/ptr.h"
++#include "yaml-cpp/dll.h"
+ #include "yaml-cpp/node/type.h"
++#include "yaml-cpp/node/ptr.h"
++#include "yaml-cpp/node/detail/node_ref.h"
+ #include <set>
+ 
+ namespace YAML {
+ namespace detail {
+ class node {
+  public:
+-  node() : m_pRef(new node_ref), m_dependencies{} {}
++  node() : m_pRef(new node_ref) {}
+   node(const node&) = delete;
+   node& operator=(const node&) = delete;
+ 
+@@ -163,7 +163,7 @@ class node {
+   typedef std::set<node*> nodes;
+   nodes m_dependencies;
+ };
+-}  // namespace detail
+-}  // namespace YAML
++}
++}
+ 
+ #endif  // NODE_DETAIL_NODE_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/include/yaml-cpp/node/impl.h b/include/yaml-cpp/node/impl.h
+index 8346f40..de2bf44 100644
+--- a/include/yaml-cpp/node/impl.h
++++ b/include/yaml-cpp/node/impl.h
+@@ -7,15 +7,15 @@
+ #pragma once
+ #endif
+ 
+-#include "yaml-cpp/exceptions.h"
++#include "yaml-cpp/node/node.h"
++#include "yaml-cpp/node/iterator.h"
+ #include "yaml-cpp/node/detail/memory.h"
+ #include "yaml-cpp/node/detail/node.h"
+-#include "yaml-cpp/node/iterator.h"
+-#include "yaml-cpp/node/node.h"
++#include "yaml-cpp/exceptions.h"
+ #include <string>
+ 
+ namespace YAML {
+-inline Node::Node() : m_isValid(true), m_pMemory(nullptr), m_pNode(nullptr) {}
++inline Node::Node() : m_isValid(true), m_pNode(NULL) {}
+ 
+ inline Node::Node(NodeType::value type)
+     : m_isValid(true),
+@@ -42,7 +42,7 @@ inline Node::Node(const Node& rhs)
+       m_pMemory(rhs.m_pMemory),
+       m_pNode(rhs.m_pNode) {}
+ 
+-inline Node::Node(Zombie) : m_isValid(false), m_pMemory{}, m_pNode(nullptr) {}
++inline Node::Node(Zombie) : m_isValid(false), m_pNode(NULL) {}
+ 
+ inline Node::Node(detail::node& node, detail::shared_memory_holder pMemory)
+     : m_isValid(true), m_pMemory(pMemory), m_pNode(&node) {}
+@@ -202,15 +202,6 @@ inline Node& Node::operator=(const T& rhs) {
+   return *this;
+ }
+ 
+-inline Node& Node::operator=(const Node& rhs) {
+-  if (!m_isValid || !rhs.m_isValid)
+-    throw InvalidNode();
+-  if (is(rhs))
+-    return *this;
+-  AssignNode(rhs);
+-  return *this;
+-}
+-
+ inline void Node::reset(const YAML::Node& rhs) {
+   if (!m_isValid || !rhs.m_isValid)
+     throw InvalidNode();
+@@ -247,6 +238,15 @@ inline void Node::Assign(char* rhs) {
+   m_pNode->set_scalar(rhs);
+ }
+ 
++inline Node& Node::operator=(const Node& rhs) {
++  if (!m_isValid || !rhs.m_isValid)
++    throw InvalidNode();
++  if (is(rhs))
++    return *this;
++  AssignNode(rhs);
++  return *this;
++}
++
+ inline void Node::AssignData(const Node& rhs) {
+   if (!m_isValid || !rhs.m_isValid)
+     throw InvalidNode();
+@@ -366,7 +366,7 @@ template <typename T>
+ inline typename to_value_t<T>::return_type to_value(const T& t) {
+   return to_value_t<T>(t)();
+ }
+-}  // namespace detail
++}
+ 
+ // indexing
+ template <typename Key>
+@@ -374,8 +374,8 @@ inline const Node Node::operator[](const Key& key) const {
+   if (!m_isValid)
+     throw InvalidNode();
+   EnsureNodeExists();
+-  detail::node* value = static_cast<const detail::node&>(*m_pNode).get(
+-      detail::to_value(key), m_pMemory);
++  detail::node* value = static_cast<const detail::node&>(*m_pNode)
++                            .get(detail::to_value(key), m_pMemory);
+   if (!value) {
+     return Node(ZombieNode);
+   }
+@@ -443,6 +443,6 @@ inline void Node::force_insert(const Key& key, const Value& value) {
+ 
+ // free functions
+ inline bool operator==(const Node& lhs, const Node& rhs) { return lhs.is(rhs); }
+-}  // namespace YAML
++}
+ 
+ #endif  // NODE_IMPL_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/include/yaml-cpp/noncopyable.h b/include/yaml-cpp/noncopyable.h
+new file mode 100644
+index 0000000..a261040
+--- /dev/null
++++ b/include/yaml-cpp/noncopyable.h
+@@ -0,0 +1,25 @@
++#ifndef NONCOPYABLE_H_62B23520_7C8E_11DE_8A39_0800200C9A66
++#define NONCOPYABLE_H_62B23520_7C8E_11DE_8A39_0800200C9A66
++
++#if defined(_MSC_VER) ||                                            \
++    (defined(__GNUC__) && (__GNUC__ == 3 && __GNUC_MINOR__ >= 4) || \
++     (__GNUC__ >= 4))  // GCC supports "pragma once" correctly since 3.4
++#pragma once
++#endif
++
++#include "yaml-cpp/dll.h"
++
++namespace YAML {
++// this is basically boost::noncopyable
++class YAML_CPP_API noncopyable {
++ protected:
++  noncopyable() {}
++  ~noncopyable() {}
++
++ private:
++  noncopyable(const noncopyable&);
++  const noncopyable& operator=(const noncopyable&);
++};
++}
++
++#endif  // NONCOPYABLE_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/include/yaml-cpp/ostream_wrapper.h b/include/yaml-cpp/ostream_wrapper.h
+index 259801b..09d45f3 100644
+--- a/include/yaml-cpp/ostream_wrapper.h
++++ b/include/yaml-cpp/ostream_wrapper.h
+@@ -17,10 +17,6 @@ class YAML_CPP_API ostream_wrapper {
+  public:
+   ostream_wrapper();
+   explicit ostream_wrapper(std::ostream& stream);
+-  ostream_wrapper(const ostream_wrapper&) = delete;
+-  ostream_wrapper(ostream_wrapper&&) = delete;
+-  ostream_wrapper& operator=(const ostream_wrapper&) = delete;
+-  ostream_wrapper& operator=(ostream_wrapper&&) = delete;
+   ~ostream_wrapper();
+ 
+   void write(const std::string& str);
+@@ -56,7 +52,7 @@ class YAML_CPP_API ostream_wrapper {
+ 
+ template <std::size_t N>
+ inline ostream_wrapper& operator<<(ostream_wrapper& stream,
+-                                   const char (&str)[N]) {
++                                   const char(&str)[N]) {
+   stream.write(str, N - 1);
+   return stream;
+ }
+@@ -71,6 +67,6 @@ inline ostream_wrapper& operator<<(ostream_wrapper& stream, char ch) {
+   stream.write(&ch, 1);
+   return stream;
+ }
+-}  // namespace YAML
++}
+ 
+ #endif  // OSTREAM_WRAPPER_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/include/yaml-cpp/parser.h b/include/yaml-cpp/parser.h
+index e9fba0c..ceac22d 100644
+--- a/include/yaml-cpp/parser.h
++++ b/include/yaml-cpp/parser.h
+@@ -11,6 +11,7 @@
+ #include <memory>
+ 
+ #include "yaml-cpp/dll.h"
++#include "yaml-cpp/noncopyable.h"
+ 
+ namespace YAML {
+ class EventHandler;
+@@ -23,17 +24,11 @@ struct Token;
+  * A parser turns a stream of bytes into one stream of "events" per YAML
+  * document in the input stream.
+  */
+-class YAML_CPP_API Parser {
++class YAML_CPP_API Parser : private noncopyable {
+  public:
+   /** Constructs an empty parser (with no input. */
+   Parser();
+ 
+-  /** non copyable but movable */
+-  Parser(const Parser&) = delete;
+-  Parser(Parser&&) = default;
+-  Parser& operator=(const Parser&) = delete;
+-  Parser& operator=(Parser&&) = default;
+-
+   /**
+    * Constructs a parser from the given input stream. The input stream must
+    * live as long as the parser.
+@@ -86,6 +81,6 @@ class YAML_CPP_API Parser {
+   std::unique_ptr<Scanner> m_pScanner;
+   std::unique_ptr<Directives> m_pDirectives;
+ };
+-}  // namespace YAML
++}
+ 
+ #endif  // PARSER_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/src/collectionstack.h b/src/collectionstack.h
+index 9feba96..ebdc587 100644
+--- a/src/collectionstack.h
++++ b/src/collectionstack.h
+@@ -7,8 +7,8 @@
+ #pragma once
+ #endif
+ 
+-#include <cassert>
+ #include <stack>
++#include <cassert>
+ 
+ namespace YAML {
+ struct CollectionType {
+@@ -17,7 +17,6 @@ struct CollectionType {
+ 
+ class CollectionStack {
+  public:
+-  CollectionStack() : collectionStack{} {}
+   CollectionType::value GetCurCollectionType() const {
+     if (collectionStack.empty())
+       return CollectionType::NoCollection;
+@@ -36,6 +35,6 @@ class CollectionStack {
+  private:
+   std::stack<CollectionType::value> collectionStack;
+ };
+-}  // namespace YAML
++}
+ 
+ #endif  // COLLECTIONSTACK_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/src/contrib/graphbuilderadapter.h b/src/contrib/graphbuilderadapter.h
+index 9078cdf..62b40a1 100644
+--- a/src/contrib/graphbuilderadapter.h
++++ b/src/contrib/graphbuilderadapter.h
+@@ -26,15 +26,7 @@ namespace YAML {
+ class GraphBuilderAdapter : public EventHandler {
+  public:
+   GraphBuilderAdapter(GraphBuilderInterface& builder)
+-      : m_builder(builder),
+-        m_containers{},
+-        m_anchors{},
+-        m_pRootNode(nullptr),
+-        m_pKeyNode(nullptr) {}
+-  GraphBuilderAdapter(const GraphBuilderAdapter&) = delete;
+-  GraphBuilderAdapter(GraphBuilderAdapter&&) = delete;
+-  GraphBuilderAdapter& operator=(const GraphBuilderAdapter&) = delete;
+-  GraphBuilderAdapter& operator=(GraphBuilderAdapter&&) = delete;
++      : m_builder(builder), m_pRootNode(nullptr), m_pKeyNode(nullptr) {}
+ 
+   virtual void OnDocumentStart(const Mark& mark) { (void)mark; }
+   virtual void OnDocumentEnd() {}
+@@ -58,8 +50,8 @@ class GraphBuilderAdapter : public EventHandler {
+   struct ContainerFrame {
+     ContainerFrame(void* pSequence)
+         : pContainer(pSequence), pPrevKeyNode(&sequenceMarker) {}
+-    ContainerFrame(void* pMap, void* pPreviousKeyNode)
+-        : pContainer(pMap), pPrevKeyNode(pPreviousKeyNode) {}
++    ContainerFrame(void* pMap, void* pPrevKeyNode)
++        : pContainer(pMap), pPrevKeyNode(pPrevKeyNode) {}
+ 
+     void* pContainer;
+     void* pPrevKeyNode;
+@@ -82,6 +74,6 @@ class GraphBuilderAdapter : public EventHandler {
+   void RegisterAnchor(anchor_t anchor, void* pNode);
+   void DispositionNode(void* pNode);
+ };
+-}  // namespace YAML
++}
+ 
+ #endif  // GRAPHBUILDERADAPTER_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/src/directives.cpp b/src/directives.cpp
+index 0c85d0f..963bd2c 100644
+--- a/src/directives.cpp
++++ b/src/directives.cpp
+@@ -1,7 +1,12 @@
+ #include "directives.h"
+ 
+ namespace YAML {
+-Directives::Directives() : version{true, 1, 2}, tags{} {}
++Directives::Directives() {
++  // version
++  version.isDefault = true;
++  version.major = 1;
++  version.minor = 2;
++}
+ 
+ const std::string Directives::TranslateTagHandle(
+     const std::string& handle) const {
+@@ -14,4 +19,4 @@ const std::string Directives::TranslateTagHandle(
+ 
+   return it->second;
+ }
+-}  // namespace YAML
++}
+diff --git a/src/emitfromevents.cpp b/src/emitfromevents.cpp
+index 5a51bb4..4832649 100644
+--- a/src/emitfromevents.cpp
++++ b/src/emitfromevents.cpp
+@@ -16,11 +16,10 @@ std::string ToString(YAML::anchor_t anchor) {
+   stream << anchor;
+   return stream.str();
+ }
+-}  // namespace
++}
+ 
+ namespace YAML {
+-EmitFromEvents::EmitFromEvents(Emitter& emitter)
+-    : m_emitter(emitter), m_stateStack{} {}
++EmitFromEvents::EmitFromEvents(Emitter& emitter) : m_emitter(emitter) {}
+ 
+ void EmitFromEvents::OnDocumentStart(const Mark&) {}
+ 
+@@ -117,4 +116,4 @@ void EmitFromEvents::EmitProps(const std::string& tag, anchor_t anchor) {
+   if (anchor)
+     m_emitter << Anchor(ToString(anchor));
+ }
+-}  // namespace YAML
++}
+diff --git a/src/emitter.cpp b/src/emitter.cpp
+index 016beb1..6872252 100644
+--- a/src/emitter.cpp
++++ b/src/emitter.cpp
+@@ -11,7 +11,7 @@ namespace YAML {
+ class Binary;
+ struct _Null;
+ 
+-Emitter::Emitter() : m_pState(new EmitterState), m_stream{} {}
++Emitter::Emitter() : m_pState(new EmitterState) {}
+ 
+ Emitter::Emitter(std::ostream& stream)
+     : m_pState(new EmitterState), m_stream(stream) {}
+@@ -906,4 +906,4 @@ Emitter& Emitter::Write(const Binary& binary) {
+ 
+   return *this;
+ }
+-}  // namespace YAML
++}
+diff --git a/src/emitterstate.cpp b/src/emitterstate.cpp
+index 890b4f0..d5f39e7 100644
+--- a/src/emitterstate.cpp
++++ b/src/emitterstate.cpp
+@@ -6,31 +6,27 @@
+ namespace YAML {
+ EmitterState::EmitterState()
+     : m_isGood(true),
+-      m_lastError{},
+-      // default global manipulators
+-      m_charset(EmitNonAscii),
+-      m_strFmt(Auto),
+-      m_boolFmt(TrueFalseBool),
+-      m_boolLengthFmt(LongBool),
+-      m_boolCaseFmt(LowerCase),
+-      m_intFmt(Dec),
+-      m_indent(2),
+-      m_preCommentIndent(2),
+-      m_postCommentIndent(1),
+-      m_seqFmt(Block),
+-      m_mapFmt(Block),
+-      m_mapKeyFmt(Auto),
+-      m_floatPrecision(std::numeric_limits<float>::max_digits10),
+-      m_doublePrecision(std::numeric_limits<double>::max_digits10),
+-      //
+-      m_modifiedSettings{},
+-      m_globalModifiedSettings{},
+-      m_groups{},
+       m_curIndent(0),
+       m_hasAnchor(false),
+       m_hasTag(false),
+       m_hasNonContent(false),
+-      m_docCount(0) {}
++      m_docCount(0) {
++  // set default global manipulators
++  m_charset.set(EmitNonAscii);
++  m_strFmt.set(Auto);
++  m_boolFmt.set(TrueFalseBool);
++  m_boolLengthFmt.set(LongBool);
++  m_boolCaseFmt.set(LowerCase);
++  m_intFmt.set(Dec);
++  m_indent.set(2);
++  m_preCommentIndent.set(2);
++  m_postCommentIndent.set(1);
++  m_seqFmt.set(Block);
++  m_mapFmt.set(Block);
++  m_mapKeyFmt.set(Auto);
++  m_floatPrecision.set(std::numeric_limits<float>::max_digits10);
++  m_doublePrecision.set(std::numeric_limits<double>::max_digits10);
++}
+ 
+ EmitterState::~EmitterState() {}
+ 
+@@ -366,4 +362,4 @@ bool EmitterState::SetDoublePrecision(std::size_t value,
+   _Set(m_doublePrecision, value, scope);
+   return true;
+ }
+-}  // namespace YAML
++}
+diff --git a/src/emitterstate.h b/src/emitterstate.h
+index 75e2166..0937f00 100644
+--- a/src/emitterstate.h
++++ b/src/emitterstate.h
+@@ -145,12 +145,7 @@ class EmitterState {
+ 
+   struct Group {
+     explicit Group(GroupType::value type_)
+-        : type(type_),
+-          flowType{},
+-          indent(0),
+-          childCount(0),
+-          longKey(false),
+-          modifiedSettings{} {}
++        : type(type_), indent(0), childCount(0), longKey(false) {}
+ 
+     GroupType::value type;
+     FlowType::value flowType;
+@@ -203,6 +198,6 @@ void EmitterState::_Set(Setting<T>& fmt, T value, FmtScope::value scope) {
+       assert(false);
+   }
+ }
+-}  // namespace YAML
++}
+ 
+ #endif  // EMITTERSTATE_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/src/emitterutils.cpp b/src/emitterutils.cpp
+index e348599..e02931f 100644
+--- a/src/emitterutils.cpp
++++ b/src/emitterutils.cpp
+@@ -8,8 +8,8 @@
+ #include "regeximpl.h"
+ #include "stringsource.h"
+ #include "yaml-cpp/binary.h"  // IWYU pragma: keep
+-#include "yaml-cpp/null.h"
+ #include "yaml-cpp/ostream_wrapper.h"
++#include "yaml-cpp/null.h"
+ 
+ namespace YAML {
+ namespace Utils {
+@@ -173,12 +173,12 @@ bool IsValidPlainScalar(const std::string& str, FlowType::value flowType,
+ 
+   // then check until something is disallowed
+   static const RegEx& disallowed_flow =
+-      Exp::EndScalarInFlow() | (Exp::BlankOrBreak() + Exp::Comment()) |
+-      Exp::NotPrintable() | Exp::Utf8_ByteOrderMark() | Exp::Break() |
++      Exp::EndScalarInFlow() || (Exp::BlankOrBreak() + Exp::Comment()) ||
++      Exp::NotPrintable() || Exp::Utf8_ByteOrderMark() || Exp::Break() ||
+       Exp::Tab();
+   static const RegEx& disallowed_block =
+-      Exp::EndScalar() | (Exp::BlankOrBreak() + Exp::Comment()) |
+-      Exp::NotPrintable() | Exp::Utf8_ByteOrderMark() | Exp::Break() |
++      Exp::EndScalar() || (Exp::BlankOrBreak() + Exp::Comment()) ||
++      Exp::NotPrintable() || Exp::Utf8_ByteOrderMark() || Exp::Break() ||
+       Exp::Tab();
+   const RegEx& disallowed =
+       flowType == FlowType::Flow ? disallowed_flow : disallowed_block;
+@@ -258,7 +258,7 @@ bool WriteAliasName(ostream_wrapper& out, const std::string& str) {
+   }
+   return true;
+ }
+-}  // namespace
++}
+ 
+ StringFormat::value ComputeStringFormat(const std::string& str,
+                                         EMITTER_MANIP strFormat,
+@@ -401,8 +401,8 @@ bool WriteComment(ostream_wrapper& out, const std::string& str,
+   for (std::string::const_iterator i = str.begin();
+        GetNextCodePointAndAdvance(codePoint, i, str.end());) {
+     if (codePoint == '\n') {
+-      out << "\n"
+-          << IndentTo(curIndent) << "#" << Indentation(postCommentIndent);
++      out << "\n" << IndentTo(curIndent) << "#"
++          << Indentation(postCommentIndent);
+       out.set_comment();
+     } else {
+       WriteCodePoint(out, codePoint);
+@@ -479,5 +479,5 @@ bool WriteBinary(ostream_wrapper& out, const Binary& binary) {
+                           false);
+   return true;
+ }
+-}  // namespace Utils
+-}  // namespace YAML
++}
++}
+diff --git a/src/exp.h b/src/exp.h
+index fe36535..7c02cf6 100644
+--- a/src/exp.h
++++ b/src/exp.h
+@@ -33,15 +33,15 @@ inline const RegEx& Tab() {
+   return e;
+ }
+ inline const RegEx& Blank() {
+-  static const RegEx e = Space() | Tab();
++  static const RegEx e = Space() || Tab();
+   return e;
+ }
+ inline const RegEx& Break() {
+-  static const RegEx e = RegEx('\n') | RegEx("\r\n");
++  static const RegEx e = RegEx('\n') || RegEx("\r\n");
+   return e;
+ }
+ inline const RegEx& BlankOrBreak() {
+-  static const RegEx e = Blank() | Break();
++  static const RegEx e = Blank() || Break();
+   return e;
+ }
+ inline const RegEx& Digit() {
+@@ -49,29 +49,29 @@ inline const RegEx& Digit() {
+   return e;
+ }
+ inline const RegEx& Alpha() {
+-  static const RegEx e = RegEx('a', 'z') | RegEx('A', 'Z');
++  static const RegEx e = RegEx('a', 'z') || RegEx('A', 'Z');
+   return e;
+ }
+ inline const RegEx& AlphaNumeric() {
+-  static const RegEx e = Alpha() | Digit();
++  static const RegEx e = Alpha() || Digit();
+   return e;
+ }
+ inline const RegEx& Word() {
+-  static const RegEx e = AlphaNumeric() | RegEx('-');
++  static const RegEx e = AlphaNumeric() || RegEx('-');
+   return e;
+ }
+ inline const RegEx& Hex() {
+-  static const RegEx e = Digit() | RegEx('A', 'F') | RegEx('a', 'f');
++  static const RegEx e = Digit() || RegEx('A', 'F') || RegEx('a', 'f');
+   return e;
+ }
+ // Valid Unicode code points that are not part of c-printable (YAML 1.2, sec.
+ // 5.1)
+ inline const RegEx& NotPrintable() {
+   static const RegEx e =
+-      RegEx(0) |
+-      RegEx("\x01\x02\x03\x04\x05\x06\x07\x08\x0B\x0C\x7F", REGEX_OR) |
+-      RegEx(0x0E, 0x1F) |
+-      (RegEx('\xC2') + (RegEx('\x80', '\x84') | RegEx('\x86', '\x9F')));
++      RegEx(0) ||
++      RegEx("\x01\x02\x03\x04\x05\x06\x07\x08\x0B\x0C\x7F", REGEX_OR) ||
++      RegEx(0x0E, 0x1F) ||
++      (RegEx('\xC2') + (RegEx('\x80', '\x84') || RegEx('\x86', '\x9F')));
+   return e;
+ }
+ inline const RegEx& Utf8_ByteOrderMark() {
+@@ -82,19 +82,19 @@ inline const RegEx& Utf8_ByteOrderMark() {
+ // actual tags
+ 
+ inline const RegEx& DocStart() {
+-  static const RegEx e = RegEx("---") + (BlankOrBreak() | RegEx());
++  static const RegEx e = RegEx("---") + (BlankOrBreak() || RegEx());
+   return e;
+ }
+ inline const RegEx& DocEnd() {
+-  static const RegEx e = RegEx("...") + (BlankOrBreak() | RegEx());
++  static const RegEx e = RegEx("...") + (BlankOrBreak() || RegEx());
+   return e;
+ }
+ inline const RegEx& DocIndicator() {
+-  static const RegEx e = DocStart() | DocEnd();
++  static const RegEx e = DocStart() || DocEnd();
+   return e;
+ }
+ inline const RegEx& BlockEntry() {
+-  static const RegEx e = RegEx('-') + (BlankOrBreak() | RegEx());
++  static const RegEx e = RegEx('-') + (BlankOrBreak() || RegEx());
+   return e;
+ }
+ inline const RegEx& Key() {
+@@ -106,11 +106,11 @@ inline const RegEx& KeyInFlow() {
+   return e;
+ }
+ inline const RegEx& Value() {
+-  static const RegEx e = RegEx(':') + (BlankOrBreak() | RegEx());
++  static const RegEx e = RegEx(':') + (BlankOrBreak() || RegEx());
+   return e;
+ }
+ inline const RegEx& ValueInFlow() {
+-  static const RegEx e = RegEx(':') + (BlankOrBreak() | RegEx(",}", REGEX_OR));
++  static const RegEx e = RegEx(':') + (BlankOrBreak() || RegEx(",}", REGEX_OR));
+   return e;
+ }
+ inline const RegEx& ValueInJSONFlow() {
+@@ -122,20 +122,20 @@ inline const RegEx Comment() {
+   return e;
+ }
+ inline const RegEx& Anchor() {
+-  static const RegEx e = !(RegEx("[]{},", REGEX_OR) | BlankOrBreak());
++  static const RegEx e = !(RegEx("[]{},", REGEX_OR) || BlankOrBreak());
+   return e;
+ }
+ inline const RegEx& AnchorEnd() {
+-  static const RegEx e = RegEx("?:,]}%@`", REGEX_OR) | BlankOrBreak();
++  static const RegEx e = RegEx("?:,]}%@`", REGEX_OR) || BlankOrBreak();
+   return e;
+ }
+ inline const RegEx& URI() {
+-  static const RegEx e = Word() | RegEx("#;/?:@&=+$,_.!~*'()[]", REGEX_OR) |
++  static const RegEx e = Word() || RegEx("#;/?:@&=+$,_.!~*'()[]", REGEX_OR) ||
+                          (RegEx('%') + Hex() + Hex());
+   return e;
+ }
+ inline const RegEx& Tag() {
+-  static const RegEx e = Word() | RegEx("#;/?:@&=+$_.~*'()", REGEX_OR) |
++  static const RegEx e = Word() || RegEx("#;/?:@&=+$_.~*'()", REGEX_OR) ||
+                          (RegEx('%') + Hex() + Hex());
+   return e;
+ }
+@@ -148,34 +148,34 @@ inline const RegEx& Tag() {
+ // space.
+ inline const RegEx& PlainScalar() {
+   static const RegEx e =
+-      !(BlankOrBreak() | RegEx(",[]{}#&*!|>\'\"%@`", REGEX_OR) |
+-        (RegEx("-?:", REGEX_OR) + (BlankOrBreak() | RegEx())));
++      !(BlankOrBreak() || RegEx(",[]{}#&*!|>\'\"%@`", REGEX_OR) ||
++        (RegEx("-?:", REGEX_OR) + (BlankOrBreak() || RegEx())));
+   return e;
+ }
+ inline const RegEx& PlainScalarInFlow() {
+   static const RegEx e =
+-      !(BlankOrBreak() | RegEx("?,[]{}#&*!|>\'\"%@`", REGEX_OR) |
++      !(BlankOrBreak() || RegEx("?,[]{}#&*!|>\'\"%@`", REGEX_OR) ||
+         (RegEx("-:", REGEX_OR) + Blank()));
+   return e;
+ }
+ inline const RegEx& EndScalar() {
+-  static const RegEx e = RegEx(':') + (BlankOrBreak() | RegEx());
++  static const RegEx e = RegEx(':') + (BlankOrBreak() || RegEx());
+   return e;
+ }
+ inline const RegEx& EndScalarInFlow() {
+   static const RegEx e =
+-      (RegEx(':') + (BlankOrBreak() | RegEx() | RegEx(",]}", REGEX_OR))) |
++      (RegEx(':') + (BlankOrBreak() || RegEx() || RegEx(",]}", REGEX_OR))) ||
+       RegEx(",?[]{}", REGEX_OR);
+   return e;
+ }
+ 
+ inline const RegEx& ScanScalarEndInFlow() {
+-  static const RegEx e = (EndScalarInFlow() | (BlankOrBreak() + Comment()));
++  static const RegEx e = (EndScalarInFlow() || (BlankOrBreak() + Comment()));
+   return e;
+ }
+ 
+ inline const RegEx& ScanScalarEnd() {
+-  static const RegEx e = EndScalar() | (BlankOrBreak() + Comment());
++  static const RegEx e = EndScalar() || (BlankOrBreak() + Comment());
+   return e;
+ }
+ inline const RegEx& EscSingleQuote() {
+@@ -192,8 +192,8 @@ inline const RegEx& ChompIndicator() {
+   return e;
+ }
+ inline const RegEx& Chomp() {
+-  static const RegEx e = (ChompIndicator() + Digit()) |
+-                         (Digit() + ChompIndicator()) | ChompIndicator() |
++  static const RegEx e = (ChompIndicator() + Digit()) ||
++                         (Digit() + ChompIndicator()) || ChompIndicator() ||
+                          Digit();
+   return e;
+ }
+diff --git a/src/node_data.cpp b/src/node_data.cpp
+index c65accb..04104b7 100644
+--- a/src/node_data.cpp
++++ b/src/node_data.cpp
+@@ -14,21 +14,16 @@ namespace YAML {
+ namespace detail {
+ 
+ const std::string& node_data::empty_scalar() {
+-  static const std::string svalue;
+-  return svalue;
++    static const std::string svalue;
++    return svalue;
+ }
+ 
+ node_data::node_data()
+     : m_isDefined(false),
+       m_mark(Mark::null_mark()),
+       m_type(NodeType::Null),
+-      m_tag{},
+       m_style(EmitterStyle::Default),
+-      m_scalar{},
+-      m_sequence{},
+-      m_seqSize(0),
+-      m_map{},
+-      m_undefinedPairs{} {}
++      m_seqSize(0) {}
+ 
+ void node_data::mark_defined() {
+   if (m_type == NodeType::Undefined)
+@@ -243,8 +238,8 @@ bool node_data::remove(node& key, shared_memory_holder /* pMemory */) {
+   if (m_type != NodeType::Map)
+     return false;
+ 
+-  for (kv_pairs::iterator it = m_undefinedPairs.begin();
+-       it != m_undefinedPairs.end();) {
++  kv_pairs::iterator it = m_undefinedPairs.begin();
++  while (it != m_undefinedPairs.end()) {
+     kv_pairs::iterator jt = std::next(it);
+     if (it->first->is(key))
+       m_undefinedPairs.erase(it);
+@@ -312,5 +307,5 @@ void node_data::convert_sequence_to_map(shared_memory_holder pMemory) {
+   reset_sequence();
+   m_type = NodeType::Map;
+ }
+-}  // namespace detail
+-}  // namespace YAML
++}
++}
+diff --git a/src/nodebuilder.cpp b/src/nodebuilder.cpp
+index c90a66c..e79ac50 100644
+--- a/src/nodebuilder.cpp
++++ b/src/nodebuilder.cpp
+@@ -11,12 +11,7 @@ namespace YAML {
+ struct Mark;
+ 
+ NodeBuilder::NodeBuilder()
+-    : m_pMemory(new detail::memory_holder),
+-      m_pRoot(nullptr),
+-      m_stack{},
+-      m_anchors{},
+-      m_keys{},
+-      m_mapDepth(0) {
++    : m_pMemory(new detail::memory_holder), m_pRoot(nullptr), m_mapDepth(0) {
+   m_anchors.push_back(nullptr);  // since the anchors start at 1
+ }
+ 
+@@ -132,4 +127,4 @@ void NodeBuilder::RegisterAnchor(anchor_t anchor, detail::node& node) {
+     m_anchors.push_back(&node);
+   }
+ }
+-}  // namespace YAML
++}
+diff --git a/src/nodebuilder.h b/src/nodebuilder.h
+index 642da36..a6a47f0 100644
+--- a/src/nodebuilder.h
++++ b/src/nodebuilder.h
+@@ -27,10 +27,6 @@ class Node;
+ class NodeBuilder : public EventHandler {
+  public:
+   NodeBuilder();
+-  NodeBuilder(const NodeBuilder&) = delete;
+-  NodeBuilder(NodeBuilder&&) = delete;
+-  NodeBuilder& operator=(const NodeBuilder&) = delete;
+-  NodeBuilder& operator=(NodeBuilder&&) = delete;
+   virtual ~NodeBuilder();
+ 
+   Node Root();
+@@ -69,6 +65,6 @@ class NodeBuilder : public EventHandler {
+   std::vector<PushedKey> m_keys;
+   std::size_t m_mapDepth;
+ };
+-}  // namespace YAML
++}
+ 
+ #endif  // NODE_NODEBUILDER_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/src/nodeevents.cpp b/src/nodeevents.cpp
+index b7222e0..82261fe 100644
+--- a/src/nodeevents.cpp
++++ b/src/nodeevents.cpp
+@@ -20,7 +20,7 @@ anchor_t NodeEvents::AliasManager::LookupAnchor(
+ }
+ 
+ NodeEvents::NodeEvents(const Node& node)
+-    : m_pMemory(node.m_pMemory), m_root(node.m_pNode), m_refCount{} {
++    : m_pMemory(node.m_pMemory), m_root(node.m_pNode) {
+   if (m_root)
+     Setup(*m_root);
+ }
+@@ -98,4 +98,4 @@ bool NodeEvents::IsAliased(const detail::node& node) const {
+   RefCount::const_iterator it = m_refCount.find(node.ref());
+   return it != m_refCount.end() && it->second > 1;
+ }
+-}  // namespace YAML
++}
+diff --git a/src/nodeevents.h b/src/nodeevents.h
+index dbed5d2..49c18eb 100644
+--- a/src/nodeevents.h
++++ b/src/nodeevents.h
+@@ -26,17 +26,13 @@ class Node;
+ class NodeEvents {
+  public:
+   explicit NodeEvents(const Node& node);
+-  NodeEvents(const NodeEvents&) = delete;
+-  NodeEvents(NodeEvents&&) = delete;
+-  NodeEvents& operator=(const NodeEvents&) = delete;
+-  NodeEvents& operator=(NodeEvents&&) = delete;
+ 
+   void Emit(EventHandler& handler);
+ 
+  private:
+   class AliasManager {
+    public:
+-    AliasManager() : m_anchorByIdentity{}, m_curAnchor(0) {}
++    AliasManager() : m_curAnchor(0) {}
+ 
+     void RegisterReference(const detail::node& node);
+     anchor_t LookupAnchor(const detail::node& node) const;
+@@ -63,6 +59,6 @@ class NodeEvents {
+   typedef std::map<const detail::node_ref*, int> RefCount;
+   RefCount m_refCount;
+ };
+-}  // namespace YAML
++}
+ 
+ #endif  // NODE_NODEEVENTS_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/src/ostream_wrapper.cpp b/src/ostream_wrapper.cpp
+index 5fa5858..a3c7597 100644
+--- a/src/ostream_wrapper.cpp
++++ b/src/ostream_wrapper.cpp
+@@ -14,12 +14,7 @@ ostream_wrapper::ostream_wrapper()
+       m_comment(false) {}
+ 
+ ostream_wrapper::ostream_wrapper(std::ostream& stream)
+-    : m_buffer{},
+-      m_pStream(&stream),
+-      m_pos(0),
+-      m_row(0),
+-      m_col(0),
+-      m_comment(false) {}
++    : m_pStream(&stream), m_pos(0), m_row(0), m_col(0), m_comment(false) {}
+ 
+ ostream_wrapper::~ostream_wrapper() {}
+ 
+@@ -59,4 +54,4 @@ void ostream_wrapper::update_pos(char ch) {
+     m_comment = false;
+   }
+ }
+-}  // namespace YAML
++}
+diff --git a/src/parser.cpp b/src/parser.cpp
+index 7bc0c78..cd69f39 100644
+--- a/src/parser.cpp
++++ b/src/parser.cpp
+@@ -11,9 +11,9 @@
+ namespace YAML {
+ class EventHandler;
+ 
+-Parser::Parser() : m_pScanner{}, m_pDirectives{} {}
++Parser::Parser() {}
+ 
+-Parser::Parser(std::istream& in) : Parser() { Load(in); }
++Parser::Parser(std::istream& in) { Load(in); }
+ 
+ Parser::~Parser() {}
+ 
+@@ -126,4 +126,4 @@ void Parser::PrintTokens(std::ostream& out) {
+     m_pScanner->pop();
+   }
+ }
+-}  // namespace YAML
++}
+diff --git a/src/ptr_vector.h b/src/ptr_vector.h
+index d58de04..955aebd 100644
+--- a/src/ptr_vector.h
++++ b/src/ptr_vector.h
+@@ -12,17 +12,15 @@
+ #include <memory>
+ #include <vector>
+ 
++#include "yaml-cpp/noncopyable.h"
++
+ namespace YAML {
+ 
+ // TODO: This class is no longer needed
+ template <typename T>
+-class ptr_vector {
++class ptr_vector : private YAML::noncopyable {
+  public:
+-  ptr_vector() : m_data{} {}
+-  ptr_vector(const ptr_vector&) = delete;
+-  ptr_vector(ptr_vector&&) = default;
+-  ptr_vector& operator=(const ptr_vector&) = delete;
+-  ptr_vector& operator=(ptr_vector&&) = default;
++  ptr_vector() {}
+ 
+   void clear() { m_data.clear(); }
+ 
+@@ -40,6 +38,6 @@ class ptr_vector {
+  private:
+   std::vector<std::unique_ptr<T>> m_data;
+ };
+-}  // namespace YAML
++}
+ 
+ #endif  // PTR_VECTOR_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/src/regex_yaml.cpp b/src/regex_yaml.cpp
+index bf1784b..20b7720 100644
+--- a/src/regex_yaml.cpp
++++ b/src/regex_yaml.cpp
+@@ -2,16 +2,18 @@
+ 
+ namespace YAML {
+ // constructors
++RegEx::RegEx() : m_op(REGEX_EMPTY) {}
+ 
+-RegEx::RegEx(REGEX_OP op) : m_op(op), m_a(0), m_z(0), m_params{} {}
+-RegEx::RegEx() : RegEx(REGEX_EMPTY) {}
++RegEx::RegEx(REGEX_OP op) : m_op(op) {}
+ 
+-RegEx::RegEx(char ch) : m_op(REGEX_MATCH), m_a(ch), m_z(0), m_params{} {}
++RegEx::RegEx(char ch) : m_op(REGEX_MATCH), m_a(ch) {}
+ 
+-RegEx::RegEx(char a, char z) : m_op(REGEX_RANGE), m_a(a), m_z(z), m_params{} {}
++RegEx::RegEx(char a, char z) : m_op(REGEX_RANGE), m_a(a), m_z(z) {}
+ 
+-RegEx::RegEx(const std::string& str, REGEX_OP op)
+-    : m_op(op), m_a(0), m_z(0), m_params(str.begin(), str.end()) {}
++RegEx::RegEx(const std::string& str, REGEX_OP op) : m_op(op) {
++  for (std::size_t i = 0; i < str.size(); i++)
++    m_params.push_back(RegEx(str[i]));
++}
+ 
+ // combination constructors
+ RegEx operator!(const RegEx& ex) {
+@@ -20,14 +22,14 @@ RegEx operator!(const RegEx& ex) {
+   return ret;
+ }
+ 
+-RegEx operator|(const RegEx& ex1, const RegEx& ex2) {
++RegEx operator||(const RegEx& ex1, const RegEx& ex2) {
+   RegEx ret(REGEX_OR);
+   ret.m_params.push_back(ex1);
+   ret.m_params.push_back(ex2);
+   return ret;
+ }
+ 
+-RegEx operator&(const RegEx& ex1, const RegEx& ex2) {
++RegEx operator&&(const RegEx& ex1, const RegEx& ex2) {
+   RegEx ret(REGEX_AND);
+   ret.m_params.push_back(ex1);
+   ret.m_params.push_back(ex2);
+@@ -40,4 +42,4 @@ RegEx operator+(const RegEx& ex1, const RegEx& ex2) {
+   ret.m_params.push_back(ex2);
+   return ret;
+ }
+-}  // namespace YAML
++}
+diff --git a/src/regex_yaml.h b/src/regex_yaml.h
+index 3a347bb..1611cb2 100644
+--- a/src/regex_yaml.h
++++ b/src/regex_yaml.h
+@@ -31,14 +31,14 @@ enum REGEX_OP {
+ class YAML_CPP_API RegEx {
+  public:
+   RegEx();
+-  explicit RegEx(char ch);
++  RegEx(char ch);
+   RegEx(char a, char z);
+   RegEx(const std::string& str, REGEX_OP op = REGEX_SEQ);
+   ~RegEx() {}
+ 
+   friend YAML_CPP_API RegEx operator!(const RegEx& ex);
+-  friend YAML_CPP_API RegEx operator|(const RegEx& ex1, const RegEx& ex2);
+-  friend YAML_CPP_API RegEx operator&(const RegEx& ex1, const RegEx& ex2);
++  friend YAML_CPP_API RegEx operator||(const RegEx& ex1, const RegEx& ex2);
++  friend YAML_CPP_API RegEx operator&&(const RegEx& ex1, const RegEx& ex2);
+   friend YAML_CPP_API RegEx operator+(const RegEx& ex1, const RegEx& ex2);
+ 
+   bool Matches(char ch) const;
+@@ -53,7 +53,7 @@ class YAML_CPP_API RegEx {
+   int Match(const Source& source) const;
+ 
+  private:
+-  explicit RegEx(REGEX_OP op);
++  RegEx(REGEX_OP op);
+ 
+   template <typename Source>
+   bool IsValidSource(const Source& source) const;
+diff --git a/src/scanner.cpp b/src/scanner.cpp
+index ac84892..546a2f0 100644
+--- a/src/scanner.cpp
++++ b/src/scanner.cpp
+@@ -9,15 +9,10 @@
+ namespace YAML {
+ Scanner::Scanner(std::istream& in)
+     : INPUT(in),
+-      m_tokens{},
+       m_startedStream(false),
+       m_endedStream(false),
+       m_simpleKeyAllowed(false),
+-      m_canBeJSONFlow(false),
+-      m_simpleKeys{},
+-      m_indents{},
+-      m_indentRefs{},
+-      m_flows{} {}
++      m_canBeJSONFlow(false) {}
+ 
+ Scanner::~Scanner() {}
+ 
+diff --git a/src/scantoken.cpp b/src/scantoken.cpp
+index 325de57..fd8758d 100644
+--- a/src/scantoken.cpp
++++ b/src/scantoken.cpp
+@@ -338,7 +338,7 @@ void Scanner::ScanQuotedScalar() {
+ 
+   // setup the scanning parameters
+   ScanScalarParams params;
+-  RegEx end = (single ? RegEx(quote) & !Exp::EscSingleQuote() : RegEx(quote));
++  RegEx end = (single ? RegEx(quote) && !Exp::EscSingleQuote() : RegEx(quote));
+   params.end = &end;
+   params.eatEnd = true;
+   params.escape = (single ? '\'' : '\\');
+@@ -434,4 +434,4 @@ void Scanner::ScanBlockScalar() {
+   token.value = scalar;
+   m_tokens.push(token);
+ }
+-}  // namespace YAML
++}
+diff --git a/src/setting.h b/src/setting.h
+index 280d1e7..b78d40e 100644
+--- a/src/setting.h
++++ b/src/setting.h
+@@ -8,8 +8,8 @@
+ #endif
+ 
+ #include <memory>
+-#include <utility>
+ #include <vector>
++#include "yaml-cpp/noncopyable.h"
+ 
+ namespace YAML {
+ class SettingChangeBase;
+@@ -18,7 +18,6 @@ template <typename T>
+ class Setting {
+  public:
+   Setting() : m_value() {}
+-  Setting(const T& value) : m_value() { set(value); }
+ 
+   const T get() const { return m_value; }
+   std::unique_ptr<SettingChangeBase> set(const T& value);
+@@ -37,14 +36,10 @@ class SettingChangeBase {
+ template <typename T>
+ class SettingChange : public SettingChangeBase {
+  public:
+-  SettingChange(Setting<T>* pSetting)
+-      : m_pCurSetting(pSetting),
+-        m_oldSetting(*pSetting)  // copy old setting to save its state
+-  {}
+-  SettingChange(const SettingChange&) = delete;
+-  SettingChange(SettingChange&&) = delete;
+-  SettingChange& operator=(const SettingChange&) = delete;
+-  SettingChange& operator=(SettingChange&&) = delete;
++  SettingChange(Setting<T>* pSetting) : m_pCurSetting(pSetting) {
++    // copy old setting to save its state
++    m_oldSetting = *pSetting;
++  }
+ 
+   virtual void pop() { m_pCurSetting->restore(m_oldSetting); }
+ 
+@@ -60,12 +55,9 @@ inline std::unique_ptr<SettingChangeBase> Setting<T>::set(const T& value) {
+   return pChange;
+ }
+ 
+-class SettingChanges {
++class SettingChanges : private noncopyable {
+  public:
+-  SettingChanges() : m_settingChanges{} {}
+-  SettingChanges(const SettingChanges&) = delete;
+-  SettingChanges(SettingChanges&&) = default;
+-  SettingChanges& operator=(const SettingChanges&) = delete;
++  SettingChanges() {}
+   ~SettingChanges() { clear(); }
+ 
+   void clear() {
+@@ -98,6 +90,6 @@ class SettingChanges {
+   typedef std::vector<std::unique_ptr<SettingChangeBase>> setting_changes;
+   setting_changes m_settingChanges;
+ };
+-}  // namespace YAML
++}
+ 
+ #endif  // SETTING_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/src/singledocparser.cpp b/src/singledocparser.cpp
+index be82741..e267797 100644
+--- a/src/singledocparser.cpp
++++ b/src/singledocparser.cpp
+@@ -18,7 +18,6 @@ SingleDocParser::SingleDocParser(Scanner& scanner, const Directives& directives)
+     : m_scanner(scanner),
+       m_directives(directives),
+       m_pCollectionStack(new CollectionStack),
+-      m_anchors{},
+       m_curAnchor(0) {}
+ 
+ SingleDocParser::~SingleDocParser() {}
+@@ -171,10 +170,10 @@ void SingleDocParser::HandleBlockSequence(EventHandler& eventHandler) {
+ 
+     // check for null
+     if (!m_scanner.empty()) {
+-      const Token& nextToken = m_scanner.peek();
+-      if (nextToken.type == Token::BLOCK_ENTRY ||
+-          nextToken.type == Token::BLOCK_SEQ_END) {
+-        eventHandler.OnNull(nextToken.mark, NullAnchor);
++      const Token& token = m_scanner.peek();
++      if (token.type == Token::BLOCK_ENTRY ||
++          token.type == Token::BLOCK_SEQ_END) {
++        eventHandler.OnNull(token.mark, NullAnchor);
+         continue;
+       }
+     }
+diff --git a/src/singledocparser.h b/src/singledocparser.h
+index 392453e..a78301e 100644
+--- a/src/singledocparser.h
++++ b/src/singledocparser.h
+@@ -12,6 +12,7 @@
+ #include <string>
+ 
+ #include "yaml-cpp/anchor.h"
++#include "yaml-cpp/noncopyable.h"
+ 
+ namespace YAML {
+ class CollectionStack;
+@@ -22,13 +23,9 @@ struct Directives;
+ struct Mark;
+ struct Token;
+ 
+-class SingleDocParser {
++class SingleDocParser : private noncopyable {
+  public:
+   SingleDocParser(Scanner& scanner, const Directives& directives);
+-  SingleDocParser(const SingleDocParser&) = delete;
+-  SingleDocParser(SingleDocParser&&) = delete;
+-  SingleDocParser& operator=(const SingleDocParser&) = delete;
+-  SingleDocParser& operator=(SingleDocParser&&) = delete;
+   ~SingleDocParser();
+ 
+   void HandleDocument(EventHandler& eventHandler);
+diff --git a/src/stream.cpp b/src/stream.cpp
+index 592802d..3b013cf 100644
+--- a/src/stream.cpp
++++ b/src/stream.cpp
+@@ -111,15 +111,24 @@ static UtfIntroState s_introTransitions[][uictMax] = {
+ 
+ static char s_introUngetCount[][uictMax] = {
+     // uict00, uictBB, uictBF, uictEF, uictFE, uictFF, uictAscii, uictOther
+-    {0, 1, 1, 0, 0, 0, 0, 1}, {0, 2, 2, 2, 2, 2, 2, 2},
+-    {3, 3, 3, 3, 0, 3, 3, 3}, {4, 4, 4, 4, 4, 0, 4, 4},
+-    {1, 1, 1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1, 1, 1},
+-    {2, 2, 2, 2, 2, 0, 2, 2}, {2, 2, 2, 2, 0, 2, 2, 2},
+-    {0, 1, 1, 1, 1, 1, 1, 1}, {0, 2, 2, 2, 2, 2, 2, 2},
+-    {1, 1, 1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1, 1, 1},
+-    {0, 2, 2, 2, 2, 2, 2, 2}, {0, 3, 3, 3, 3, 3, 3, 3},
+-    {4, 4, 4, 4, 4, 4, 4, 4}, {2, 0, 2, 2, 2, 2, 2, 2},
+-    {3, 3, 0, 3, 3, 3, 3, 3}, {1, 1, 1, 1, 1, 1, 1, 1},
++    {0, 1, 1, 0, 0, 0, 0, 1},
++    {0, 2, 2, 2, 2, 2, 2, 2},
++    {3, 3, 3, 3, 0, 3, 3, 3},
++    {4, 4, 4, 4, 4, 0, 4, 4},
++    {1, 1, 1, 1, 1, 1, 1, 1},
++    {1, 1, 1, 1, 1, 1, 1, 1},
++    {2, 2, 2, 2, 2, 0, 2, 2},
++    {2, 2, 2, 2, 0, 2, 2, 2},
++    {0, 1, 1, 1, 1, 1, 1, 1},
++    {0, 2, 2, 2, 2, 2, 2, 2},
++    {1, 1, 1, 1, 1, 1, 1, 1},
++    {1, 1, 1, 1, 1, 1, 1, 1},
++    {0, 2, 2, 2, 2, 2, 2, 2},
++    {0, 3, 3, 3, 3, 3, 3, 3},
++    {4, 4, 4, 4, 4, 4, 4, 4},
++    {2, 0, 2, 2, 2, 2, 2, 2},
++    {3, 3, 0, 3, 3, 3, 3, 3},
++    {1, 1, 1, 1, 1, 1, 1, 1},
+ };
+ 
+ inline UtfIntroCharType IntroCharTypeOf(std::istream::int_type ch) {
+@@ -183,9 +192,6 @@ inline void QueueUnicodeCodepoint(std::deque<char>& q, unsigned long ch) {
+ 
+ Stream::Stream(std::istream& input)
+     : m_input(input),
+-      m_mark{},
+-      m_charSet{},
+-      m_readahead{},
+       m_pPrefetched(new unsigned char[YAML_PREFETCH_SIZE]),
+       m_nPrefetchedAvailable(0),
+       m_nPrefetchedUsed(0) {
+@@ -439,4 +445,4 @@ void Stream::StreamInUtf32() const {
+ 
+   QueueUnicodeCodepoint(m_readahead, ch);
+ }
+-}  // namespace YAML
++}
+diff --git a/src/stream.h b/src/stream.h
+index ff5149e..42d542d 100644
+--- a/src/stream.h
++++ b/src/stream.h
+@@ -7,6 +7,7 @@
+ #pragma once
+ #endif
+ 
++#include "yaml-cpp/noncopyable.h"
+ #include "yaml-cpp/mark.h"
+ #include <cstddef>
+ #include <deque>
+@@ -16,15 +17,11 @@
+ #include <string>
+ 
+ namespace YAML {
+-class Stream {
++class Stream : private noncopyable {
+  public:
+   friend class StreamCharSource;
+ 
+   Stream(std::istream& input);
+-  Stream(const Stream&) = delete;
+-  Stream(Stream&&) = delete;
+-  Stream& operator=(const Stream&) = delete;
+-  Stream& operator=(Stream&&) = delete;
+   ~Stream();
+ 
+   operator bool() const;
+@@ -74,6 +71,6 @@ inline bool Stream::ReadAheadTo(size_t i) const {
+     return true;
+   return _ReadAheadTo(i);
+ }
+-}  // namespace YAML
++}
+ 
+ #endif  // STREAM_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/src/streamcharsource.h b/src/streamcharsource.h
+index 4b6a143..624599e 100644
+--- a/src/streamcharsource.h
++++ b/src/streamcharsource.h
+@@ -7,6 +7,7 @@
+ #pragma once
+ #endif
+ 
++#include "yaml-cpp/noncopyable.h"
+ #include <cstddef>
+ 
+ namespace YAML {
+@@ -15,9 +16,6 @@ class StreamCharSource {
+   StreamCharSource(const Stream& stream) : m_offset(0), m_stream(stream) {}
+   StreamCharSource(const StreamCharSource& source)
+       : m_offset(source.m_offset), m_stream(source.m_stream) {}
+-  StreamCharSource(StreamCharSource&&) = default;
+-  StreamCharSource& operator=(const StreamCharSource&) = delete;
+-  StreamCharSource& operator=(StreamCharSource&&) = delete;
+   ~StreamCharSource() {}
+ 
+   operator bool() const;
+@@ -29,6 +27,8 @@ class StreamCharSource {
+  private:
+   std::size_t m_offset;
+   const Stream& m_stream;
++
++  StreamCharSource& operator=(const StreamCharSource&);  // non-assignable
+ };
+ 
+ inline StreamCharSource::operator bool() const {
+@@ -43,6 +43,6 @@ inline const StreamCharSource StreamCharSource::operator+(int i) const {
+     source.m_offset = 0;
+   return source;
+ }
+-}  // namespace YAML
++}
+ 
+ #endif  // STREAMCHARSOURCE_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/src/tag.cpp b/src/tag.cpp
+index df8a2cf..5143552 100644
+--- a/src/tag.cpp
++++ b/src/tag.cpp
+@@ -6,8 +6,7 @@
+ #include "token.h"
+ 
+ namespace YAML {
+-Tag::Tag(const Token& token)
+-    : type(static_cast<TYPE>(token.data)), handle{}, value{} {
++Tag::Tag(const Token& token) : type(static_cast<TYPE>(token.data)) {
+   switch (type) {
+     case VERBATIM:
+       value = token.value;
+@@ -47,4 +46,4 @@ const std::string Tag::Translate(const Directives& directives) {
+   }
+   throw std::runtime_error("yaml-cpp: internal error, bad tag type");
+ }
+-}  // namespace YAML
++}
+diff --git a/src/token.h b/src/token.h
+index 9a27f3d..ad0b7d0 100644
+--- a/src/token.h
++++ b/src/token.h
+@@ -14,11 +14,10 @@
+ 
+ namespace YAML {
+ const std::string TokenNames[] = {
+-    "DIRECTIVE",        "DOC_START",      "DOC_END",       "BLOCK_SEQ_START",
+-    "BLOCK_MAP_START",  "BLOCK_SEQ_END",  "BLOCK_MAP_END", "BLOCK_ENTRY",
+-    "FLOW_SEQ_START",   "FLOW_MAP_START", "FLOW_SEQ_END",  "FLOW_MAP_END",
+-    "FLOW_MAP_COMPACT", "FLOW_ENTRY",     "KEY",           "VALUE",
+-    "ANCHOR",           "ALIAS",          "TAG",           "SCALAR"};
++    "DIRECTIVE", "DOC_START", "DOC_END", "BLOCK_SEQ_START", "BLOCK_MAP_START",
++    "BLOCK_SEQ_END", "BLOCK_MAP_END", "BLOCK_ENTRY", "FLOW_SEQ_START",
++    "FLOW_MAP_START", "FLOW_SEQ_END", "FLOW_MAP_END", "FLOW_MAP_COMPACT",
++    "FLOW_ENTRY", "KEY", "VALUE", "ANCHOR", "ALIAS", "TAG", "SCALAR"};
+ 
+ struct Token {
+   // enums
+@@ -49,7 +48,7 @@ struct Token {
+ 
+   // data
+   Token(TYPE type_, const Mark& mark_)
+-      : status(VALID), type(type_), mark(mark_), value{}, params{}, data(0) {}
++      : status(VALID), type(type_), mark(mark_), data(0) {}
+ 
+   friend std::ostream& operator<<(std::ostream& out, const Token& token) {
+     out << TokenNames[token.type] << std::string(": ") << token.value;
+@@ -65,6 +64,6 @@ struct Token {
+   std::vector<std::string> params;
+   int data;
+ };
+-}  // namespace YAML
++}
+ 
+ #endif  // TOKEN_H_62B23520_7C8E_11DE_8A39_0800200C9A66
+diff --git a/test/regex_test.cpp b/test/regex_test.cpp
+index 658db9e..7589d2e 100644
+--- a/test/regex_test.cpp
++++ b/test/regex_test.cpp
+@@ -1,6 +1,6 @@
++#include "gtest/gtest.h"
+ #include "regex_yaml.h"
+ #include "stream.h"
+-#include "gtest/gtest.h"
+ 
+ using YAML::RegEx;
+ using YAML::Stream;
+@@ -106,8 +106,8 @@ TEST(RegExTest, OperatorOr) {
+     for (int j = i + 1; j < 128; ++j) {
+       auto iStr = std::string(1, char(i));
+       auto jStr = std::string(1, char(j));
+-      RegEx ex1 = RegEx(iStr) | RegEx(jStr);
+-      RegEx ex2 = RegEx(jStr) | RegEx(iStr);
++      RegEx ex1 = RegEx(iStr) || RegEx(jStr);
++      RegEx ex2 = RegEx(jStr) || RegEx(iStr);
+ 
+       for (int k = MIN_CHAR; k < 128; ++k) {
+         auto str = std::string(1, char(k));
+@@ -128,8 +128,8 @@ TEST(RegExTest, OperatorOr) {
+ }
+ 
+ TEST(RegExTest, OperatorOrShortCircuits) {
+-  RegEx ex1 = RegEx(std::string("aaaa")) | RegEx(std::string("aa"));
+-  RegEx ex2 = RegEx(std::string("aa")) | RegEx(std::string("aaaa"));
++  RegEx ex1 = RegEx(std::string("aaaa")) || RegEx(std::string("aa"));
++  RegEx ex2 = RegEx(std::string("aa")) || RegEx(std::string("aaaa"));
+ 
+   EXPECT_TRUE(ex1.Matches(std::string("aaaaa")));
+   EXPECT_EQ(4, ex1.Match(std::string("aaaaa")));
+@@ -139,13 +139,13 @@ TEST(RegExTest, OperatorOrShortCircuits) {
+ }
+ 
+ TEST(RegExTest, OperatorAnd) {
+-  RegEx emptySet = RegEx('a') & RegEx();
++  RegEx emptySet = RegEx('a') && RegEx();
+   EXPECT_FALSE(emptySet.Matches(std::string("a")));
+ }
+ 
+ TEST(RegExTest, OperatorAndShortCircuits) {
+-  RegEx ex1 = RegEx(std::string("aaaa")) & RegEx(std::string("aa"));
+-  RegEx ex2 = RegEx(std::string("aa")) & RegEx(std::string("aaaa"));
++  RegEx ex1 = RegEx(std::string("aaaa")) && RegEx(std::string("aa"));
++  RegEx ex2 = RegEx(std::string("aa")) && RegEx(std::string("aaaa"));
+ 
+   EXPECT_TRUE(ex1.Matches(std::string("aaaaa")));
+   EXPECT_EQ(4, ex1.Match(std::string("aaaaa")));
+@@ -174,4 +174,4 @@ TEST(RegExTest, StringOr) {
+ 
+   EXPECT_EQ(1, ex.Match(str));
+ }
+-}  // namespace
++}
+-- 
+2.20.1
+

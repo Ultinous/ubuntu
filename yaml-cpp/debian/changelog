@@ -1,0 +1,241 @@
+yaml-cpp (0.6.3-10ultinous1) bionic; urgency=medium
+
+  * Backported to bionic.
+
+ -- Szabó Attila <attila@ultinous.com>  Thu, 17 Sep 2020 14:20:26 +0200
+
+yaml-cpp (0.6.3-9) unstable; urgency=medium
+
+  * Fix pkg-config and cmake wrong files and paths. LP: #1880419
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Tue, 26 May 2020 17:56:33 +0200
+
+yaml-cpp (0.6.3-8) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
+    Repository-Browse.
+
+  [ Helmut Grohne ]
+  * Fix FTCBFS: Don't build tests for DEB_BUILD_OPTIONS=nocheck.
+    (Closes: #960167)
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Thu, 14 May 2020 10:29:07 +0200
+
+yaml-cpp (0.6.3-7) unstable; urgency=medium
+
+  * Team upload
+  [ Adrian Bunk ]
+  * From Adrian Bunk, fix other c++ symbols that broke ABI
+    (Closes: #959201)
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Wed, 13 May 2020 19:26:42 +0200
+
+yaml-cpp (0.6.3-6) unstable; urgency=medium
+
+  * Ack NMUs, thanks a bunch Gianfranco!
+    - Add him as a co-maintainer so he doesn't have to grandfather in team
+      uploads.
+
+ -- Simon Quigley <tsimonq2@debian.org>  Sun, 10 May 2020 14:15:46 -0500
+
+yaml-cpp (0.6.3-5) unstable; urgency=medium
+
+  * Team upload.
+  [ Helmut Grohne ]
+  * Fix FTCBFS (Closes: #843918)
+    + Let dh_auto_configure pass cross flags
+    + Honour DEB_BUILD_OPTIONS=nocheck
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Sat, 09 May 2020 17:34:48 +0200
+
+yaml-cpp (0.6.3-4) unstable; urgency=medium
+
+  * Team upload (salsa.d.o namespace)
+  * Use -g1 optimization level to fix FTBFS on mipsel
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 08 May 2020 23:34:57 +0200
+
+yaml-cpp (0.6.3-3) unstable; urgency=medium
+
+  * Team upload (salsa.d.o namespace)
+  * Lower mipsel build to parallel=1
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 08 May 2020 19:17:53 +0200
+
+yaml-cpp (0.6.3-2) unstable; urgency=medium
+
+  * Team upload (salsa.d.o namespace)
+  * Fix mipsel build by lowering to parallel=2 there (Closes: #959402)
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 08 May 2020 15:42:46 +0200
+
+yaml-cpp (0.6.3-1.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Update also symbols file
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 08 May 2020 14:15:10 +0200
+
+yaml-cpp (0.6.3-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload
+  * Revert ABI changes in new release (Closes: #959201)
+    - debian/patches/revert-774f25800e6f19f4b927023c85d1389af322da5e.patch:
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 08 May 2020 13:15:00 +0200
+
+yaml-cpp (0.6.3-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #958505).
+    - Refresh patches.
+    - BUILD_SHARED_LIBS -> YAML_BUILD_SHARED_LIBS cmake flag.
+    - Update symbols from amd64 build log.
+  * Add the following CVE patches:
+    - fix-CVE-2017-11692.patch
+      + Fixes CVE-2017-11692 (Closes: #870326).
+    - fix-unbounded-recursion-depth.patch
+      + Fixes CVE-2017-5950 (Closes: #859891).
+      + Fixes CVE-2018-20573 (Closes: #918147).
+      + Fixes CVE-2018-20574 (Closes: #918145).
+      + Fixes CVE-2019-6285 (Closes: #919432, 919430).
+  * Migrate to using the debhelper-compat dependency.
+  * Bump Standards-version to 4.5.0, no changes needed.
+  * Migrate to debhelper 13.
+
+ -- Simon Quigley <tsimonq2@debian.org>  Wed, 29 Apr 2020 20:24:07 -0500
+
+yaml-cpp (0.6.2-4) unstable; urgency=medium
+
+  * Upload to Sid.
+
+ -- Simon Quigley <tsimonq2@debian.org>  Mon, 07 Jan 2019 16:00:33 -0600
+
+yaml-cpp (0.6.2-3) experimental; urgency=medium
+
+  * Update symbols from build logs.
+
+ -- Simon Quigley <tsimonq2@debian.org>  Sat, 05 Jan 2019 17:27:47 -0600
+
+yaml-cpp (0.6.2-2) experimental; urgency=medium
+
+  [ Christopher James Halse Rogers ]
+  * d/libyaml-cpp0.6.symbols:
+    - Add symbols file now that only public symbols are exported
+  * d/libyaml-cpp-dev.install:
+    - Don't install gtest/gmock headers (Closes: #915575)
+
+  [ Simon Quigley ]
+  * Change my email to tsimonq2@debian.org now that I am a Debian Developer.
+  * Bump Standards-version to 4.3.0, no changes needed.
+
+ -- Simon Quigley <tsimonq2@debian.org>  Sun, 23 Dec 2018 22:25:40 -0600
+
+yaml-cpp (0.6.2-1) experimental; urgency=medium
+
+  [ Andreas Tille ]
+  * New upstream version
+  * debhelper 11
+  * Standards-Version: 4.2.0
+  * Point Vcs-fields to Salsa
+  * Fix watch file
+
+  [ Graham Inggs ]
+  * Drop patches no longer needed
+  * Drop dependencies on libboost-dev, no longer needed
+  * Rename binary package for libyaml-cpp0.6 transition
+
+  [ Ondřej Nový ]
+  * d/copyright: Use https protocol in Format field
+  * d/changelog: Remove trailing whitespaces
+
+  [ Christopher James Halse Rogers ]
+  * patches/symbol-visibility.patch: Hide non-public-API symbols.
+    - Cuts down the number of exported symbols by over half, and makes
+      it more feasible to use a .symbols file
+  * d/rules: Use VERBOSE make.
+    - Lets the hardening buildlog scanning check that the appropriate
+      flags have been passed, and makes it easier to debug build
+      failures.
+
+  [ Simon Quigley ]
+  * Take over maintainership of the package (Closes: #914853).
+  * Depend on debhelper 11.
+  * Run wrap-and-sort.
+  * Bump Standards-version to 4.2.1.
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Tue, 27 Nov 2018 18:23:07 -0600
+
+yaml-cpp (0.5.2-4) unstable; urgency=medium
+
+  * Make the build reproducible (Closes: #808714)
+  * Add libboost-dev dependency (Closes: #812851)
+  * Fix yaml-cpp 0.5.2 issue (Closes: #814499)
+  * Fix lintian warnings: spelling, standards-version, and Vcs-Git
+
+ -- Paul Novotny <paul@paulnovo.us>  Wed, 12 Oct 2016 19:48:11 -0400
+
+yaml-cpp (0.5.2-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Work around bug in googletest causing segfault with gcc-6.
+    (Closes: #812284)
+
+ -- Christian Hofstaedtler <zeha@debian.org>  Sat, 02 Jul 2016 13:27:16 +0200
+
+yaml-cpp (0.5.2-3) unstable; urgency=medium
+
+  * Fix error in yaml-cpp-config.cmake
+  * Disable gtest's use of pthread on hurd and kfreebsd
+
+ -- Paul Novotny <paul@paulnovo.us>  Mon, 30 Nov 2015 16:53:57 -0500
+
+yaml-cpp (0.5.2-2) unstable; urgency=medium
+
+  * Rename libyaml-cpp0.5 to libyaml-cpp0.5v5 for gcc5 transition
+    (Closes: #791317)
+
+ -- Paul Novotny <paul@paulnovo.us>  Tue, 04 Aug 2015 18:03:35 -0400
+
+yaml-cpp (0.5.2-1) unstable; urgency=medium
+
+  * Update due to yaml-cpp from Google Code to GitHub
+  * Imported Upstream version 0.5.2
+  * Remove patches/fix-unit-test.patch, applied upstream
+  * Remove patches/remove-conflicting-google-libs.patch, applied upstream
+
+ -- Paul Novotny <paul@paulnovo.us>  Thu, 23 Apr 2015 16:40:20 -0400
+
+yaml-cpp (0.5.1+hg20150210-1) experimental; urgency=medium
+
+  [ Andreas Tille ]
+  * Import latest upstream
+  * Fix failing unit tests
+  * Inject package into collab-maint to enable more people contributing
+  * cme fix dpkg-control
+  * debhelper 9
+
+  [ Paul Novotny ]
+  * Add myself as Uploader
+  * Import latest upstream VCS status
+  * Fix failing unit tests, update version number
+  * Install cmake development files
+
+ -- Andreas Tille <tille@debian.org>  Mon, 09 Feb 2015 13:36:42 +0100
+
+yaml-cpp (0.5.1-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #706708)
+  * Bump Standards-Version to 3.9.4.
+  * libyaml-cpp-dev: remove multiarch path in yaml-cpp.pc to make
+    lintian happy.
+  * debian/copyright: new Format URI.
+  * debian/control: remove Vcs-Svn field.
+
+ -- Lifeng Sun <lifongsun@gmail.com>  Fri, 30 Aug 2013 18:29:05 +0800
+
+yaml-cpp (0.3.0-1) unstable; urgency=low
+
+  * Initial release (Closes: #636985)
+
+ -- Lifeng Sun <lifongsun@gmail.com>  Sun, 03 Jun 2012 23:48:30 +0800

@@ -1,0 +1,156 @@
+From dd072aab1264e1343dead7de0dc2c67c588fdd30 Mon Sep 17 00:00:00 2001
+From: Adrian Bunk <bunk@debian.org>
+Date: Sun, 10 May 2020 11:39:29 +0300
+Subject: Revert "Static analysis fix: replace 0 and NULL with nullptr (#738)"
+
+This reverts commit db0bda7087a6fac811e78957787fc5037465ac4e.
+---
+ include/yaml-cpp/binary.h                    |  2 +-
+ include/yaml-cpp/exceptions.h                |  4 ++--
+ include/yaml-cpp/node/detail/impl.h          | 14 +++++++-------
+ include/yaml-cpp/node/detail/node_iterator.h |  4 ++--
+ include/yaml-cpp/node/impl.h                 |  2 +-
+ include/yaml-cpp/ostream_wrapper.h           |  2 +-
+ 6 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/include/yaml-cpp/binary.h b/include/yaml-cpp/binary.h
+index 1050dae..0267a3a 100644
+--- a/include/yaml-cpp/binary.h
++++ b/include/yaml-cpp/binary.h
+@@ -39,7 +39,7 @@ class YAML_CPP_API Binary {
+       rhs.clear();
+       rhs.resize(m_unownedSize);
+       std::copy(m_unownedData, m_unownedData + m_unownedSize, rhs.begin());
+-      m_unownedData = nullptr;
++      m_unownedData = 0;
+       m_unownedSize = 0;
+     } else {
+       m_data.swap(rhs);
+diff --git a/include/yaml-cpp/exceptions.h b/include/yaml-cpp/exceptions.h
+index eef2283..3b1b01a 100644
+--- a/include/yaml-cpp/exceptions.h
++++ b/include/yaml-cpp/exceptions.h
+@@ -117,7 +117,7 @@ inline const std::string KEY_NOT_FOUND_WITH_KEY(
+ 
+ template <typename T>
+ inline const std::string BAD_SUBSCRIPT_WITH_KEY(
+-    const T&, typename disable_if<is_numeric<T>>::type* = nullptr) {
++    const T&, typename disable_if<is_numeric<T>>::type* = 0) {
+   return BAD_SUBSCRIPT;
+ }
+ 
+@@ -129,7 +129,7 @@ inline const std::string BAD_SUBSCRIPT_WITH_KEY(const std::string& key) {
+ 
+ template <typename T>
+ inline const std::string BAD_SUBSCRIPT_WITH_KEY(
+-    const T& key, typename enable_if<is_numeric<T>>::type* = nullptr) {
++    const T& key, typename enable_if<is_numeric<T>>::type* = 0) {
+   std::stringstream stream;
+   stream << BAD_SUBSCRIPT << " (key: \"" << key << "\")";
+   return stream.str();
+diff --git a/include/yaml-cpp/node/detail/impl.h b/include/yaml-cpp/node/detail/impl.h
+index 4123b85..46615a9 100644
+--- a/include/yaml-cpp/node/detail/impl.h
++++ b/include/yaml-cpp/node/detail/impl.h
+@@ -17,7 +17,7 @@ template <typename Key, typename Enable = void>
+ struct get_idx {
+   static node* get(const std::vector<node*>& /* sequence */,
+                    const Key& /* key */, shared_memory_holder /* pMemory */) {
+-    return nullptr;
++    return 0;
+   }
+ };
+ 
+@@ -27,7 +27,7 @@ struct get_idx<Key,
+                                        !std::is_same<Key, bool>::value>::type> {
+   static node* get(const std::vector<node*>& sequence, const Key& key,
+                    shared_memory_holder /* pMemory */) {
+-    return key < sequence.size() ? sequence[key] : nullptr;
++    return key < sequence.size() ? sequence[key] : 0;
+   }
+ 
+   static node* get(std::vector<node*>& sequence, const Key& key,
+@@ -46,13 +46,13 @@ struct get_idx<Key, typename std::enable_if<std::is_signed<Key>::value>::type> {
+                    shared_memory_holder pMemory) {
+     return key >= 0 ? get_idx<std::size_t>::get(
+                           sequence, static_cast<std::size_t>(key), pMemory)
+-                    : nullptr;
++                    : 0;
+   }
+   static node* get(std::vector<node*>& sequence, const Key& key,
+                    shared_memory_holder pMemory) {
+     return key >= 0 ? get_idx<std::size_t>::get(
+                           sequence, static_cast<std::size_t>(key), pMemory)
+-                    : nullptr;
++                    : 0;
+   }
+ };
+ 
+@@ -109,11 +109,11 @@ inline node* node_data::get(const Key& key,
+       break;
+     case NodeType::Undefined:
+     case NodeType::Null:
+-      return nullptr;
++      return NULL;
+     case NodeType::Sequence:
+       if (node* pNode = get_idx<Key>::get(m_sequence, key, pMemory))
+         return pNode;
+-      return nullptr;
++      return NULL;
+     case NodeType::Scalar:
+       throw BadSubscript(key);
+   }
+@@ -124,7 +124,7 @@ inline node* node_data::get(const Key& key,
+     }
+   }
+ 
+-  return nullptr;
++  return NULL;
+ }
+ 
+ template <typename Key>
+diff --git a/include/yaml-cpp/node/detail/node_iterator.h b/include/yaml-cpp/node/detail/node_iterator.h
+index ab6916f..088090f 100644
+--- a/include/yaml-cpp/node/detail/node_iterator.h
++++ b/include/yaml-cpp/node/detail/node_iterator.h
+@@ -26,9 +26,9 @@ template <typename V>
+ struct node_iterator_value : public std::pair<V*, V*> {
+   typedef std::pair<V*, V*> kv;
+ 
+-  node_iterator_value() : kv(), pNode(nullptr) {}
++  node_iterator_value() : kv(), pNode(0) {}
+   explicit node_iterator_value(V& rhs) : kv(), pNode(&rhs) {}
+-  explicit node_iterator_value(V& key, V& value) : kv(&key, &value), pNode(nullptr) {}
++  explicit node_iterator_value(V& key, V& value) : kv(&key, &value), pNode(0) {}
+ 
+   V& operator*() const { return *pNode; }
+   V& operator->() const { return *pNode; }
+diff --git a/include/yaml-cpp/node/impl.h b/include/yaml-cpp/node/impl.h
+index 7a3deac..0b0e296 100644
+--- a/include/yaml-cpp/node/impl.h
++++ b/include/yaml-cpp/node/impl.h
+@@ -52,7 +52,7 @@ inline Node::Node(Zombie)
+     : m_isValid(false), m_invalidKey{}, m_pMemory{}, m_pNode(nullptr) {}
+ 
+ inline Node::Node(Zombie, const std::string& key)
+-    : m_isValid(false), m_invalidKey(key), m_pMemory{}, m_pNode(nullptr) {}
++    : m_isValid(false), m_invalidKey(key), m_pMemory{}, m_pNode(NULL) {}
+ 
+ inline Node::Node(detail::node& node, detail::shared_memory_holder pMemory)
+     : m_isValid(true), m_invalidKey{}, m_pMemory(pMemory), m_pNode(&node) {}
+diff --git a/include/yaml-cpp/ostream_wrapper.h b/include/yaml-cpp/ostream_wrapper.h
+index cf89741..259801b 100644
+--- a/include/yaml-cpp/ostream_wrapper.h
++++ b/include/yaml-cpp/ostream_wrapper.h
+@@ -30,7 +30,7 @@ class YAML_CPP_API ostream_wrapper {
+ 
+   const char* str() const {
+     if (m_pStream) {
+-      return nullptr;
++      return 0;
+     } else {
+       m_buffer[m_pos] = '\0';
+       return &m_buffer[0];
+-- 
+2.20.1
+

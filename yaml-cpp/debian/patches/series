@@ -1,0 +1,11 @@
+install-cmake-dev-files.patch
+reproducible-build.patch
+symbol-visibility.patch
+fix-CVE-2017-11692.patch
+fix-unbounded-recursion-depth.patch
+0001-Revert-Static-analysis-fix-replace-0-and-NULL-with-n.patch
+0002-Revert-Improve-error-messages-on-operator-or-as-656.patch
+0003-Revert-Disallow-moving-for-the-Parser.patch
+0004-Revert-Apply-formatting-style-tweaks-to-comply-with-.patch
+0005-Revert-fix-up-static-so-works-as-DLL-559.patch
+fix-pkg-config.patch

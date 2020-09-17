@@ -1,0 +1,39 @@
+Description: fix pkg-config file and cmake one
+Author: Gianfranco Costamagna <locutusofborg@debian.org>
+Forwarded: not needed, upstream reworked the cmake handling
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/yaml-cpp/+bug/1880419
+Last-Update: 2020-05-26
+
+--- yaml-cpp-0.6.3.orig/CMakeLists.txt
++++ yaml-cpp-0.6.3/CMakeLists.txt
+@@ -325,7 +325,7 @@ export(
+ export(PACKAGE yaml-cpp)
+ set(EXPORT_TARGETS yaml-cpp CACHE INTERNAL "export targets")
+ 
+-set(CONFIG_INCLUDE_DIRS "${YAML_CPP_SOURCE_DIR}/include")
++set(CONFIG_INCLUDE_DIRS include)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/yaml-cpp-config.cmake.in
+ 	"${PROJECT_BINARY_DIR}/yaml-cpp-config.cmake" @ONLY)
+ 
+--- yaml-cpp-0.6.3.orig/yaml-cpp-config.cmake.in
++++ yaml-cpp-0.6.3/yaml-cpp-config.cmake.in
+@@ -5,7 +5,7 @@
+ 
+ # Compute paths
+ get_filename_component(YAML_CPP_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-set(YAML_CPP_INCLUDE_DIR "@CONFIG_INCLUDE_DIRS@")
++set(YAML_CPP_INCLUDE_DIR "@INCLUDE_INSTALL_ROOT_DIR@")
+ 
+ # Our library dependencies (contains definitions for IMPORTED targets)
+ include("${YAML_CPP_CMAKE_DIR}/yaml-cpp-targets.cmake")
+--- yaml-cpp-0.6.3.orig/yaml-cpp.pc.cmake
++++ yaml-cpp-0.6.3/yaml-cpp.pc.cmake
+@@ -1,7 +1,7 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+ includedir=${prefix}/@INCLUDE_INSTALL_ROOT_DIR@
+-libdir=${exec_prefix}/@LIB_INSTALL_DIR@
++libdir=@LIB_INSTALL_DIR@
+ 
+ Name: Yaml-cpp
+ Description: A YAML parser and emitter for C++
