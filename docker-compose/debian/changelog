@@ -1,0 +1,159 @@
+docker-compose (1.27.3-1ultinous1) bionic; urgency=medium
+
+  * Ultinous release
+
+ -- Szabó Attila <attila@ultinous.com>  Thu, 17 Sep 2020 13:04:30 +0200
+
+docker-compose (1.25.0-1) unstable; urgency=medium
+
+  * New upstream version
+    - Drop Relax-Dependencies.patch - now dependencies are less strict
+  * Drop pydist-overrides and update debian/control versions.
+    Since docker-compose is python3 it was not used.
+  * Trim trailing whitespace.
+  * Use secure copyright file specification URI.
+  * Use secure URI in Homepage field.
+  * Bump debhelper from old 10 to 12.
+  * Set upstream metadata fields: Repository.
+
+ -- Felipe Sateler <fsateler@debian.org>  Fri, 22 Nov 2019 21:32:27 -0300
+
+docker-compose (1.21.0-3) unstable; urgency=medium
+
+  * Add dependency on python3-distutils.
+    While part of stdlib, it is split in the Debian packaging.
+
+ -- Felipe Sateler <fsateler@debian.org>  Wed, 03 Oct 2018 14:55:03 -0300
+
+docker-compose (1.21.0-2) unstable; urgency=medium
+
+  [ Jason Pleau ]
+  * Update Vcs-* fields to point to docker-compose-team group
+
+  [ Felipe Sateler ]
+  * Set team email as maintainer
+  * Switch to using python3 instead of python2.
+    Also removes the need for the ssl-match-hostname backport.
+    (Closes: #909974)
+  * Upload to unstable
+
+ -- Felipe Sateler <fsateler@debian.org>  Tue, 02 Oct 2018 16:49:34 -0300
+
+docker-compose (1.21.0-1) experimental; urgency=medium
+
+  [ Jason Pleau ]
+  * New upstream release
+  * Refresh patches
+  * Bump Build-Dependencies
+  * Add myself to Uploaders
+  * Bump Standards-Version to 4.1.4
+  * refresh Relax-dependencies.patch
+  * Bump python-docker B-D to 3.2.1
+  * add docker_compose.egg-info/* to debian/clean
+
+ -- Felipe Sateler <fsateler@debian.org>  Tue, 17 Apr 2018 20:02:23 -0300
+
+docker-compose (1.17.1-2) unstable; urgency=medium
+
+  * Change Vcs-* Urls to salsa
+  * Tighten dependencies to ensure correct versions. Closes: #891003
+
+ -- Felipe Sateler <fsateler@debian.org>  Wed, 21 Feb 2018 21:00:31 -0300
+
+docker-compose (1.17.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump debhelper compat level to 10
+
+ -- Felipe Sateler <fsateler@debian.org>  Sun, 19 Nov 2017 18:27:48 -0300
+
+docker-compose (1.17.0-1) unstable; urgency=medium
+
+  * New upstream version. (Closes: #860454)
+  * Bump build-dependencies
+  * Refresh patches
+  * Run tests directly through pytest
+  * Bump standards version
+
+ -- Felipe Sateler <fsateler@debian.org>  Sat, 04 Nov 2017 11:17:44 -0300
+
+docker-compose (1.8.0-2) unstable; urgency=medium
+
+  * Also Bump runtime dependencies of python-docker and python-dockerpty
+    Closes: #841307
+
+ -- Felipe Sateler <fsateler@debian.org>  Wed, 19 Oct 2016 11:26:05 -0300
+
+docker-compose (1.8.0-1) unstable; urgency=medium
+
+  * New upstream release
+    - Bump python-docker dependency
+    - Bump docker.io recommends version
+    - Refresh patches
+  * Update Vcs urls to https
+
+ -- Felipe Sateler <fsateler@debian.org>  Mon, 17 Oct 2016 20:29:18 -0300
+
+docker-compose (1.5.2-1) unstable; urgency=medium
+
+  * New upstream version
+  * Refresh patches
+
+ -- Felipe Sateler <fsateler@debian.org>  Thu, 10 Dec 2015 21:29:48 -0300
+
+docker-compose (1.5.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Refresh patches.
+  * Add SWARM docs
+  * Note upstream breaking changes in NEWS.Debian
+
+ -- Felipe Sateler <fsateler@debian.org>  Sat, 14 Nov 2015 15:26:30 -0300
+
+docker-compose (1.3.3-1) unstable; urgency=medium
+
+  * New upstream release
+    - Refresh patches
+    - Bump python-docker dependency
+  * Add manpage for docker-compose. Thanks Dariusz Dwornikowski.
+    Closes: #792518
+
+ -- Felipe Sateler <fsateler@debian.org>  Sun, 19 Jul 2015 15:32:46 -0300
+
+docker-compose (1.3.1-1) unstable; urgency=medium
+
+  * New upstream version
+    - Add news file documenting breaking changes in 1.3.0
+  * Backport zsh completion fixes from upstream
+  * Install bash and zsh completions
+  * Update dependencies
+  * Recommend the daemon
+  * Tighten runtime dependencies on python-requests, dockerpty and docker-py
+    (Closes: #790734)
+
+ -- Felipe Sateler <fsateler@debian.org>  Sat, 04 Jul 2015 14:51:23 -0300
+
+docker-compose (1.2.0-1) unstable; urgency=medium
+
+  [ Felipe Sateler ]
+  * New upstream version
+    - Refresh patches. Relax python-docker depenency
+    - Update dependency versions
+    - Drop bootstrap bundle
+  * debian/watch: Fix version mangle, allow upstream -rc without -
+  * Update copyright file
+
+ -- Felipe Sateler <fsateler@debian.org>  Wed, 20 May 2015 21:28:56 -0300
+
+fig (1.0.0-2) unstable; urgency=medium
+
+  * Relax dependency on docker-py
+
+ -- Felipe Sateler <fsateler@debian.org>  Fri, 15 May 2015 11:16:42 -0300
+
+fig (1.0.0-1) unstable; urgency=low
+
+  * Initial packaging. Closes: #7674440
+    - Bundle bootstrap less source
+
+ -- Felipe Sateler <fsateler@debian.org>  Tue, 11 Nov 2014 15:19:49 -0300

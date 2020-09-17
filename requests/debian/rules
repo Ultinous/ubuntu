@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME=requests
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+# The test suite is disabled.
+# Test requires fixed version of pytest-httpbin and
+# doesn't work with newer one
+override_dh_auto_test:
+
+override_dh_installchangelogs:
+	dh_installchangelogs HISTORY.md

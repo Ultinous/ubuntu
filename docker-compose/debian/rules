@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME=docker-compose
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+DESTDIR = $(CURDIR)/debian/docker-compose
+override_dh_auto_install:
+	dh_auto_install --buildsystem=pybuild
+	mkdir -p $(DESTDIR)/usr/share/zsh/vendor-completions $(DESTDIR)/usr/share/bash-completion/completions
+	install -m644 contrib/completion/zsh/_docker-compose $(DESTDIR)/usr/share/zsh/vendor-completions
+	install -m644 contrib/completion/bash/docker-compose $(DESTDIR)/usr/share/bash-completion/completions
+
+override_dh_auto_test:
+	# tests disabled because they require networking
+
+test:
+	which pytest || (echo "pytest not found. install python-pytest" ; exit 1)
+	pytest tests

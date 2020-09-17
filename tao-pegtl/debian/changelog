@@ -2,7 +2,7 @@ tao-pegtl (2.8.3-3ultinous1) bionic; urgency=medium
 
   * Ported to Ultinous
 
- -- Szabó Attila <birger@debian.org>  Thu, 17 Sep 2020 12:13:18 +0200
+ -- Szabó Attila <attila@ultinous.com>  Thu, 17 Sep 2020 12:13:18 +0200
 
 tao-pegtl (2.8.3-2) unstable; urgency=medium
 

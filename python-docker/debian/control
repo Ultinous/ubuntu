@@ -1,0 +1,31 @@
+Source: python-docker
+Maintainer: Docker Compose Team <team+docker-compose@tracker.debian.org>
+Uploaders: Jason Pleau <jason@jpleau.ca>,
+           Felipe Sateler <fsateler@debian.org>,
+           Szabó Attila <attila@ultinous.com>
+Section: python
+Priority: optional
+Build-Depends: debhelper-compat (= 12),
+               dh-python,
+               python3-all,
+               python3-setuptools,
+               python3-requests (>= 2.11.1~),
+               python3-six (>= 1.4.0~),
+               python3-websocket (>= 0.32.0~),
+               python3-dockerpycreds (>= 0.2.2)
+Standards-Version: 4.4.1
+Vcs-Browser: https://salsa.debian.org/docker-compose-team/python-docker
+Vcs-Git: https://salsa.debian.org/docker-compose-team/python-docker
+Homepage: https://github.com/docker/docker-py
+X-Ultinous-Debian-Origtars: http://de.archive.ubuntu.com/ubuntu/pool/universe/p/python-docker/python-docker_4.1.0.orig.tar.gz
+
+Package: python3-docker
+Architecture: all
+Depends: ${misc:Depends},
+         ${python3:Depends}
+Description: Python 3 wrapper to access docker.io's control socket
+ This package contains oodles of routines that aid in controlling
+ docker.io over it's socket control, the same way the docker.io
+ client controls the daemon.
+ .
+ This package provides Python 3 module bindings only.
