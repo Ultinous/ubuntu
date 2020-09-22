@@ -1,3 +1,9 @@
+python-docker (4.3.1-1ultinous1) bionic; urgency=medium
+
+  * New upstream version 4.3.1
+
+ -- Kozak Miklos <garmine@ultinous.com>  Tue, 22 Sep 2020 11:49:44 +0000
+
 python-docker (4.1.0-2ultinous1) bionic; urgency=medium
 
   * Backported to bionic.

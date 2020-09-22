@@ -17,7 +17,7 @@ Standards-Version: 4.4.1
 Vcs-Browser: https://salsa.debian.org/docker-compose-team/python-docker
 Vcs-Git: https://salsa.debian.org/docker-compose-team/python-docker
 Homepage: https://github.com/docker/docker-py
-X-Ultinous-Debian-Origtars: http://de.archive.ubuntu.com/ubuntu/pool/universe/p/python-docker/python-docker_4.1.0.orig.tar.gz
+X-Ultinous-Upstream-Release: https://github.com/docker/docker-py/archive/4.3.1.tar.gz
 
 Package: python3-docker
 Architecture: all
