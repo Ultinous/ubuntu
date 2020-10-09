@@ -1,6 +1,8 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9da44be9..18ba974e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -238,7 +238,7 @@
+@@ -241,7 +241,7 @@ write_basic_package_version_file(
  )
  
  install(
@@ -9,34 +11,23 @@
      DESTINATION "${config_install_dir}"
  )
  
---- a/packaging/cmake/Config.cmake.in
-+++ b/packaging/cmake/Config.cmake.in
-@@ -23,10 +23,6 @@
-   endif()
- endif()
- 
--if(@WITH_LZ4_EXT@)
--  find_dependency(LZ4)
--endif()
--
- find_dependency(Threads)
- 
- include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 3c49a902..ff140a5b 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -191,7 +191,7 @@
- target_link_libraries(rdkafka PUBLIC Threads::Threads)
+@@ -238,7 +238,7 @@ target_link_libraries(rdkafka PUBLIC Threads::Threads)
  
  if(WITH_SASL_CYRUS)
+   target_include_directories(rdkafka PUBLIC ${SASL_INCLUDE_DIRS})
 -  target_link_libraries(rdkafka PUBLIC ${SASL_LIBRARIES})
 +  target_link_libraries(rdkafka PRIVATE ${SASL_LIBRARIES})
  endif()
  
  if(WITH_LIBDL)
-@@ -199,7 +199,7 @@
- endif()
+@@ -247,7 +247,7 @@ endif()
  
  if(WITH_LZ4_EXT)
+   target_include_directories(rdkafka PUBLIC ${LZ4_INCLUDE_DIRS})
 -  target_link_libraries(rdkafka PUBLIC LZ4::LZ4)
 +  target_link_libraries(rdkafka PRIVATE LZ4::LZ4)
  endif()
