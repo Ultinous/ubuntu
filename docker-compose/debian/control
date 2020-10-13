@@ -27,7 +27,7 @@ X-Python3-Version: >= 3.6
 Homepage: https://docs.docker.com/compose/
 Vcs-Git: https://salsa.debian.org/docker-compose-team/docker-compose
 Vcs-Browser: https://salsa.debian.org/docker-compose-team/docker-compose
-X-Ultinous-Upstream-Release: https://github.com/docker/compose/archive/1.27.3.tar.gz
+X-Ultinous-Upstream-Release: https://github.com/docker/compose/archive/1.27.4.tar.gz
 
 Package: docker-compose
 Architecture: all
