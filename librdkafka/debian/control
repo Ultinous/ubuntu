@@ -9,7 +9,7 @@ Section: libs
 Homepage: https://github.com/edenhill/librdkafka
 Vcs-Git: https://anonscm.debian.org/cgit/pkg-kafka/librdkafka.git -b debian
 Vcs-Browser: https://anonscm.debian.org/cgit/pkg-kafka/librdkafka.git
-X-Ultinous-Upstream-Release: https://github.com/edenhill/librdkafka/archive/v1.5.0.tar.gz
+X-Ultinous-Upstream-Release: https://github.com/edenhill/librdkafka/archive/v1.5.2.tar.gz
 
 Package: librdkafka1
 Architecture: any
