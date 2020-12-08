@@ -1,1 +1,2 @@
-usr/nvvm/lib64/libnvvm.so.*	#LIBDIR#/
+cuda/nvvm/lib64/libnvvm.so.3	usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/nvvm/lib64/libnvvm.so.3.*	usr/lib/#DEB_HOST_MULTIARCH#/

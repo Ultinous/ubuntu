@@ -1,0 +1,5 @@
+libaccinj64.so.#SOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ acc_register_library@Base 0
+#MISSING: 10.0# (symver)libaccinj64.so.#SOVERSION# 0
+ ompt_tool@Base 0

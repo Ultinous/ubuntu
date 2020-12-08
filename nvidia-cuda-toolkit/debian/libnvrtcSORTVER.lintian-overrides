@@ -1,6 +1,0 @@
-no-upstream-changelog
-# The NVIDIA license does not allow any form of modification.
-hardening-no-bindnow
-hardening-no-fortify-functions
-hardening-no-relro
-spelling-error-in-binary

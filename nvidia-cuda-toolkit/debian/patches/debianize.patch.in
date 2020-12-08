@@ -1,6 +1,7 @@
-Description: customize nvpp, nsight wrappers and nvcc.profile
+Description: customize nsight wrapper and nvcc.profile
  adjust paths etc.
 Author: Andreas Beckmann <anbe@debian.org>
+Forwarded: not-needed
 
 --- a/nvidia-cuda/bin/nsight
 +++ b/nvidia-cuda/bin/nsight
@@ -15,41 +16,38 @@ Author: Andreas Beckmann <anbe@debian.org>
 +UBUNTU_MENUPROXY=0 LIBOVERLAY_SCROLLBAR=0 exec /usr/lib/nvidia-nsight/nsight "$@"
 --- a/nvidia-cuda/bin/nvcc.profile
 +++ b/nvidia-cuda/bin/nvcc.profile
-@@ -1,14 +1,17 @@
+@@ -1,14 +1,18 @@
 +# Syntax:
 +#   name  = <text>   assignment
 +#   name ?= <text>   conditional assignment
 +#   name += <text>   prepend
 +#   name =+ <text>   append
-+# Predefined variables: _SPACE_, _HERE_, _TARGET_DIR_, _TARGET_SIZE_
++# Predefined variables: _SPACE_, _HERE_, _TARGET_DIR_, _TARGET_SIZE_, _NVVM_BRANCH_
  
 -TOP              = $(_HERE_)/..
+ 
+-NVVMIR_LIBRARY_DIR = $(TOP)/$(_NVVM_BRANCH_)/libdevice
 +NVVMIR_LIBRARY_DIR = /usr/lib/nvidia-cuda-toolkit/libdevice
  
--NVVMIR_LIBRARY_DIR = $(TOP)/nvvm/libdevice
-+PATH		+= /usr/lib/nvidia-cuda-toolkit/bin:
- 
 -LD_LIBRARY_PATH += $(TOP)/lib:
--PATH            += $(TOP)/nvvm/bin:$(_HERE_):
-+#INCLUDES	+=
+-PATH            += $(TOP)/$(_NVVM_BRANCH_)/bin:$(_HERE_):
++PATH		+= /usr/lib/nvidia-cuda-toolkit/$(_NVVM_BRANCH_)/bin:/usr/lib/nvidia-cuda-toolkit/bin:
  
 -INCLUDES        +=  "-I$(TOP)/$(_TARGET_DIR_)/include" $(_SPACE_)
-+LIBRARIES	=+ $(_SPACE_) -L/#LIBDIR#/stubs
++#INCLUDES	+=
  
 -LIBRARIES        =+ $(_SPACE_) "-L$(TOP)/$(_TARGET_DIR_)/lib$(_TARGET_SIZE_)/stubs" "-L$(TOP)/$(_TARGET_DIR_)/lib$(_TARGET_SIZE_)"
--
++LIBRARIES	=+ $(_SPACE_) -L/#LIBDIR#/stubs -L/#LIBDIR#
+ 
 -CUDAFE_FLAGS    +=
 -PTXAS_FLAGS     +=
 +#CUDAFE_FLAGS	+=
 +#PTXAS_FLAGS	+=
---- a/nvidia-cuda/bin/nvvp
-+++ b/nvidia-cuda/bin/nvvp
-@@ -1,3 +1,6 @@
- #!/bin/sh
--CUDA_BIN=$( cd "$( dirname "$0" )" && pwd )
--PATH=$PATH:$CUDA_BIN LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_BIN/../lib:$CUDA_BIN/../lib64 UBUNTU_MENUPROXY=0 LIBOVERLAY_SCROLLBAR=0 $CUDA_BIN/../libnvvp/nvvp $@
-+
-+JAVA_HOME=#CUDA_JAVA_HOME#
-+PATH=$JAVA_HOME/bin:$PATH
-+
-+UBUNTU_MENUPROXY=0 LIBOVERLAY_SCROLLBAR=0 exec /usr/lib/nvidia-visual-profiler/nvvp "$@"
+--- a/nvidia-cuda/libnsight/plugins/org.apache.ant_1.9.2.v201404171502/bin/runant.py
++++ b/nvidia-cuda/libnsight/plugins/org.apache.ant_1.9.2.v201404171502/bin/runant.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python2
+ # Licensed to the Apache Software Foundation (ASF) under one or more
+ #  contributor license agreements.  See the NOTICE file distributed with
+ #  this work for additional information regarding copyright ownership.

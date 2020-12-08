@@ -1,0 +1,1 @@
+usr/lib/${DEB_HOST_MULTIARCH}/nsight-compute/target/${env:NSIGHT_COMPUTE_DESKTOP_DIR}	usr/lib/nsight-compute/target/${env:NSIGHT_COMPUTE_DESKTOP_DIR}

@@ -1,3 +1,2 @@
-usr/NsightCompute/EULA.txt
-usr/NsightCompute/html
-usr/NsightCompute/pdf
+nsight_compute/EULA.txt
+nsight_compute/docs/*

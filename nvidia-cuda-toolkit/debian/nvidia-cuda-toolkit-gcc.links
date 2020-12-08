@@ -1,0 +1,2 @@
+usr/bin/gcc-8	usr/bin/cuda-gcc
+usr/bin/g++-8	usr/bin/cuda-g++

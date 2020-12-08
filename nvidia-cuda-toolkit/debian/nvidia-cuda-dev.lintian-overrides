@@ -1,15 +1,16 @@
-no-upstream-changelog
 # The NVIDIA license does not allow any form of modification.
 hardening-no-bindnow
 hardening-no-fortify-functions
 hardening-no-relro
+repeated-path-segment include usr/include/cuda/std/detail/libcxx/include/*
 static-library-has-unneeded-section
 
 # These libraries are only stubs used by nvcc while linking.
-[amd64]: missing-dependency-on-libc needed by usr/lib/*/stubs/*.so and 22 others
-[amd64]: missing-dependency-on-libstdc++ needed by usr/lib/*/stubs/*.so and 21 others
-[ppc64el]: missing-dependency-on-libc needed by usr/lib/*/stubs/*.so and 21 others
-[ppc64el]: missing-dependency-on-libstdc++ needed by usr/lib/*/stubs/*.so and 20 others
+missing-dependency-on-libc needed by usr/lib/*/stubs/libnvidia-ml.so
+[ppc64el]: missing-dependency-on-libstdc++ needed by usr/lib/*/stubs/*.so and 21 others
+shared-library-lacks-prerequisites usr/lib/*/stubs/*.so
 
 # There are too many of them ...
-manpage-has-bad-whatis-entry
+bad-whatis-entry
+
+package-contains-documentation-outside-usr-share-doc usr/include/cuda/std/detail/libcxx/include/CMakeLists.txt

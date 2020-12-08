@@ -1,0 +1,3 @@
+#!/usr/bin/dh-exec --with=filter
+usr/lib/nsight-compute/nv-nsight-cu		usr/bin/nv-nsight-cu		[amd64]
+usr/lib/nsight-compute/nv-nsight-cu-cli		usr/bin/nv-nsight-cu-cli

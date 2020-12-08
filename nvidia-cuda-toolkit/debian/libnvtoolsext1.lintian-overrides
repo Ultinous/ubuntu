@@ -1,4 +1,3 @@
-no-upstream-changelog
 # The NVIDIA license does not allow any form of modification.
 hardening-no-bindnow
 [amd64]: hardening-no-fortify-functions

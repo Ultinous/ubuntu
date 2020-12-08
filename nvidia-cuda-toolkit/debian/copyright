@@ -12,8 +12,8 @@ Disclaimer:
  permitted, and the binaries are not distributed with source code.
 
 Files: *
-Copyright: (C) 1993-2018 NVIDIA Corporation.  All rights reserved.
-License: other-NVIDIA-CUDA-TOOLKIT-10.0
+Copyright: (C) 1993-2019 NVIDIA Corporation.  All rights reserved.
+License: other-NVIDIA-CUDA-TOOLKIT-10.1-UPDATE-2
  End User License Agreement
  --------------------------
  .
@@ -111,16 +111,16 @@ License: other-NVIDIA-CUDA-TOOLKIT-10.0
  %ProgramFiles(x86)%\NVIDIA Corporation\Nsight Visual Studio Edition #.#
  .
  .
- 1. LICENSE AGREEMENT FOR NVIDIA SOFTWARE DEVELOPMENT KITS
+ 1. License Agreement for NVIDIA Software Development Kits
  ---------------------------------------------------------
  .
  .
- Release Date: July 26, 2018
- ---------------------------
+ Release Date: May 21, 2019
+ --------------------------
  .
  .
- IMPORTANT NOTICE--READ BEFORE DOWNLOADING, INSTALLING,
- COPYING OR USING THE LICENSED SOFTWARE:
+ Important Notice--Read before downloading, installing,
+ copying or using the licensed software:
  -------------------------------------------------------
  .
  This license agreement, including exhibits attached
@@ -341,20 +341,20 @@ License: other-NVIDIA-CUDA-TOOLKIT-10.0
  .
  1.3. Ownership
  .
-   1. NVIDIA or its licensors hold all rights, title and
+   1.  NVIDIA or its licensors hold all rights, title and
      interest in and to the SDK and its modifications and
      derivative works, including their respective intellectual
-     property rights, subject to your rights under Section 3.2.
+     property rights, subject to your rights described here .
      This SDK may include software and materials from
      NVIDIA's licensors, and these licensors are intended
      third party beneficiaries that may enforce this Agreement
      with respect to their intellectual property rights.
  .
-   2. You hold all rights, title and interest in and to your
+   2.  You hold all rights, title and interest in and to your
      applications and your derivative works of the sample
      source code delivered in the SDK, including their
      respective intellectual property rights, subject to
-     NVIDIA's rights under section 3.1.
+     NVIDIA's rights described here .
  .
    3. You may, but don't have to, provide to NVIDIA
      suggestions, feature requests or other feedback regarding
@@ -531,140 +531,8 @@ License: other-NVIDIA-CUDA-TOOLKIT-10.0
  parties.
  .
  .
- 1.8. Glossary of Terms
- .
- Certain capitalized terms, if not otherwise defined elsewhere
- in this SLA, shall have the meanings set forth below:
- .
-   1.
- .
-     "Affiliate" means any legal entity that Owns, is Owned
-     by, or is commonly Owned with a party. "Own" means
-     having more than 50% ownership or the right to direct the
-     management of the entity.
- .
-   2.
- .
-     "AGREEMENT" means this SLA and all associated
-     Supplements entered by the parties referencing this SLA.
- .
-   3.
- .
-     "Authorized Users" means your Enterprise individual
-     employees and any of your Enterprise's Contractors,
-     subject to the terms of the "Enterprise and Contractors
-     Usage" section.
- .
-   4.
- .
-     "Confidential Information" means the Licensed Software
-     (unless made publicly available by NVIDIA without
-     confidentiality obligations), and any NVIDIA business,
-     marketing, pricing, research and development, know-how,
-     technical, scientific, financial status, proposed new
-     products or other information disclosed by NVIDIA to you
-     which, at the time of disclosure, is designated in writing
-     as confidential or proprietary (or like written
-     designation), or orally identified as confidential or
-     proprietary or is otherwise reasonably identifiable by
-     parties exercising reasonable business judgment, as
-     confidential. Confidential Information does not and will
-     not include information that: (i) is or becomes generally
-     known to the public through no fault of or breach of the
-     AGREEMENT by the receiving party; (ii) is rightfully known
-     by the receiving party at the time of disclosure without
-     an obligation of confidentiality; (iii) is independently
-     developed by the receiving party without use of the
-     disclosing party's Confidential Information; or (iv) is
-     rightfully obtained by the receiving party from a third
-     party without restriction on use or disclosure.
- .
-   5.
- .
-     "Contractor" means an individual who works primarily
-     for your Enterprise on a contractor basis from your secure
-     network.
- .
-   6.
- .
-     "Documentation" means the NVIDIA documentation made
-     available for use with the Software, including (without
-     limitation) user manuals, datasheets, operations
-     instructions, installation guides, release notes and other
-     materials provided to you under the AGREEMENT.
- .
-   7.
- .
-     "Enterprise" means you or any company or legal entity
-     for which you accepted the terms of this SLA, and their
-     subsidiaries of which your company or legal entity owns
-     more than fifty percent (50%) of the issued and
-     outstanding equity.
- .
-   8.
- .
-     "Feedback" means any and all suggestions, feature
-     requests, comments or other feedback regarding the
-     Licensed Software, including possible enhancements or
-     modifications thereto.
- .
-   9.
- .
-     "Intellectual Property Rights" means all patent,
-     copyright, trademark, trade secret, trade dress, trade
-     names, utility models, mask work, moral rights, rights of
-     attribution or integrity service marks, master recording
-     and music publishing rights, performance rights,
-     author's rights, database rights, registered design
-     rights and any applications for the protection or
-     registration of these rights, or other intellectual or
-     industrial property rights or proprietary rights,
-     howsoever arising and in whatever media, whether now known
-     or hereafter devised, whether or not registered,
-     (including all claims and causes of action for
-     infringement, misappropriation or violation and all rights
-     in any registrations and renewals), worldwide and whether
-     existing now or in the future.
- .
-   10.
- .
-     "Licensed Software" means Software, Documentation and
-     all modifications owned by NVIDIA.
- .
-   11.
- .
-     "Open Source License" includes, without limitation, a
-     software license that requires as a condition of use,
-     modification, and/or distribution of such software that
-     the Software be (i) disclosed or distributed in source
-     code form; (ii) be licensed for the purpose of making
-     derivative works; or (iii) be redistributable at no
-     charge.
- .
-   12.
- .
-     "Order" means a purchase order issued by you, a signed
-     purchase agreement with you, or other ordering document
-     issued by you to NVIDIA or a NVIDIA authorized reseller
-     (including any on-line acceptance process) that references
-     and incorporates the AGREEMENT and is accepted by NVIDIA.
- .
-   13.
- .
-     "Software" means the NVIDIA software programs licensed
-     to you under the AGREEMENT including, without limitation,
-     libraries, sample code, utility programs and programming
-     code.
- .
-   14.
- .
-     "Supplement" means the additional terms and conditions
-     beyond those stated in this SLA that apply to certain
-     Licensed Software licensed hereunder.
- .
- .
- 2. CUDA TOOLKIT SUPPLEMENT TO SOFTWARE LICENSE AGREEMENT FOR
- NVIDIA SOFTWARE DEVELOPMENT KITS
+ 2. CUDA Toolkit Supplement to Software License Agreement for
+ NVIDIA Software Development Kits
  ------------------------------------------------------------
  .
  .
@@ -782,19 +650,22 @@ License: other-NVIDIA-CUDA-TOOLKIT-10.0
  .
  Windows
  .
- cublas.dll, cublas_device.lib
+ cublas.dll, cublasLt.dll
  .
  Mac OSX
  .
- libcublas.dylib, libcublas_static.a, libcublas_device.a
+ libcublas.dylib, libcublasLt.dylib, libcublas_static.a,
+ libcublasLt_static.a
  .
  Linux
  .
- libcublas.so, libcublas_static.a, libcublas_device.a
+ libcublas.so, libcublasLt.so, libcublas_static.a,
+ libcublasLt_static.a
  .
  Android
  .
- libcublas.so, libcublas_static.a, libcublas_device.a
+ libcublas.so, libcublasLt.so, libcublas_static.a,
+ libcublasLt_static.a
  .
  Component
  .
@@ -1072,6 +943,17 @@ License: other-NVIDIA-CUDA-TOOLKIT-10.0
    2. The resulting application is packaged as a Docker
      container and distributed to users on Docker Hub or the
      NVIDIA GPU Cloud only.
+ .
+ In addition to the rights above, for parties that are
+ developing software intended solely for use on Jetson
+ development kits or Jetson modules, and running Linux for
+ Tegra software, the following shall apply:
+ .
+   * The SDK may be distributed in its entirety, as provided by
+     NVIDIA, and without separation of its components, for you
+     and/or your licensees to create software development kits
+     for use only on the Jetson platform and running Linux for
+     Tegra software.
  .
  .
  2.7. Attachment B
@@ -1723,10 +1605,13 @@ License: other-NVIDIA-CUDA-TOOLKIT-10.0
      GL vector/matrix operations from lunarG is subject to the
      Apache License Version 2.0.
  .
+   21. The DX12-CUDA sample uses the d3dx12.h header, which is
+     subject to the MIT license .
+ .
  -----------------
 
 Files: debian/*
-Copyright: © 2008-2019 Andreas Beckmann <anbe@debian.org>
+Copyright: © 2008-2020 Andreas Beckmann <anbe@debian.org>
 License: GPL-2+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

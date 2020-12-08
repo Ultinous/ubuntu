@@ -1,2 +1,3 @@
-usr/bin/cuda-gdb
-usr/bin/cuda-gdbserver
+cuda/bin/cuda-gcore usr/bin/cuda-gcore
+cuda/bin/cuda-gdb usr/bin/cuda-gdb
+cuda/bin/cuda-gdbserver usr/bin/cuda-gdbserver

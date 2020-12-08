@@ -1,0 +1,4 @@
+cuda/extras/CUPTI/lib64/libcupti.so.#SOVERSION#		usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/extras/CUPTI/lib64/libcupti.so.#SOVERSION#.*	usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/extras/CUPTI/lib64/libnvperf_host.so		usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/extras/CUPTI/lib64/libnvperf_target.so		usr/lib/#DEB_HOST_MULTIARCH#/

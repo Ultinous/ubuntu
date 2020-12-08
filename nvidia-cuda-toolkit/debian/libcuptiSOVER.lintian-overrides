@@ -1,0 +1,10 @@
+# The NVIDIA license does not allow any form of modification.
+hardening-no-bindnow
+hardening-no-fortify-functions
+[!amd64]: hardening-no-relro
+binary-has-unneeded-section
+lacks-unversioned-link-to-shared-library
+embedded-library usr/lib*/libnvperf_host.so: zlib
+exit-in-shared-library
+shared-library-lacks-version
+spelling-error-in-binary

@@ -1,8 +1,2 @@
-version=3
-https://developer.nvidia.com/cuda-downloads .*/cuda_([0-9.]*)_linux.run
-https://developer.nvidia.com/cuda-downloads .*/cuda_(.*)_linux_32.run
-https://developer.nvidia.com/cuda-downloads .*/cuda_(.*)_linux_64.run
-https://developer.nvidia.com/cuda-downloads .*/cuda_(.*)_linux_aarch64_native.run
-
-# source code for nvopencc and cuda-gdb is available here:
-# ftp://download.nvidia.com/CUDAOpen64/
+version=4
+opts=searchmode=plain https://developer.nvidia.com/cuda-downloads https?://[-./0-9a-zA-Z]+/local_installers/cuda_([0-9.]+)_[0-9.]+_linux(?:_[0-9a-zA-Z]+)?.run

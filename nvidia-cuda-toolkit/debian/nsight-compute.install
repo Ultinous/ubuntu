@@ -1,6 +1,6 @@
-usr/NsightCompute/nv-nsight-cu			/usr/bin/
-#usr/NsightCompute/nv-nsight-cu-cli		/usr/bin/
-usr/NsightCompute/ProfileSectionTemplates	/usr/lib/nsight-compute/
-usr/NsightCompute/extras/			/usr/lib/nsight-compute/
-usr/NsightCompute/host/				/usr/lib/nsight-compute/
-usr/NsightCompute/target/			/usr/lib/nsight-compute/
+#!/usr/bin/dh-exec --with=filter
+nsight_compute/nv-nsight-cu		usr/lib/nsight-compute/
+nsight_compute/nv-nsight-cu-cli		usr/lib/nsight-compute/
+nsight_compute/sections/		usr/lib/nsight-compute/
+nsight_compute/extras/			usr/lib/nsight-compute/
+nsight_compute/host/			usr/lib/nsight-compute/

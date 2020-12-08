@@ -1,0 +1,26 @@
+# The NVIDIA license does not allow any form of modification.
+hardening-no-bindnow
+hardening-no-fortify-functions
+hardening-no-pie
+[!amd64]: hardening-no-relro
+binary-has-unneeded-section
+[amd64]: embedded-library usr/lib/nsight-systems/#NSIGHT_SYSTEMS_HOST_DIR#/Plugins/imageformats/libqjpeg.so: libjpeg
+[amd64]: embedded-library usr/lib/nsight-systems/#NSIGHT_SYSTEMS_HOST_DIR#/Plugins/imageformats/libqtiff.so: tiff
+[amd64]: embedded-library usr/lib/nsight-systems/#NSIGHT_SYSTEMS_HOST_DIR#/libQt5Gui.so.5: libpng
+[amd64]: embedded-library usr/lib/nsight-systems/#NSIGHT_SYSTEMS_HOST_DIR#/libSshClient.so: libssh2
+[amd64]: embedded-library usr/lib/nsight-systems/#NSIGHT_SYSTEMS_HOST_DIR#/libboost_iostreams.so.1.64.0: zlib
+[amd64]: embedded-library usr/lib/nsight-systems/#NSIGHT_SYSTEMS_HOST_DIR#/libcrypto.so.1.0.0: openssl
+[amd64]: embedded-library usr/lib/nsight-systems/#NSIGHT_SYSTEMS_HOST_DIR#/libjpeg.so.8: libjpeg
+[amd64]: embedded-library usr/lib/nsight-systems/#NSIGHT_SYSTEMS_HOST_DIR#/libpng12.so.0: libpng
+[amd64]: shared-library-lacks-prerequisites
+[amd64]: exit-in-shared-library
+spelling-error-in-binary
+[amd64]: unstripped-binary-or-object
+
+# Lintian and debhelper disagree w.r.t. a library in a private directory.
+package-has-unnecessary-activation-of-ldconfig-trigger
+
+# Some of NVIDIA's binaries expect files at certain relative paths.
+executable-in-usr-lib
+[amd64]: image-file-in-usr-lib usr/lib/nsight-systems/#NSIGHT_SYSTEMS_HOST_DIR#/nsight-sys.png
+package-contains-documentation-outside-usr-share-doc usr/lib/nsight-systems/#NSIGHT_SYSTEMS_HOST_DIR#/NVIDIA_SLA.pdf

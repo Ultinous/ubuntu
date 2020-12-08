@@ -4,7 +4,9 @@
 # with both g++-4.X and gcc-4.Y but not g++-4.Y installed.
 
 prog=false
-if g++-7 --version >/dev/null 2>&1; then
+if g++-8 --version >/dev/null 2>&1; then
+	prog=gcc-8
+elif g++-7 --version >/dev/null 2>&1; then
 	prog=gcc-7
 elif g++-6 --version >/dev/null 2>&1; then
 	prog=gcc-6
@@ -14,6 +16,14 @@ elif g++-4.9 --version >/dev/null 2>&1; then
 	prog=gcc-4.9
 elif g++-4.8 --version >/dev/null 2>&1; then
 	prog=gcc-4.8
+elif clang-8 --version >/dev/null 2>&1; then
+        echo "ERROR: No supported gcc/g++ host compiler found, but clang-8 is available." >&2
+        echo "       Use 'nvcc -ccbin clang-8' to use that instead." >&2
+        exit 1
+elif clang-7 --version >/dev/null 2>&1; then
+	echo "ERROR: No supported gcc/g++ host compiler found, but clang-7 is available." >&2
+	echo "       Use 'nvcc -ccbin clang-7' to use that instead." >&2
+	exit 1
 elif clang-6.0 --version >/dev/null 2>&1; then
 	echo "ERROR: No supported gcc/g++ host compiler found, but clang-6.0 is available." >&2
 	echo "       Use 'nvcc -ccbin clang-6.0' to use that instead." >&2

@@ -1,1 +1,5 @@
-usr/extras/CUPTI/Readme.txt
+cuda/extras/CUPTI/doc/Cupti
+cuda/extras/CUPTI/doc/common
+cuda/extras/CUPTI/doc/index.html
+cuda/extras/CUPTI/doc/search
+cuda/extras/CUPTI/doc/pdf/Cupti.pdf

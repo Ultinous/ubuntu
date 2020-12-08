@@ -1,0 +1,4 @@
+cuda/*.txt
+cuda/doc/html
+cuda/doc/pdf
+cuda/tools/CUDA_Occupancy_Calculator.xls

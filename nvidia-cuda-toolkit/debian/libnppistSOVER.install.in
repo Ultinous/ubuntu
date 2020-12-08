@@ -1,1 +1,2 @@
-usr/lib64/libnppist.so.*	#LIBDIR#/
+cuda/lib64/libnppist.so.#SOVERSION#	usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/lib64/libnppist.so.#SOVERSION#.*	usr/lib/#DEB_HOST_MULTIARCH#/

@@ -1,0 +1,191 @@
+Author: Andreas Beckmann <anbe@debian.org>
+Description: make cuda-gdb build from source
+ cuda-gdb is based on gdb 7.12 which was released in stretch
+ fix it up s.t. it still compiles nowadays
+ fix building and linking against python3
+ can't use autoreconf because it specifically wants ancient autoconf
+Forwarded: not-needed
+
+--- a/cuda-gdb/configure
++++ b/cuda-gdb/configure
+@@ -1228,6 +1228,9 @@ do
+   | --x-librar=* | --x-libra=* | --x-libr=* | --x-lib=* | --x-li=* | --x-l=*)
+     x_libraries=$ac_optarg ;;
+ 
++  --runstatedir=*)
++    echo "Ignoring $ac_option" ;;
++
+   -*) as_fn_error "unrecognized option: \`$ac_option'
+ Try \`$0 --help' for more information."
+     ;;
+@@ -1951,6 +1954,7 @@ do
+   for ac_arg
+   do
+     case $ac_arg in
++    --runstatedir=*) continue ;;
+     -no-create | --no-c* | -n | -no-recursion | --no-r*) continue ;;
+     -q | -quiet | --quiet | --quie | --qui | --qu | --q \
+     | -silent | --silent | --silen | --sile | --sil)
+--- a/cuda-gdb/gdb/cuda-autostep.c
++++ b/cuda-gdb/gdb/cuda-autostep.c
+@@ -474,7 +474,7 @@ cuda_initialize_device_autostep (CORE_AD
+   /* Create the iterator.  */
+   astep_state.data.device.iter = cuda_iterator_create (CUDA_ITERATOR_TYPE_THREADS,
+ 						       &astep_state.data.device.filter,
+-						       CUDA_SELECT_BKPT | CUDA_SELECT_VALID);
++						       (cuda_select_t) (CUDA_SELECT_BKPT | CUDA_SELECT_VALID));
+ 
+   /* Start the iteration process through all warps.  */
+   cuda_iterator_start (astep_state.data.device.iter);
+--- a/cuda-gdb/gdb/cuda-asm.c
++++ b/cuda-gdb/gdb/cuda-asm.c
+@@ -200,9 +200,9 @@ disasm_cache_parse_line(const char *line
+ {
+   #define INSN_HEX_SIGNATURE "/* 0x"
+   #define INSN_HEX_LENGTH strlen(INSN_HEX_SIGNATURE)
+-  char *size_start_ptr = strstr(line, INSN_HEX_SIGNATURE);
++  char *size_start_ptr = (char*)strstr(line, INSN_HEX_SIGNATURE);
+   char *size_end_ptr = size_start_ptr ? strchr (size_start_ptr + INSN_HEX_LENGTH, ' ') : NULL;
+-  char *offs_start_ptr = strstr(line, "/*");
++  char *offs_start_ptr = (char*)strstr(line, "/*");
+   char *offs_end_ptr = offs_start_ptr + 2;
+   char *semi_colon;
+   unsigned long length;
+--- a/cuda-gdb/gdb/cuda-exceptions.c
++++ b/cuda-gdb/gdb/cuda-exceptions.c
+@@ -108,7 +108,7 @@ print_exception_origin (cuda_exception_t
+ 
+   if (sal.symtab && sal.line)
+     {
+-      filename = strrchr (sal.symtab->filename, '/');
++      filename = (char*)strrchr (sal.symtab->filename, '/');
+       if (filename)
+         ++filename;
+       else
+--- a/cuda-gdb/gdb/cuda-regmap.c
++++ b/cuda-gdb/gdb/cuda-regmap.c
+@@ -696,7 +696,7 @@ regmap_table_search (struct objfile *obj
+ 
+   /* Copy the function name to filter out the parameters, if any */
+   func_name_len = strlen (func_name);
+-  tmp = strchr (func_name, '(');
++  tmp = (char*)strchr (func_name, '(');
+   if (tmp)
+     func_name_len = (unsigned long) tmp - (unsigned long)func_name;
+ 
+--- a/cuda-gdb/gdb/libcudbgipc.h
++++ b/cuda-gdb/gdb/libcudbgipc.h
+@@ -30,7 +30,7 @@ do {
+ 
+ #define CUDBG_IPC_REQUEST(d)                       \
+ do {                                               \
+-  CUDBGResult r = cudbgipcRequest(d, NULL);        \
++  CUDBGResult r = cudbgipcRequest((void**)d, NULL);        \
+   if (r != CUDBG_SUCCESS) return r;                \
+ } while (0)
+ 
+--- a/cuda-gdb/gdb/nat/linux-ptrace.h
++++ b/cuda-gdb/gdb/nat/linux-ptrace.h
+@@ -172,7 +172,7 @@ struct buffer;
+ #endif
+ 
+ #ifndef TRAP_HWBKPT
+-# define TRAP_HWBKPT 4
++//# define TRAP_HWBKPT 4
+ #endif
+ 
+ extern void linux_ptrace_attach_fail_reason (pid_t pid, struct buffer *buffer);
+--- a/cuda-gdb/gdb/python/python-dynobj.c
++++ b/cuda-gdb/gdb/python/python-dynobj.c
+@@ -550,7 +550,9 @@ PYWRAPPERVOID_ARG1(PyGILState_Release, P
+ PYWRAPPER_ARG1(PyObject *, PyImport_AddModule, CONSTCHAR *)
+ PYWRAPPER_ARG1(PyObject *,PyImport_ImportModule, CONSTCHAR *)
+ PYWRAPPER_ARG1(long, PyInt_AsLong, PyObject *)
++#ifndef IS_PY3K
+ PYWRAPPER_ARG1(PyObject *,PyInt_FromLong, long)
++#endif
+ PYWRAPPER (long, PyInt_GetMax)
+ PYWRAPPER_ARG1(PyObject *, PyIter_Next, PyObject *)
+ PYWRAPPER_ARG2(int, PyList_Append, PyObject *, PyObject *)
+@@ -612,7 +614,9 @@ PYWRAPPER_ARG1(PyObject *, _PyObject_New
+ PYWRAPPER_ARG2(PyObject *, PyObject_CallObject, PyObject *, PyObject *)
+ PYWRAPPER_ARG3(PyObject *, PyObject_Call, PyObject *, PyObject *, PyObject *)
+ PYWRAPPER_ARG3(PyObject *, PyErr_NewException, char *, PyObject *, PyObject *)
++#ifndef IS_PY3K
+ PYWRAPPER_ARG4(PyObject *, PyString_Decode, const char *, Py_ssize_t, const char *, const char *)
++#endif
+ PYWRAPPER_ARG3(PyObject *, PyType_GenericNew, PyTypeObject *, PyObject *, PyObject *)
+ PYWRAPPER_ARG3(int, PyObject_AsReadBuffer, PyObject *, const void **, Py_ssize_t *)
+ PYWRAPPER_ARG3(int, PyObject_GenericSetAttr, PyObject *, PyObject *, PyObject *)
+--- a/cuda-gdb/gdb/source.c
++++ b/cuda-gdb/gdb/source.c
+@@ -670,7 +670,7 @@ source_info (char *ignore, int from_tty)
+       /* CUDA - filenames */
+       char *lastsep;
+       int dirnamelen;
+-      lastsep = strrchr(s->filename, '/');
++      lastsep = (char *)strrchr(s->filename, '/');
+       dirnamelen = strlen(SYMTAB_DIRNAME (s));
+       if (lastsep)
+         {
+--- a/cuda-gdb/gdb/Makefile.in
++++ b/cuda-gdb/gdb/Makefile.in
+@@ -1460,7 +1460,7 @@ gdb$(EXEEXT): gdb.o $(LIBGDB_OBS) $(ADD_
+ 	rm -f gdb$(EXEEXT)
+ 	$(CC_LD) $(WIN32LDAPP) \
+ 		-o gdb$(EXEEXT) gdb.o $(LIBGDB_OBS) \
+-		$(TDEPLIBS) $(TUI_LIBRARY) $(CLIBS) $(LOADLIBES) $(INTERNAL_LDFLAGS)
++		$(TDEPLIBS) $(TUI_LIBRARY) $(CLIBS) $(LOADLIBES) $(PYTHON_LIBS) $(INTERNAL_LDFLAGS)
+ 
+ # Convenience rule to handle recursion.
+ $(LIBGNU) $(GNULIB_H): all-lib
+@@ -2650,6 +2650,7 @@ scm-value.o: $(srcdir)/guile/scm-value.c
+ 
+ # Flags needed to compile Python code
+ PYTHON_CFLAGS=@PYTHON_CFLAGS@
++PYTHON_LIBS=@PYTHON_LIBS@
+ 
+ python.o: $(srcdir)/python/python.c
+ 	$(COMPILE) $(PYTHON_CFLAGS) $(srcdir)/python/python.c
+--- a/cuda-gdb/gdb/gdbserver/Makefile.in
++++ b/cuda-gdb/gdb/gdbserver/Makefile.in
+@@ -449,13 +449,13 @@ stamp-xml: $(XML_DIR)/feature_to_c.sh Ma
+ 	echo stamp > stamp-xml
+ 
+ cuda-notifications.o: $(srcdir)/../cuda-notifications.c $(srcdir)/../cuda-notifications.h
+-	${CC} -c ${INTERNAL_CFLAGS} $< -I$(srcdir)/.. -DGDBSERVER
++	${CXX} -c ${INTERNAL_CFLAGS} $< -I$(srcdir)/.. -DGDBSERVER
+ cuda-utils.o: $(srcdir)/../cuda-utils.c $(srcdir)/../cuda-utils.h
+-	${CC} -c ${INTERNAL_CFLAGS} $< -I$(srcdir)/.. -DGDBSERVER
++	${CXX} -c ${INTERNAL_CFLAGS} $< -I$(srcdir)/.. -DGDBSERVER
+ libcudbg.o: $(srcdir)/../libcudbg.c $(srcdir)/../libcudbg.h
+-	${CC} -c ${INTERNAL_CFLAGS} $< -I$(srcdir)/.. -DGDBSERVER
++	${CXX} -c ${INTERNAL_CFLAGS} $< -I$(srcdir)/.. -DGDBSERVER
+ libcudbgipc.o: $(srcdir)/../libcudbgipc.c $(srcdir)/../libcudbgipc.h
+-	${CC} -c ${INTERNAL_CFLAGS} $< -I$(srcdir)/.. -DGDBSERVER
++	${CXX} -c ${INTERNAL_CFLAGS} $< -I$(srcdir)/.. -DGDBSERVER
+ 
+ .PRECIOUS: xml-builtin.c
+ 
+--- a/cuda-gdb/gdb/cuda-notifications.c
++++ b/cuda-gdb/gdb/cuda-notifications.c
+@@ -110,7 +110,7 @@ cuda_notification_trace (char *fmt, ...)
+ 
+   va_start (ap, fmt);
+ #ifdef GDBSERVER
+-  msg = xmalloc (sizeof (*msg));
++  msg = (cuda_trace_msg *) xmalloc (sizeof (*msg));
+   if (!cuda_first_trace_msg)
+     cuda_first_trace_msg = msg;
+   else
+--- a/cuda-gdb/gdb/libcudbg.c
++++ b/cuda-gdb/gdb/libcudbg.c
+@@ -2446,7 +2446,7 @@ cudbg_trace(char *fmt, ...)
+ 
+   va_start (ap, fmt);
+ #ifdef GDBSERVER
+-  msg = xmalloc (sizeof (*msg));
++  msg = (cuda_trace_msg*) xmalloc (sizeof (*msg));
+   if (!cuda_first_trace_msg)
+     cuda_first_trace_msg = msg;
+   else

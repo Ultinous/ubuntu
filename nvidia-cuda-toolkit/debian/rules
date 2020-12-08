@@ -1,49 +1,88 @@
 #!/usr/bin/make -f
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+export DH_VERBOSE=1
+
+# most flags derived from gdb 7.12 in stretch
+# README.NVIDIA mentions --enable-targets="x86_64-apple-darwin,x86_64-unknown-linux-gnu,arm-elf-linux-gnu,m68k-unknown-linux-gnu"
+CUDA_GDB_FLAGS	 = \
+	--program-prefix=cuda- --with-gdb-datadir='$${prefix}/share/cuda-gdb' --with-jit-reader-dir='$${libdir}/cuda-gdb' --with-system-gdbinit='$${sysconfdir}/cuda-gdb/gdbinit' \
+	--enable-cuda --enable-targets="$(DEB_HOST_GNU_TYPE),m68k-unknown-linux-gnu" --disable-nls \
+	--disable-gdbtk --disable-shared --disable-readline --with-system-readline --with-expat --with-system-zlib --without-guile --with-babeltrace --enable-tui --with-lzma --with-python=python3 --enable-64-bit-bfd
+
+DEB_BUILD_MAINT_OPTIONS		 = hardening=+all
+DEB_CPPFLAGS_MAINT_APPEND	 = -I$(CURDIR)/nvidia-cuda-tree-$(DEB_HOST_ARCH)/include
+DEB_CFLAGS_MAINT_APPEND		 = -fcommon
+DEB_LDFLAGS_MAINT_APPEND	 = -pthread
 
 include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/buildflags.mk
 include /usr/share/dpkg/pkg-info.mk
 
 VENDOR			?= $(call dpkg_late_eval,VENDOR,dpkg-vendor --derives-from Ubuntu && echo Ubuntu || echo Debian)
 
 
+aval			 = $(or $($(strip $1).$(or $(strip $2),$(DEB_HOST_ARCH))),$($(strip $1).default),$(error Not defined: $(strip $1)($(or $(strip $2),$(DEB_HOST_ARCH)))))
 include debian/rules.defs
-CUDA_ARCH_LIST		?= amd64
-CUDA_PATCH_LIST		?=
-CUDA_PATCH_LIST_ARCH	?= $(patsubst $(DEB_HOST_ARCH)-%,%,$(filter $(DEB_HOST_ARCH)-%,$(CUDA_PATCH_LIST)))
-CUDA_ARCH_LIST_NO_DRIVER?=
-CUDA_ARCH_LIST_NO_JAVA	?=
+CUDA_ARCH_LIST			?= amd64
+CUDA_ARCH_LIST_NO_DRIVER	?=
+CUDA_ARCH_LIST_NO_OPENJDK	?=
 CUDA_VERSION_TOOLKIT	?= $(DEB_VERSION_UPSTREAM)
 CUDA_VERSION_MAJOR	?= $(word 1,$(subst ., ,$(CUDA_VERSION_TOOLKIT)))
 CUDA_VERSION_MINOR	?= $(word 2,$(subst ., ,$(CUDA_VERSION_TOOLKIT)))
-version_driver		 = $(CUDA_VERSION_DRIVER.$(DEB_HOST_ARCH))
+CUDART_SOVERSION	?= $(CUDA_VERSION_MAJOR).$(CUDA_VERSION_MINOR)
+CUDA_SOVERSION		?= $(CUDA_VERSION_MAJOR)
+version_driver		 = $(call aval,CUDA_VERSION_DRIVER_MINIMAL)
 watch_url		 = $(CUDA_WATCH_URL)
 PACKAGE_LIST		:= $(shell dh_listpackages)
+CUDA_GDB_VERSION	?= $(CUDA_VERSION_TOOLKIT)
+OPENJDK_VERSION		?= $(error Undefined OPENJDK_VERSION)
 THRUST_VERSION		?= $(or $(strip $(shell perl -ne 'if (/define\s+THRUST_VERSION\s+(\d*)/) { printf "%d.%d.%d\n", $$1 / 100000, $$1 / 100 % 1000, $$1 % 100; }' nvidia-cuda/include/thrust/version.h)),$(error empty THRUST_VERSION))
-OPENJDK_VERSION		?= $(or $(strip $(shell nvidia-cuda/jre/bin/java -version 2>&1 | sed -rn '1s/.*"1\.([0-9]*)\.0_(.*)"/\1u\2/p')),$(error empty OPENJDK_VERSION))
-CUDA_JAVA_HOME		?= /usr/lib/jvm/nvidia-java-8-openjdk-$(DEB_HOST_ARCH)
+CUDA_JAVA_HOME		?= /usr/lib/jvm/java-8-openjdk-$(DEB_HOST_ARCH)
 jre_pkg			?= $(filter nvidia-openjdk-8-jre,$(PACKAGE_LIST))
 thrust_pkg		?= $(filter libthrust-dev,$(PACKAGE_LIST))
+nvidia_profiler_pkg	?= $(filter nvidia-profiler,$(PACKAGE_LIST))
+visual_profiler_pkg	?= $(filter nvidia-visual-profiler,$(PACKAGE_LIST))
 nsight_compute_pkg	?= $(filter nsight-compute,$(PACKAGE_LIST))
+nsight_systems_pkg	?= $(filter nsight-systems,$(PACKAGE_LIST))
 
-package_libcuda1 \
-	= libcuda1 (>= $${nvidia:MinVersion}) \
-	| libcuda-$${cuda:SoVersion}-1
-#ifeq ($(VENDOR),Ubuntu)
-package_libcuda1	+= | no-libcuda1 [$${cuda:arch:has-no-driver}]
-#endif
+export NSIGHT_COMPUTE_DESKTOP_DIR	 = $(NSIGHT_COMPUTE_DESKTOP_DIR.$(DEB_HOST_ARCH))
+export NSIGHT_SYSTEMS_HOST_DIR		 = $(NSIGHT_SYSTEMS_HOST_DIR.$(DEB_HOST_ARCH))
+export NSIGHT_SYSTEMS_TARGET_DIR	 = $(NSIGHT_SYSTEMS_TARGET_DIR.$(DEB_HOST_ARCH))
+
+package_libcuda1	 = $(package_libcuda1.$(VENDOR))
+package_libcuda1	+= libcuda.so.1 (>= $${nvidia:MinVersion}) |
+package_libcuda1	+= libcuda-$${cudart:SoVersion}-1 |
+package_libcuda1	+= no-libcuda1 [$${cuda:arch:has-no-driver}] |
+
+package_libnvidia-ml1	 = $(package_libnvidia-ml1.$(VENDOR))
+package_libnvidia-ml1	+= libnvidia-ml.so.1 (>= $${nvidia:MinVersion}) |
+package_libnvidia-ml1	+= no-libcuda1 [$${cuda:arch:has-no-driver}] |
+
+package_driver		 = $(package_driver.$(VENDOR))
+
+# do not build nvidia-openjdk-8-jre on Ubuntu
+ifneq (,$(jre_pkg))
+ifeq ($(VENDOR),Ubuntu)
+export DH_OPTIONS := $(DH_OPTIONS) -N$(jre_pkg)
+jre_pkg	 =
+endif
+endif
+
+make_component_version	?= $(subst +,-,$(subst ~,-,$(subst ~deb,~d,$1)))
+OPENJDK_COMP_VERSION	?= $(call make_component_version,$(OPENJDK_VERSION))
+jre_pkg_dep		?= $(if $(jre_pkg),$(jre_pkg) (>= 9.+8u252))
+jre_depends.Debian	?= $(if $(jre_pkg),$(jre_pkg_dep) |) openjdk-8-jre
+jre_depends.Ubuntu	?= openjdk-8-jre | $(jre_pkg_dep)
 
 # system libdir
 libdir			 = usr/lib/$(DEB_HOST_MULTIARCH)
 
 TEMPLATES	:= $(wildcard debian/*.in debian/patches/*.in)
 SOVERTEMPLATES	:= $(wildcard debian/*SOVER*)
-RTSOVERTEMPLATES:= $(wildcard debian/*SORTVER*)
 AUTOGEN		+= $(patsubst %.in,%,$(TEMPLATES))
+AUTOGEN		+= $(subst SOVER,$(CUDART_SOVERSION),$(sort $(patsubst %.in,%,$(SOVERTEMPLATES))))
 AUTOGEN		+= $(subst SOVER,$(CUDA_SOVERSION),$(sort $(patsubst %.in,%,$(SOVERTEMPLATES))))
-AUTOGEN		+= $(subst SORTVER,$(CUDART_SOVERSION),$(sort $(patsubst %.in,%,$(RTSOVERTEMPLATES))))
 AUTOGEN		+= debian/g++
 AUTOKEEP	 = debian/watch
 AUTOCLEAN	 = $(filter-out $(AUTOKEEP),$(AUTOGEN))
@@ -55,40 +94,29 @@ autogen: $(AUTOGEN)
 prepare: autogen unpack-stamp compare-copyright-license
 
 
-define nvidia-cuda-unpack-run
+# deep copy, files will get irreversibly modified via hardlinks in the build target
+define nvidia-cuda-unpack-repack
 	dh_testdir
 	$(RM) -r $@ $@.tmp
-	sh $(CUDA_FILENAME.$1) --noexec --keep --target $@.tmp
-	mv $@.tmp $@
-endef
-
-define nvidia-cuda-unpack-deb
-	dh_testdir
-	$(RM) -r $@ $@.tmp
-	mkdir $@.tmp
-	@set -e -x ; for deb in $1/cuda*.deb ; do dpkg -x $$deb $@.tmp/ubuntutree ; done
-	mv $@.tmp/ubuntutree/usr/local/cuda*/* $@.tmp/
-	$(RM) -r $@.tmp/ubuntutree/usr/lib/pkgconfig
-	$(RM) -r $@.tmp/ubuntutree/usr/share/doc
-	$(RM) -r $@.tmp/ubuntutree/usr/share/lintian
-	$(RM) -v $@.tmp/ubuntutree/etc/ld.so.conf.d/cuda-$(subst .,-,$(CUDART_SOVERSION)).conf
-	$(RM) -v $@.tmp/bin/computeprof
-	$(RM) -v $@.tmp/LICENSE
-	$(RM) -v $@.tmp/README
-	mv $@.tmp/doc/EULA.txt $@.tmp/
-	$(RM) $@.tmp/include $@.tmp/lib64
-	mv $@.tmp/targets/ppc64le-linux/include $@.tmp/include
-	mv $@.tmp/targets/ppc64le-linux/lib $@.tmp/lib64
-	mv $@.tmp $@
+	cp -a $1 $@
 endef
 
 nvidia-cuda-tree-%:
-	$(call nvidia-cuda-unpack-$(CUDA_TAR_TYPE.$*),$*)
+	$(call nvidia-cuda-unpack-$(call aval,CUDA_TAR_TYPE,$*),$*)
 
 unpack-stamp: $(filter debian/patches%,$(AUTOGEN))
 unpack-stamp: nvidia-cuda-tree-$(DEB_HOST_ARCH)
 	$(RM) nvidia-cuda
 	ln -sf nvidia-cuda-tree-$(DEB_HOST_ARCH) nvidia-cuda
+	$(RM) -r cuda-gdb-$(CUDA_GDB_VERSION) cuda-gdb
+	tar xf nvidia-cuda/extras/cuda-gdb-$(CUDA_GDB_VERSION).src.tar.gz
+	mv cuda-gdb-$(CUDA_GDB_VERSION) cuda-gdb
+ifneq (,$(jre_pkg))
+	$(RM) -r openjdk-8-jre
+	dpkg -x openjdk-8-jre-$(DEB_HOST_ARCH)-$(OPENJDK_COMP_VERSION)/openjdk-8-jre-headless_$(OPENJDK_VERSION)_$(DEB_HOST_ARCH).deb openjdk-8-jre
+	dpkg -x openjdk-8-jre-$(DEB_HOST_ARCH)-$(OPENJDK_COMP_VERSION)/openjdk-8-jre_$(OPENJDK_VERSION)_$(DEB_HOST_ARCH).deb openjdk-8-jre
+	cp openjdk-8-jre/usr/share/doc/openjdk-8-jre-headless/copyright debian/$(jre_pkg).copyright
+endif
 	QUILT_PATCHES=debian/patches QUILT_SERIES=series-postunpack quilt --quiltrc /dev/null push -a || test $$? = 2
 	touch $@
 
@@ -122,74 +150,127 @@ binary binary-indep:
 build-stamp: unpack-stamp
 	$(RM) -r build
 	cp -al nvidia-cuda-tree-$(DEB_HOST_ARCH)/ build
-	test ! -d build/NsightCompute-$(NSIGHT_COMPUTE_VERSION) || mv build/NsightCompute-$(NSIGHT_COMPUTE_VERSION) build/NsightCompute
+	test ! -d build/nsight-compute-$(NSIGHT_COMPUTE_VERSION) || mv build/nsight-compute-$(NSIGHT_COMPUTE_VERSION) build/nsight_compute
+	test ! -d build/nsight-systems-$(NSIGHT_SYSTEMS_VERSION) || mv build/nsight-systems-$(NSIGHT_SYSTEMS_VERSION) build/nsight_systems
 	# fix permissions
-	chmod -x build/bin/crt/link.stub
-	chmod -x build/bin/crt/prelink.stub
-	chmod -x build/libnvvp/*.xpm
 	chmod -x build/libnsight/*.xpm
-	chmod -x build/nvvm/include/*.h
+ifneq (,$(visual_profiler_pkg))
+	chmod -x build/libnvvp/*.xpm
 	chmod -x build/nvvm/libnvvm-samples/build.bat
-	# remove java path
-	sed -i '/^-vm$$/ d; /^..\/jre\/bin\/java$$/ d' build/libnvvp/nvvp.ini build/libnsight/nsight.ini
-ifneq (,$(jre_pkg))
-	# these depend on libraries from oldoldstable
-	$(RM) -v build/jre/lib/amd64/libavplugin-53.so
-	$(RM) -v build/jre/lib/amd64/libavplugin-54.so
 endif
 	# uuid(3) is already provided by uuid-dev
 	mv -v build/doc/man/man3/uuid.3 build/doc/man/man3/CUDA_uuid.3
 	# remove tracking scripts
 	find build \( -name google-analytics-tracker.js -o -name google-analytics-write.js -o -name tynt.js \) -exec rm -v {} +
 	# remove tracking images
-	find \
+	@set -e -x ; for dir in \
 		build/doc/html \
-		$(if $(nsight_compute_pkg),build/NsightCompute/html) \
+		build/nsight_compute/docs \
+		build/extras/CUPTI/doc \
+		build/extras/Sanitizer/docs \
+	; do test ! -d $$dir || find $$dir \
 	    -name '*.html' -exec sed -r -i \
 		-e '\,http://omniture.nvidia.com/b/ss/nvidiacudadocs/1/H.17--NS/0, { s,(<noscript>),<!-- \1,; s,img src,img DISABLED,; s,(</noscript>),\1 -->, }' \
 		-e 's,(<script type="text/javascript" )src(="http://w.sharethis.com/button/buttons.js"[^>]*></script>),<!-- \1DISABLED\2 -->,' \
 		-e 's,(<script type="text/javascript" charset="utf-8" )src(="//assets.adobedtm.com/b92787824f2e0e9b68dc2e993f9bd995339fe417/satelliteLib-7ba51e58dc61bcb0e9311aadd02a0108ab24cc6c.js"[^>]*></script>),<!-- \1DISABLED\2 -->,' \
-		{} +
-	find \
+		{} + ; \
+	done
+	@set -e -x ; for dir in \
 		build/libnsight \
 		build/libnvvp \
+	; do test ! -d $$dir || find $$dir \
 	    -name 'license.html' -exec sed -r -i \
 		-e 's,(<script type="text/javascript" )src(="http://w.sharethis.com/button/buttons.js"[^>]*></script>),<!-- \1DISABLED\2 -->,' \
-		{} +
+		{} + ; \
+	done
 	# replace embedded javascript libraries
+	find build -name doctools.js -exec ln -sfv /usr/share/javascript/sphinxdoc/1.0/doctools.js {} \;
 	find build -name html5shiv-printshiv.min.js -exec ln -sfv /usr/share/javascript/html5shiv/html5shiv-printshiv.min.js {} \;
 	find build -name jquery.js -exec ln -sfv /usr/share/javascript/jquery/jquery.js {} \;
+	find build -name jquery-3.1.0.js -exec ln -sfv /usr/share/javascript/jquery/jquery.js {} \;
 	find build -name jquery.min.js -exec ln -sfv /usr/share/javascript/jquery/jquery.min.js {} \;
+	find build -name searchtools.js -exec ln -sfv /usr/share/javascript/sphinxdoc/1.0/searchtools.js {} \;
+	find build -name underscore.js -exec ln -sfv /usr/share/javascript/underscore/underscore.js {} \;
 	# reduce 'dh_missing --list-missing' noise
+	@set -e -x ; for dir in build/include build/lib64 ; do if [ -h "$$dir" ] ; then target=$$(readlink -f $$dir) ; $(RM) $$dir ; mv -v $$target $$dir ; fi ; done
+	# cuda-gdb is built from source
+	$(RM) -rv build/share/gdb
+ifeq (,$(thrust_pkg))
+	# thrust is packaged separately
+	$(RM) -r build/include/thrust
+endif
+	# deduplicate nvvmx
+	for f in $$(find build/nvvmx -type f) ; do if cmp -s "$$f" "build/nvvm/$${f#build/nvvmx/}" ; then $(RM) -v "$$f" ; fi ; done
 	# remove empty directories
 	find build -depth -type d -exec sh -c 'd="{}"; rmdir --ignore-fail-on-non-empty "$$d" ; test -d "$$d" || echo "removed $$d"' \;
 	# split arch and indep eclipse plugins
 	mkdir build/libnsight/plugins-arch
 	mv build/libnsight/plugins/org.eclipse.equinox.launcher.gtk.linux.* build/libnsight/plugins-arch/
+ifneq (,$(visual_profiler_pkg))
 	mkdir build/libnvvp/plugins-arch
 	mv build/libnvvp/plugins/org.eclipse.equinox.launcher.gtk.linux.* build/libnvvp/plugins-arch/
+endif
 ifneq (,$(nsight_compute_pkg))
-	# clean up nsight-compute
-	chrpath -d build/NsightCompute/host/$(NSIGHT_COMPUTE_DESKTOP_DIR.$(DEB_HOST_ARCH))/libicu*.so.56
+	# clean up nsight_compute
+ifeq (amd64,$(DEB_HOST_ARCH))
+	chrpath -d build/nsight_compute/host/$(NSIGHT_COMPUTE_DESKTOP_DIR)/libicu*.so.56
+	$(RM) -rv build/nsight_compute/target/$(NSIGHT_COMPUTE_DESKTOP_DIR.i386)/
+	$(RM) -rv build/nsight_compute/target/$(NSIGHT_COMPUTE_DESKTOP_DIR.ppc64el)/
+else
+	chrpath -d build/nsight_compute/target/$(NSIGHT_COMPUTE_DESKTOP_DIR)/libTreeLauncherTargetInjection.so
+endif
+	$(RM) -v build/nsight_compute/host/$(NSIGHT_COMPUTE_DESKTOP_DIR)/libcrypto.so
+	$(RM) -v build/nsight_compute/host/$(NSIGHT_COMPUTE_DESKTOP_DIR)/libssl.so
+endif
+ifneq (,$(nsight_systems_pkg))
+	# clean up nsight_systems
+ifeq (amd64,$(DEB_HOST_ARCH))
+	chrpath -d build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libicu*.so.56
+endif
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libhyphen.so.0
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libstdc++.so.6
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libcrypto.so
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libssl.so
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5Charts.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5Designer*.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5Help.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5Multimedia*.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5QuickParticles.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5QuickTest.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5ScriptTools.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5Sensors.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5Sql.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5Test.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5Xml.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libQt5XmlPatterns.so.5
+	$(RM) -v build/nsight_systems/$(NSIGHT_SYSTEMS_HOST_DIR)/libboost_python*.so.1.*
+endif
+ifneq ($(call aval,CUDA_MAN_DATE),$(call aval,CUDA_MAN_DATE,amd64))
+	sed -ri 's/$(call aval,CUDA_MAN_DATE)/$(call aval,CUDA_MAN_DATE,amd64)/' build/doc/man/man3/*.3
 endif
 	touch $@
 
-override_dh_auto_configure: $(AUTOGEN) unpack-stamp
+override_dh_update_autotools_config: $(AUTOGEN) unpack-stamp
 
-override_dh_auto_build-arch: build-stamp
+override_dh_auto_configure-arch:
+	dh_auto_configure --sourcedirectory=cuda-gdb -- $(CUDA_GDB_FLAGS)
 
-override_dh_auto_build-indep: build-stamp
-ifeq (,$(thrust_pkg))
-	$(RM) -r build/include/thrust
-endif
+override_dh_auto_build: build-stamp
+
+override_dh_auto_build-arch:
+	dh_auto_build --sourcedirectory=cuda-gdb
 
 override_dh_auto_install:
 	mkdir debian/tmp
 	cp -al build/ debian/tmp/usr
+	test ! -d debian/tmp/usr/nsight_compute || mv debian/tmp/usr/nsight_compute debian/tmp
+	test ! -d debian/tmp/usr/nsight_systems || mv debian/tmp/usr/nsight_systems debian/tmp
+	mv debian/tmp/usr debian/tmp/cuda
+	cp cuda-gdb/gdb/gcore debian/tmp/cuda/bin/cuda-gcore
 
-override_dh_installdocs-indep:
-	dh_installdocs -pnvidia-cuda-doc --doc-main-package=nvidia-cuda-toolkit
-	dh_installdocs --remaining-packages
+override_dh_auto_install-arch:
+	dh_auto_install --sourcedirectory=cuda-gdb
+	chrpath -d debian/tmp/usr/bin/cuda-gdb
 
 override_dh_installman:
 	dh_installman --language=C
@@ -206,7 +287,20 @@ override_dh_shlibdeps:
 	ln -s ../nvidia-cuda/lib64/stubs/libcuda.so libcuda/libcuda.so.1
 	echo 'libcuda 1 XXXlibcuda1XXX' > debian/shlibs.local
 ifneq (,$(nsight_compute_pkg))
-	dh_shlibdeps -p$(nsight_compute_pkg) -- -l/usr/lib/nsight-compute/host/$(NSIGHT_COMPUTE_DESKTOP_DIR.$(DEB_HOST_ARCH))
+	dh_shlibdeps -p$(nsight_compute_pkg) -X/libexec/QtWebEngineProcess -- \
+		-l/usr/lib/nsight-compute/host/$(NSIGHT_COMPUTE_DESKTOP_DIR) \
+		-l/usr/lib/nsight-compute/target/$(NSIGHT_COMPUTE_DESKTOP_DIR)
+endif
+ifneq (,$(nsight_systems_pkg))
+	dh_shlibdeps -p$(nsight_systems_pkg) -- \
+		-l/usr/lib/nsight-systems/$(NSIGHT_SYSTEMS_HOST_DIR)
+endif
+ifneq (,$(jre_pkg))
+ifeq (ppc64el,$(DEB_HOST_ARCH))
+	dh_shlibdeps -p$(jre_pkg) -- -l$(CUDA_JAVA_HOME)/jre/lib/ppc64le/server
+else
+	dh_shlibdeps -p$(jre_pkg) -- -l$(CUDA_JAVA_HOME)/jre/lib/$(DEB_HOST_ARCH)/server
+endif
 endif
 	dh_shlibdeps --remaining-packages -X/stubs/ -- -llibcuda
 	$(RM) -r libcuda debian/shlibs.local
@@ -215,36 +309,46 @@ endif
 # running dh_strip is not permitted by the NVIDIA license
 override_dh_dwz:
 override_dh_strip:
-override_dh_strip_nondeterminism:
+	dh_strip -pnvidia-cuda-gdb
+override_dh_strip_nondeterminism-indep:
+override_dh_strip_nondeterminism-arch:
+	dh_strip_nondeterminism -pnvidia-cuda-gdb
 
-override_dh_compress:
-	dh_compress -Xusr/share/doc/nvidia-cuda-toolkit/examples -Xusr/share/doc/libcupti-dev/examples
+override_dh_installdeb-indep:
+	hardlink -v -t debian/nvidia-cuda-toolkit-doc/usr/share/doc/nvidia-cuda-toolkit
+	hardlink -v -t debian/libcupti-doc/usr/share/doc/libcupti-dev
 
-override_dh_gencontrol-indep:
-	hardlink -v -t debian/nvidia-cuda-doc/usr/share/doc/nvidia-cuda-toolkit
-ifneq (,$(thrust_pkg))
-	dh_gencontrol -p$(thrust_pkg) -- -v$(THRUST_VERSION)~$(DEB_VERSION)
-endif
-	dh_gencontrol --remaining-packages
-
-override_dh_gencontrol-arch:
 ifneq (,$(nsight_compute_pkg))
+override_dh_installdeb-arch:
 	hardlink -v -t debian/$(nsight_compute_pkg)/usr/share/doc/$(nsight_compute_pkg)
 endif
+
+ifneq (,$(thrust_pkg))
+override_dh_gencontrol-indep:
+	dh_gencontrol -p$(thrust_pkg) -- -v$(THRUST_VERSION)~$(DEB_VERSION)
+	dh_gencontrol --remaining-packages
+endif
+
+override_dh_gencontrol-arch:
 ifneq (,$(jre_pkg))
 	dh_gencontrol -p$(jre_pkg) -- -v9.+$(OPENJDK_VERSION)~$(DEB_VERSION)
 endif
 	dh_gencontrol --remaining-packages -- \
 		-V'package:libcuda1=$(package_libcuda1)' \
-		-V'cuda:SoVersion=$(CUDA_SOVERSION)' \
+		-V'package:libnvidia-ml1=$(package_libnvidia-ml1)' \
+		-V'package:driver=$(package_driver)' \
 		-V'cudart:SoVersion=$(CUDART_SOVERSION)' \
+		-V'cuda:SoVersion=$(CUDA_SOVERSION)' \
 		-V'nvidia:MinVersion=$(version_driver)' \
+		-V'thrust:Version=$(THRUST_VERSION)' \
 		-V'cuda:arch:has-no-driver=$(if $(filter $(DEB_HOST_ARCH),$(CUDA_ARCH_LIST_NO_DRIVER)),,!)$(DEB_HOST_ARCH)' \
-		-V'cuda:arch:has-driver=$(if $(filter $(DEB_HOST_ARCH),$(CUDA_ARCH_LIST_NO_DRIVER)),!,)$(DEB_HOST_ARCH)' \
-		-V'cuda:arch:has-java=$(if $(filter $(DEB_HOST_ARCH),$(CUDA_ARCH_LIST_NO_JAVA)),!,)$(DEB_HOST_ARCH)' \
+		-V'cuda:arch:has-nvidia-profiler=$(if $(nvidia_profiler_pkg),,!)$(DEB_HOST_ARCH)' \
+		-V'cuda:arch:has-nvidia-visual-profiler=$(if $(visual_profiler_pkg),,!)$(DEB_HOST_ARCH)' \
 		-V'cuda:arch:has-nsight-compute=$(if $(nsight_compute_pkg),,!)$(DEB_HOST_ARCH)' \
+		-V'cuda:arch:has-nsight-systems=$(if $(nsight_systems_pkg),,!)$(DEB_HOST_ARCH)' \
+		-V'jre:Depends=$(jre_depends.$(VENDOR))' \
 
-override_dh_auto_clean:
+override_dh_autoreconf_clean:
 	$(RM) -r .pc
 	$(RM) -r nvidia-cuda-tree-amd64*
 	$(RM) -r nvidia-cuda-tree-ppc64el*
@@ -252,9 +356,13 @@ override_dh_auto_clean:
 	$(RM) -r build
 	$(RM) -r libcuda
 	$(RM) EULA.fmt EULA.tmp copyright.tmp
+	$(RM) -r openjdk-8-jre
+	$(RM) debian/$(jre_pkg).copyright
 
 override_dh_clean:
 	dh_clean
+	$(RM) -r get-orig-source
+	$(RM) -r cuda-gdb-$(CUDA_GDB_VERSION) cuda-gdb
 	$(RM) $(AUTOCLEAN)
 	$(MAKE) -f debian/rules $(AUTOKEEP)
 
@@ -263,23 +371,28 @@ override_dh_clean:
 %:: %.in debian/rules debian/rules.defs
 	perl -p \
 	-e 's{#VERSION_TOOLKIT#}{$(CUDA_VERSION_TOOLKIT)}g;' \
-	-e 's{#SOVERSION#}{$(CUDA_SOVERSION)}g;' \
-	-e 's{#RTSOVERSION#}{$(CUDART_SOVERSION)}g;' \
+	-e 's{#CUDA_GDB_VERSION#}{$(CUDA_GDB_VERSION)}g;' \
 	-e 's{#CUDA_DOWNLOAD_URL#}{$(watch_url)}g;' \
 	-e 's{#LIBDIR#}{$(libdir)}g;' \
-	-e 's{#MAN_DATE#}{$(CUDA_MAN_DATE.$(DEB_HOST_ARCH))}g;' \
+	-e 's{#MAN_DATE#}{$(call aval,CUDA_MAN_DATE)}g;' \
 	-e 's{#!ppc64el#}{$(if $(filter ppc64el,$(DEB_HOST_ARCH)),#)}g;' \
 	-e 's{#CUDA_JAVA_HOME#}{$(CUDA_JAVA_HOME)}g;' \
-	-e 's{#NSIGHT_COMPUTE_VERSION#}{$(NSIGHT_COMPUTE_VERSION)}g;' \
-	-e 's{#NSIGHT_COMPUTE_DESKTOP_DIR#}{$(NSIGHT_COMPUTE_DESKTOP_DIR.$(DEB_HOST_ARCH))}g;' \
+	-e 's{#NSIGHT_COMPUTE_DESKTOP_DIR#}{$(NSIGHT_COMPUTE_DESKTOP_DIR)}g;' \
+	-e 's{#NSIGHT_SYSTEMS_HOST_DIR#}{$(NSIGHT_SYSTEMS_HOST_DIR)}g;' \
+	-e 's{#NSIGHT_SYSTEMS_TARGET_DIR#}{$(NSIGHT_SYSTEMS_TARGET_DIR)}g;' \
+	-e 's{#DEB_HOST_MULTIARCH#}{$(DEB_HOST_MULTIARCH)}g;' \
 	< $< > $@
 
 define sover-template
-lib%$(CUDA_SOVERSION).$(1):: lib%SOVER.$(1)
-	cp $$< $$@
+lib%$(CUDART_SOVERSION).$(1):: lib%SOVER.$(1)
+	perl -p \
+	-e 's{#SOVERSION#}{$(CUDART_SOVERSION)}g;' \
+	< $$< > $$@
 
-lib%$(CUDART_SOVERSION).$(1):: lib%SORTVER.$(1)
-	cp $$< $$@
+lib%$(CUDA_SOVERSION).$(1):: lib%SOVER.$(1)
+	perl -p \
+	-e 's{#SOVERSION#}{$(CUDA_SOVERSION)}g;' \
+	< $$< > $$@
 
 endef
 $(foreach suffix,install links lintian-overrides symbols,$(eval $(call sover-template,$(suffix))))
@@ -290,30 +403,38 @@ debian/g++: debian/gcc
 
 # only invoked manually
 check-whitespace:
-	grep -r --exclude-dir=.svn --exclude-dir=.git --exclude '*.patch' -E '\s$$' debian || true
+	grep -r --exclude-dir=.svn --exclude-dir=.git --exclude '*.patch*' -E '\s$$' debian || true
 
 ############################################################################
 
+# $1 = arch
+get_origdir		 = $(or $(ORIGDIR.$(strip $1)),$(ORIGDIR_BASE)-$(strip $1))
+get_tarball		 = $(or $(TARBALL.$(strip $1)),$(TARBALL_BASE)-$(strip $1))$(TARBALL_SUFFIX)
+
+get_dl_url		?= $(error Undefined: get_dl_url)
+get_dl_filename		?= $(error Undefined: get_dl_filename)
+get_dl_type		?= $(error Undefined: get_dl_type)
+
+openjdk8snapshot	?= $(or $(OPENJDK_VERSION),$(shell debsnap --list openjdk-8 | head -n 1))
+get_openjdk_component	 = openjdk-8-$1-$(call make_component_version,$(openjdk8snapshot))
+get_openjdk_origdir	 = $(UPSTREAM_NAME).orig-$(call get_openjdk_component,$1)
+
 UPSTREAM_NAME		 = nvidia-cuda-toolkit
 UPSTREAM_VERSION	 = $(CUDA_VERSION_TOOLKIT)
-REPACK_LIST		 = $(CUDA_ARCH_LIST) $(CUDA_PATCH_LIST)
-TARBALL_LIST		 = $(foreach a,$(REPACK_LIST),$(call get_tarball,$a))
+REPACK_LIST		 = $(CUDA_ARCH_LIST)
+OPENJDK_ARCH_LIST	 = $(filter-out $(CUDA_ARCH_LIST_NO_OPENJDK),$(CUDA_ARCH_LIST))
+TARBALL_LIST		 = $(foreach a,empty $(REPACK_LIST),$(call get_tarball,$a))
+TARBALL_LIST		+= $(foreach a,source $(OPENJDK_ARCH_LIST:%=jre-%),$(call get_tarball,openjdk-8-$a-$(OPENJDK_COMP_VERSION)))
 
 CACHE			?= ../.cache
 COMPRESS_EXT		?= gz
 COMPRESS.gz		?= gzip -n9
 COMPRESS.xz		?= xz -9
-ORIGDIR			?= $(UPSTREAM_NAME)-$(UPSTREAM_VERSION).orig
+ORIGDIR_BASE		?= $(UPSTREAM_NAME)-$(UPSTREAM_VERSION).orig
 TARBALL_BASE		?= $(UPSTREAM_NAME)_$(UPSTREAM_VERSION).orig
 TARBALL_SUFFIX		?= .tar.$(COMPRESS_EXT)
-TARBALL			?= $(TARBALL_BASE)$(TARBALL_SUFFIX)
-ORIGDIR.amd64		?= $(ORIGDIR)
-TARBALL.amd64		?= $(TARBALL)
-
-# $1 = arch
-get_origdir		 = $(or $(ORIGDIR.$(strip $1)),$(ORIGDIR)-$(strip $1))
-get_tarball		 = $(or $(TARBALL.$(strip $1)),$(TARBALL_BASE)-$(strip $1)$(TARBALL_SUFFIX))
-get_dl_filename		 = $(CUDA_DL_FILENAME.$(strip $1).$(CUDA_DL_TYPE.$(strip $1)))
+ORIGDIR.empty		?= $(ORIGDIR_BASE)
+TARBALL.empty		?= $(TARBALL_BASE)
 
 get-orig-source-prepare:
 	$(RM) -r get-orig-source
@@ -323,61 +444,71 @@ get-orig-source-prepare/%: get-orig-source-prepare
 	$(RM) $(call get_tarball,$*)
 	mkdir get-orig-source/$(call get_origdir,$*)
 
+get-orig-source-download/%: dl_filename = $(call get_dl_filename,$*)
 get-orig-source-download/%: get-orig-source-prepare
-	ln -v $(CACHE)/$(call get_dl_filename,$*) get-orig-source/ 2>/dev/null || \
-		wget $(CUDA_DL_URL_HOST)/$(CUDA_DL_URL_PATH.$*)/$(CUDA_URL_FILENAME.$*) -O get-orig-source/$(call get_dl_filename,$*)
-	if [ -d $(CACHE) ] && [ ! -f $(CACHE)/$(call get_dl_filename,$*) ]; then \
-		ln -v get-orig-source/$(call get_dl_filename,$*) $(CACHE) ; fi
+	ln -v $(CACHE)/$(dl_filename) get-orig-source/ 2>/dev/null || \
+		wget $(call get_dl_url,$*) -O get-orig-source/$(dl_filename)
+	if [ -d $(CACHE) ] && [ ! -f $(CACHE)/$(dl_filename) ]; then \
+		ln -v get-orig-source/$(dl_filename) $(CACHE) ; fi
+
+get-orig-source-download-openjdk-8/$(call get_openjdk_component,source): get-orig-source-prepare/$(call get_openjdk_component,source)
+	cd get-orig-source/$(call get_origdir,$(@F)) && (apt-get source -d openjdk-8=$(openjdk8snapshot) || debsnap -v -f -d . openjdk-8 $(openjdk8snapshot))
+get-orig-source-download-openjdk-8/$(call get_openjdk_component,jre-%): get-orig-source-prepare/$(call get_openjdk_component,jre-%)
+	cd get-orig-source/$(call get_origdir,$(@F)) && (apt-get download openjdk-8-jre:$*=$(openjdk8snapshot) || debsnap -v -f -a $* -d . openjdk-8-jre $(openjdk8snapshot))
+	cd get-orig-source/$(call get_origdir,$(@F)) && (apt-get download openjdk-8-jre-headless:$*=$(openjdk8snapshot) || debsnap -v -f -a $* -d . openjdk-8-jre-headless $(openjdk8snapshot))
 
 # unpack the all-in-one .run cuda installer containing toolkit, driver and samples
 get-orig-source-run-unpack/%: get-orig-source-prepare/% get-orig-source-download/%
 	@set -e -x ; \
 	    cd get-orig-source ; \
-	    sh $(call get_dl_filename,$*) --noexec --keep --target tmp.$* ; \
+	    sh $(call get_dl_filename,$*) --nox11 --noexec --keep --target tmp.$* ; \
 	    find tmp.$* -ls ; \
-	    if [ -d tmp.$*/run_files ]; then \
-	        mv -f tmp.$*/run_files/cuda-linux*.run tmp.$*/run_files/EULA.txt $(call get_origdir,$*)/ ; \
+	    if [ -d tmp.$*/builds/cuda-toolkit ]; then \
+		mv tmp.$*/builds/cuda-toolkit/* $(call get_origdir,$*)/ ; \
 	    else \
-	        mv "$(call get_dl_filename,$*)" $(call get_origdir,$*)/ ; \
+	        false ; \
 	    fi ; \
-	    chmod 0755 $(call get_origdir,$*)/*.run ; \
 	    $(RM) -r tmp.$*
 
-# unpack the all-in-one .deb local-repo installer
-get-orig-source-deb-unpack/%: get-orig-source-prepare/% get-orig-source-download/%
-	@set -e -x ; \
-	    cd get-orig-source ; \
-	    dpkg -X $(call get_dl_filename,$*) tmp.$* ; \
-	    mv tmp.$*/var/cuda-repo-$(CUDA_VERSION_MAJOR)-$(CUDA_VERSION_MINOR)-*/*.deb $(call get_origdir,$*)/ ; \
-	    : "# Remove undistributable files:" ; \
-	    $(RM) -v $(call get_origdir,$*)/cuda-samples-$(CUDA_VERSION_MAJOR)-$(CUDA_VERSION_MINOR)_*.deb ; \
-	    : "# Remove driver:" ; \
-	    $(RM) -v $(call get_origdir,$*)/*_$(CUDA_VERSION_DRIVER.$*)-*_*.deb ; \
-	    chmod 0644 $(call get_origdir,$*)/*.deb ; \
-	    $(RM) -r tmp.$*
+define get-orig-source-unpack-template
+get-orig-source-unpack/$1: get-orig-source-$$(call get_dl_type,$1)-unpack/$1
 
-get-orig-source-unpack/amd64: get-orig-source-$(CUDA_DL_TYPE.amd64)-unpack/amd64
-get-orig-source-unpack/ppc64el: get-orig-source-$(CUDA_DL_TYPE.ppc64el)-unpack/ppc64el
+ORIGDIR.$$(call get_openjdk_component,jre-$1)		?= $$(call get_openjdk_origdir,jre-$1)
+get-orig-source-unpack/$$(call get_openjdk_component,jre-$1): get-orig-source-download-openjdk-8/$$(call get_openjdk_component,jre-$1)
+endef
+$(foreach a,$(CUDA_ARCH_LIST),$(eval $(call get-orig-source-unpack-template,$a)))
 
+ORIGDIR.$(call get_openjdk_component,source)		?= $(call get_openjdk_origdir,source)
+get-orig-source-unpack/$(call get_openjdk_component,source): get-orig-source-download-openjdk-8/$(call get_openjdk_component,source)
+
+get-orig-source-files/%: origdir = $(call get_origdir,$*)
 get-orig-source-files/%: get-orig-source-unpack/%
 	@set -e -x ; \
 	    cd get-orig-source ; \
-	    touch $(call get_origdir,$*).stamp -r $$(find $(call get_origdir,$*) -type f | xargs -r ls -tr | tail -n 1)
+	    touch $(origdir).stamp -r $$(find $(origdir) -type f | xargs -r ls -tr | tail -n 1)
 
+get-orig-source-pack/%: origdir = $(call get_origdir,$*)
+get-orig-source-pack/%: tarball = $(call get_tarball,$*)
 get-orig-source-pack/%: get-orig-source-files/%
 	@set -e -x ; \
 	    cd get-orig-source ; \
 	    tar cfv - \
-	        --clamp-mtime --mtime="./$(call get_origdir,$*).stamp" \
+	        --clamp-mtime --mtime="./$(origdir).stamp" \
 		--sort=name \
 		--owner=root --group=src \
-		$(call get_origdir,$*) \
-		| $(COMPRESS.$(COMPRESS_EXT)) > $(call get_tarball,$*); \
-	    touch $(call get_tarball,$*) -r $(call get_origdir,$*).stamp
-	mv get-orig-source/$(call get_tarball,$*) .
+		$(origdir) \
+		| $(COMPRESS.$(COMPRESS_EXT)) > $(tarball); \
+	    touch $(tarball) -r $(origdir).stamp
+	mv get-orig-source/$(tarball) .
+
+get-orig-source-files/empty: get-orig-source-prepare/empty $(foreach a,$(REPACK_LIST),get-orig-source-pack/$a)
+	touch get-orig-source/$(call get_origdir,empty).stamp -r $$(ls -tr $(foreach a,$(CUDA_ARCH_LIST),$(call get_tarball,$a)) | tail -n 1)
+
+get-orig-source-openjdk-8: $(foreach a,source $(OPENJDK_ARCH_LIST:%=jre-%),get-orig-source-pack/$(call get_openjdk_component,$a))
 
 .PHONY: get-orig-source
-get-orig-source: $(foreach a,$(REPACK_LIST),get-orig-source-pack/$a)
+get-orig-source: get-orig-source-openjdk-8
+get-orig-source: $(foreach a,empty $(REPACK_LIST),get-orig-source-pack/$a)
 	$(RM) -r get-orig-source
 
 ############################################################################

@@ -1,3 +1,0 @@
-libcudart.so.#RTSOVERSION# #PACKAGE# #MINVER#
-* Build-Depends-Package: nvidia-cuda-dev
- (symver)libcudart.so.#RTSOVERSION# 0

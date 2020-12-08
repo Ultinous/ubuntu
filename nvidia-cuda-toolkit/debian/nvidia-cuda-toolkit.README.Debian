@@ -8,25 +8,28 @@ Getting NVCC Working with the Compiler
 ======================================
 
 It is worth noting that not all compilers can be used together with NVCC.
-Here is a list of possible combinations:
+Here is a list of possible combinations, partially based on [1]:
 
     ```
-                 |  CUDA Toolkit Version                         |
-    CXX compiler |  7.5  |  8.0  |  9.0  |  9.1  |  9.2  | 10.0  |
-    -------------+-------+-------+-------+-------+-------+-------+
-    GCC-9        |   -   |   -   |   -   |   -   |   -   |   -   |
-    GCC-8        |   -   |   -   |   -   |   -   |   -   |   -   |
-    GCC-7        |   -   |   -   |   -   |   -   |  OK   |  OK   |
-    GCC-6        |   -   |   -   |  OK   |  OK   |  OK   |  OK   |
-    GCC-5        | OK[1] |  OK   |  OK   |  OK   |  OK   |  OK   |
-    -------------+-------+-------+-------+-------+-------+-------+
-    CLANG-8      |   -   |   -   |   -   |   -   |   -   |   -   |
-    CLANG-7      |   -   |   -   |   -   |   -   |   -   |   -   |
-    CLANG-6.0    |   -   |   -   |   -   |   -   |   -   |  OK   |
-    CLANG-5.0    |   -   |   -   |   -   |   -   |  OK   |  OK   |
-    CLANG-4.0    |   -   |   -   |   -   |  OK   |  OK   |  OK   |
-    CLANG-3.9    |   -   |   -   |  OK   |  OK   |  OK   |  OK   |
-    CLANG-3.8    |   -   |  OK   |  OK   |  OK   |  OK   |  OK   |
+                 |  CUDA Toolkit Version                                               |
+    CXX compiler |  8.0  |  9.0  |  9.1  |  9.2  | 10.0  | 10.1  |10.1u1 | 10.2 | 11.0 |
+    -------------+-------+-------+-------+-------+-------+-------+-------+------+------+
+    GCC-10       |   -   |   -   |   -   |   -   |   -   |   -   |   -   |   -  |   -  |
+    GCC-9        |   -   |   -   |   -   |   -   |   -   |   -   |   -   |   -  |  OK  |
+    GCC-8        |   -   |   -   |   -   |   -   |   -   |  OK   |  OK   |  OK  |  OK  |
+    GCC-7        |   -   |   -   |   -   |  OK   |  OK   |  OK   |  OK   |  OK  |  OK  |
+    GCC-6        |   -   |  OK   |  OK   |  OK   |  OK   |  OK   |  OK   |  OK  |  OK  |
+    GCC-5        |  OK   |  OK   |  OK   |  OK   |  OK   |  OK   |  OK   |  OK  |  OK  |
+    -------------+-------+-------+-------+-------+-------+-------+-------+------+------+
+    CLANG-10     |   -   |   -   |   -   |   -   |   -   |   -   |   -   |   -  |   -  |
+    CLANG-9      |   -   |   -   |   -   |   -   |   -   |   -   |   -   |   -  |  OK  |
+    CLANG-8      |   -   |   -   |   -   |   -   |   -   |   -   |  OK   |  OK  |  OK  |
+    CLANG-7      |   -   |   -   |   -   |   -   |   -   |  OK   |  OK   |  OK  |  OK  |
+    CLANG-6.0    |   -   |   -   |   -   |   -   |  OK   |  OK   |  OK   |  OK  |  OK  |
+    CLANG-5.0    |   -   |   -   |   -   |  OK   |  OK   |  OK   |  OK   |  OK  |   -  |
+    CLANG-4.0    |   -   |   -   |  OK   |  OK   |  OK   |  OK   |  OK   |  OK  |   -  |
+    CLANG-3.9    |   -   |  OK   |  OK   |  OK   |  OK   |  OK   |  OK   |  OK  |   -  |
+    CLANG-3.8    |  OK   |  OK   |  OK   |  OK   |  OK   |  OK   |  OK   |  OK  |   -  |
     ```
 
 In the above table, '?' means 'not tested', '-' means 'never work',
@@ -56,8 +59,8 @@ Debian Stretch ships CUDA 8.0, and the same time its default GCC is
 GCC-6. So we changed the default compiler to clang-3.8 for the CUDA 8.0
 package because Stretch ships no GCC-5.
 
-[1] CUDA 7.5 works with GCC-5 after begin patched.
-[2] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=861878
+[1] https://gist.github.com/ax3l/9489132
+[2] https://bugs.debian.org/861878
 [3] https://gcc.gnu.org/onlinedocs/gcc/Code-Gen-Options.html
 
 

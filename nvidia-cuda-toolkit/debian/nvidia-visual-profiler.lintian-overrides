@@ -1,4 +1,3 @@
-no-upstream-changelog
 # The NVIDIA license does not allow any form of modification.
 hardening-no-bindnow
 hardening-no-fortify-functions
@@ -7,11 +6,15 @@ hardening-no-pie
 unstripped-binary-or-object
 
 # Bundled eclipse components ...
+breakout-link usr/lib/nvidia-visual-profiler/* -> usr/share/nvidia-visual-profiler/*
 codeless-jar
 extra-license-file usr/share/*/plugins/org.apache.ant_*/about_files/LICENSE
-package-contains-documentation-outside-usr-share-doc usr/share/*/plugins/org.apache.ant_*/about_files/LICENSE
-package-contains-documentation-outside-usr-share-doc usr/share/*/readme/readme_eclipse.html
+national-encoding usr/share/*/plugins/org.w3c.sac_*/about_files/copyright-software-20021231.htm
+package-contains-documentation-outside-usr-share-doc
 script-not-executable usr/share/*/plugins/org.apache.ant_*/bin/*
 
 # The content differs between the architectures.
 [amd64 ppc64el]: arch-dep-package-has-big-usr-share
+
+# Some of NVIDIA's binaries expect files at certain relative paths.
+executable-in-usr-lib

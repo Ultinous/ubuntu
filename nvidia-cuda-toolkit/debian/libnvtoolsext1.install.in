@@ -1,1 +1,2 @@
-usr/lib64/libnvToolsExt.so.*	#LIBDIR#/
+cuda/lib64/libnvToolsExt.so.1	usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/lib64/libnvToolsExt.so.1.*	usr/lib/#DEB_HOST_MULTIARCH#/

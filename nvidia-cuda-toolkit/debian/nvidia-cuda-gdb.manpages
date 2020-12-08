@@ -1,2 +1,4 @@
-usr/doc/man/man1/cuda-gdb.1
-usr/doc/man/man1/cuda-gdbserver.1
+#usr/share/man/man1/cuda-gcore.1
+#usr/share/man/man5/cuda-gdbinit.5
+cuda/doc/man/man1/cuda-gdb.1
+cuda/doc/man/man1/cuda-gdbserver.1

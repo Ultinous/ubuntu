@@ -5,61 +5,76 @@ Maintainer: Debian NVIDIA Maintainers <pkg-nvidia-devel@lists.alioth.debian.org>
 Uploaders:
  Andreas Beckmann <anbe@debian.org>,
  Graham Inggs <ginggs@debian.org>,
- Zhou Mo <cdluminate@gmail.com>,
- Kozák Miklós <garmine@ultinous.com>
+ Kozák Miklós <garmine@ultinous.com>,
 Build-Depends:
- debhelper (>= 11),
+ debhelper-compat (= 12),
+ dh-exec,
  quilt,
- libncurses5,
- libexpat1 [ppc64el],
- hardlink [amd64],
-# for nsight-compute
- libglvnd-dev [!ppc64el],
- libnspr4-dev [!ppc64el],
- libnss3-dev [!ppc64el],
- libpulse-dev [!ppc64el],
- chrpath [!ppc64el],
-# for nvidia-openjdk-8-jre
- libasound2 [amd64],
+ chrpath,
+ hardlink,
+Build-Depends-Arch:
+# for cuda-gdb
+ bison,
+ flex,
+ libbabeltrace-dev,
+ libbabeltrace-ctf-dev,
+ libexpat1-dev,
+ liblzma-dev,
+ libncurses-dev,
+ libreadline-dev,
+ python3-dev,
+ zlib1g-dev,
+# for nsight-compute/nsight-systems
+ libasound2-dev [!arm64],
+ libdbus-1-3 [amd64],
+ libegl1 [amd64],
+ libfontconfig1 [amd64],
  libgl1 [amd64],
- libgtk2.0-0 [amd64],
- libxslt1.1 [amd64],
- libxtst6 [amd64],
- libxxf86vm1 [amd64],
+ libhyphen0 [amd64],
+ libnss3 [amd64],
+ libxcomposite1 [amd64],
+ libxcursor1 [amd64],
+ libxkbcommon-x11-0 [amd64],
+ libxi6 [!arm64],
+ libxtst6 [!arm64],
+# for nvidia-openjdk-8-jre
+ libfreetype6-dev [!arm64],
+ libgif-dev [!arm64],
+ libjpeg-dev (>= 1:0) [!arm64] | libjpeg62-dev [!arm64],
+ liblcms2-dev [!arm64],
+ libpulse-dev [!arm64],
+ libpcsclite-dev [!arm64],
+ libpng-dev [!arm64],
+ libxrender-dev [!arm64],
 Rules-Requires-Root: no
-Standards-Version: 4.3.0
+Standards-Version: 4.5.0
 Homepage: https://developer.nvidia.com/cuda-zone
 Vcs-Browser: https://salsa.debian.org/nvidia-team/nvidia-cuda-toolkit
 Vcs-Git: https://salsa.debian.org/nvidia-team/nvidia-cuda-toolkit.git
 XS-Autobuild: yes
-X-Ultinous-Debian-Origtars: manual
+X-Ultinous-Origtars: nvidia-cuda-toolkit_10.2.89.orig.tar.xz nvidia-cuda-toolkit_10.2.89.orig-amd64.tar.xz
+# nvidia-cuda-toolkit_10.2.89.orig-openjdk-8-jre-amd64-8u252-b09-1-d9u1.tar.xz nvidia-cuda-toolkit_10.2.89.orig-openjdk-8-source-8u252-b09-1-d9u1.tar.xz
 
 Package: nvidia-cuda-toolkit
 Section: non-free/devel
 Architecture: amd64 ppc64el
 Depends:
- nvidia-profiler (= ${binary:Version}),
+ nvidia-profiler (= ${binary:Version}) [${cuda:arch:has-nvidia-profiler}],
  nvidia-cuda-dev (= ${binary:Version}),
  nvidia-opencl-dev (= ${binary:Version}) | opencl-dev,
- gcc-7 | clang-6.0 | clang-5.0 | clang-4.0 | clang-3.9 | clang-3.8 | clang (<< 1:7~) | gcc-6 | gcc-5 | gcc-4.9 | gcc-4.8,
- g++-7 | clang-6.0 | clang-5.0 | clang-4.0 | clang-3.9 | clang-3.8 | clang (<< 1:7~) | g++-6 | g++-5 | g++-4.9 | g++-4.8,
+ gcc-8 | clang-8 | clang-7 | gcc-7 | clang-6.0 | clang-5.0 | clang-4.0 | clang-3.9 | clang-3.8 | clang (<< 1:9~) | gcc-6 | gcc-5 | gcc-4.9 | gcc-4.8,
+ g++-8 | clang-8 | clang-7 | g++-7 | clang-6.0 | clang-5.0 | clang-4.0 | clang-3.9 | clang-3.8 | clang (<< 1:9~) | g++-6 | g++-5 | g++-4.9 | g++-4.8,
  ${shlibs:Depends}, ${misc:Depends},
 Recommends:
- nvidia-cuda-doc (= ${source:Version}),
+ nvidia-cuda-toolkit-doc (= ${source:Version}),
  nvidia-cuda-gdb (= ${binary:Version}),
- nvidia-visual-profiler (= ${binary:Version}) [${cuda:arch:has-java}],
+ nvidia-visual-profiler (= ${binary:Version}) [${cuda:arch:has-nvidia-visual-profiler}],
  nsight-compute (= ${binary:Version}) [${cuda:arch:has-nsight-compute}],
+ nsight-systems (= ${binary:Version}) [${cuda:arch:has-nsight-systems}],
 Suggests:
- libcupti-dev,
- nvidia-driver (>= ${nvidia:MinVersion}) [${cuda:arch:has-driver}],
-Conflicts:
-# packages from the repository packages provided by NVIDIA
- cuda-repo-ubuntu1404,
- cuda-repo-ubuntu1404-7-5-local,
- cuda-repo-ubuntu1410,
- cuda-repo-ubuntu1504,
- cuda-repo-ubuntu1504-7-5-local,
- cuda-license-7-5,
+ ${package:driver},
+Breaks:
+ nvidia-cuda-doc (<< 10.2.89-3),
 Description: NVIDIA CUDA development toolkit
  The Compute Unified Device Architecture (CUDA) enables NVIDIA
  graphics processing units (GPUs) to be used for massively parallel
@@ -71,13 +86,34 @@ Description: NVIDIA CUDA development toolkit
  Running CUDA applications requires a supported NVIDIA GPU and the NVIDIA
  driver kernel module.
 
-Package: nvidia-cuda-doc
+Package: nvidia-cuda-toolkit-gcc
+Section: non-free/devel
+Architecture: amd64 ppc64el
+Depends:
+ gcc-8,
+ g++-8,
+ nvidia-cuda-toolkit (= ${binary:Version}),
+ ${misc:Depends},
+Description: NVIDIA CUDA development toolkit (GCC compatibility)
+ The Compute Unified Device Architecture (CUDA) enables NVIDIA
+ graphics processing units (GPUs) to be used for massively parallel
+ general purpose computation.
+ .
+ This package provides the /usr/bin/cuda-gcc, /usr/bin/cuda-g++ symlinks to
+ simplify building packages that need to be built with a CUDA-compatible
+ compiler.
+
+Package: nvidia-cuda-toolkit-doc
 Section: non-free/doc
 Architecture: all
 Depends:
  libjs-html5shiv,
  libjs-jquery,
  ${misc:Depends}
+Breaks:
+ nvidia-cuda-doc (<< 10.2.89-3),
+Replaces:
+ nvidia-cuda-doc (<< 10.2.89-3),
 Description: NVIDIA CUDA and OpenCL documentation
  The Compute Unified Device Architecture (CUDA) enables NVIDIA
  graphics processing units (GPUs) to be used for massively parallel
@@ -93,7 +129,7 @@ Package: nvidia-cuda-gdb
 Section: non-free/devel
 Architecture: amd64 ppc64el
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: nvidia-cuda-doc (= ${source:Version})
+Recommends: nvidia-cuda-toolkit-doc (= ${source:Version})
 Description: NVIDIA CUDA Debugger (GDB)
  The Compute Unified Device Architecture (CUDA) enables NVIDIA
  graphics processing units (GPUs) to be used for massively parallel
@@ -123,27 +159,33 @@ Description: NVIDIA Profiler for CUDA and OpenCL
 
 Package: nvidia-openjdk-8-jre
 Section: non-free/java
-Architecture: amd64
+Architecture: amd64 ppc64el
 Depends:
  ${shlibs:Depends}, ${misc:Depends}
-Description: NVIDIA provided OpenJDK Java runtime, using Hotspot JIT
+Conflicts:
+ openjdk-8-jre-headless,
+ openjdk-8-jre,
+Replaces:
+ openjdk-8-jre-headless,
+ openjdk-8-jre,
+Description: Obsolete OpenJDK Java runtime, for NVIDIA applications
  Full Java runtime environment - needed for executing Java GUI and Webstart
  programs, using Hotspot JIT.
  .
- This package provides the openjdk-8 binaries shipped with the
- NVIDIA CUDA Toolkit, this obsolete version is needed for
+ This package provides OpenJDK-8 JRE binaries built on Debian for use with
+ the NVIDIA CUDA Toolkit. This obsolete version is needed for
  nvidia-visual-profiler and nvidia-nsight.
 
 Package: nvidia-visual-profiler
 Section: non-free/devel
-Architecture: amd64
+Architecture: amd64 ppc64el
 Depends:
- nvidia-openjdk-8-jre,
+ ${jre:Depends},
  libgtk2.0-0,
- nvidia-profiler (= ${binary:Version}),
+ nvidia-profiler (= ${binary:Version}) [${cuda:arch:has-nvidia-profiler}],
  ${perl:Depends},
  ${shlibs:Depends}, ${misc:Depends}
-Recommends: nvidia-cuda-doc (= ${source:Version}),
+Recommends: nvidia-cuda-toolkit-doc (= ${source:Version}),
 Homepage: https://developer.nvidia.com/nvidia-visual-profiler
 Description: NVIDIA Visual Profiler for CUDA and OpenCL
  The NVIDIA Visual Profiler is a cross-platform performance profiling tool
@@ -152,12 +194,12 @@ Description: NVIDIA Visual Profiler for CUDA and OpenCL
 
 Package: nvidia-nsight
 Section: non-free/devel
-Architecture: amd64
+Architecture: amd64 ppc64el
 Depends:
- nvidia-openjdk-8-jre,
+ ${jre:Depends},
  libgtk2.0-0,
  ${shlibs:Depends}, ${misc:Depends}
-Recommends: nvidia-cuda-doc (= ${source:Version}),
+Recommends: nvidia-cuda-toolkit-doc (= ${source:Version}),
 Homepage: https://developer.nvidia.com/cuda/nsight-eclipse-edition
 Description: NVIDIA Nsight Eclipse Edition
  NVIDIA Nsight Eclipse Edition is a full-featured IDE powered by the Eclipse
@@ -167,10 +209,11 @@ Description: NVIDIA Nsight Eclipse Edition
 
 Package: nsight-compute
 Section: non-free/devel
-Architecture: amd64
+Architecture: amd64 ppc64el
 Depends:
  libjs-html5shiv,
  libjs-jquery,
+ nsight-compute-target (= ${binary:Version}),
  ${shlibs:Depends}, ${misc:Depends}
 Homepage: https://developer.nvidia.com/nsight-compute
 Description: NVIDIA Nsight Compute
@@ -181,22 +224,77 @@ Description: NVIDIA Nsight Compute
  customizable and data-driven user interface and metric collection and can be
  extended with analysis scripts for post-processing results.
 
+Package: nsight-compute-target
+Section: non-free/devel
+Architecture: amd64 ppc64el
+Multi-Arch: same
+Depends:
+ ${shlibs:Depends}, ${misc:Depends}
+Breaks:
+ nsight-compute (<< 10.2.89-3),
+Homepage: https://developer.nvidia.com/nsight-compute
+Description: NVIDIA Nsight Compute (target specific libraries)
+ NVIDIA Nsight Compute is an interactive kernel profiler for CUDA applications.
+ It provides detailed performance metrics and API debugging via a user
+ interface and command line tool. In addition, its baseline feature allows
+ users to compare results within the tool. Nsight Compute provides a
+ customizable and data-driven user interface and metric collection and can be
+ extended with analysis scripts for post-processing results.
+ .
+ This package contains the target specific libraries.
+
+Package: nsight-systems
+Section: non-free/devel
+Architecture: amd64
+Depends:
+ libjs-jquery,
+ libjs-sphinxdoc,
+ libjs-underscore,
+ nsight-systems-target (= ${binary:Version}),
+ ${shlibs:Depends}, ${misc:Depends}
+Homepage: https://developer.nvidia.com/nsight-systems
+Description: NVIDIA Nsight Systems
+ NVIDIA Nsight Systems is a system-wide performance analysis tool designed to
+ visualize an application’s algorithms, help you identify the largest
+ opportunities to optimize, and tune to scale efficiently across any quantity
+ or size of CPUs and GPUs; from large server to smallest SoCs.
+
+Package: nsight-systems-target
+Section: non-free/devel
+Architecture: amd64
+Multi-Arch: same
+Depends:
+ ${shlibs:Depends}, ${misc:Depends}
+Breaks:
+ nsight-systems (<< 10.2.89-3),
+Homepage: https://developer.nvidia.com/nsight-systems
+Description: NVIDIA Nsight Systems (target specific libraries)
+ NVIDIA Nsight Systems is a system-wide performance analysis tool designed to
+ visualize an application’s algorithms, help you identify the largest
+ opportunities to optimize, and tune to scale efficiently across any quantity
+ or size of CPUs and GPUs; from large server to smallest SoCs.
+ .
+ This package contains the target specific libraries.
+
 Package: nvidia-cuda-dev
 Section: non-free/libdevel
 Architecture: amd64 ppc64el
+Multi-Arch: same
 Depends:
  libcudart${cudart:SoVersion} (= ${binary:Version}),
- libaccinj64-${cudart:SoVersion} (= ${binary:Version}),
- libcuinj64-${cudart:SoVersion} (= ${binary:Version}),
+ libaccinj64-${cudart:SoVersion} (= ${binary:Version}) [${cuda:arch:has-nvidia-profiler}],
+ libcuinj64-${cudart:SoVersion} (= ${binary:Version}) [${cuda:arch:has-nvidia-profiler}],
  libnvrtc${cudart:SoVersion} (= ${binary:Version}),
  libnvtoolsext1 (= ${binary:Version}),
- libnvvm3 (= ${binary:Version}),
+# libnvvm3 (= ${binary:Version}),
  libcublas${cuda:SoVersion} (= ${binary:Version}),
+ libcublaslt${cuda:SoVersion} (= ${binary:Version}),
  libnvblas${cuda:SoVersion} (= ${binary:Version}),
  libcufft${cuda:SoVersion} (= ${binary:Version}),
  libcufftw${cuda:SoVersion} (= ${binary:Version}),
  libcurand${cuda:SoVersion} (= ${binary:Version}),
  libcusolver${cuda:SoVersion} (= ${binary:Version}),
+ libcusolvermg${cuda:SoVersion} (= ${binary:Version}),
  libcusparse${cuda:SoVersion} (= ${binary:Version}),
  libnppc${cuda:SoVersion} (= ${binary:Version}),
  libnppial${cuda:SoVersion} (= ${binary:Version}),
@@ -211,8 +309,10 @@ Depends:
  libnppitc${cuda:SoVersion} (= ${binary:Version}),
  libnpps${cuda:SoVersion} (= ${binary:Version}),
  libnvgraph${cuda:SoVersion} (= ${binary:Version}),
- libnvjpeg${cuda:SoVersion} (= ${binary:Version}) [!ppc64el],
- libthrust-dev,
+ libnvjpeg${cuda:SoVersion} (= ${binary:Version}),
+ libcupti-dev (= ${binary:Version}),
+ libnvidia-ml-dev (= ${binary:Version}),
+ libthrust-dev (>= ${thrust:Version}~),
  ${misc:Depends}
 Recommends:
  ${package:libcuda1},
@@ -246,7 +346,26 @@ Description: NVIDIA OpenCL development files
  .
  This metapackage provides the development files: headers and libraries.
 
-Package: libcudart10.0
+Package: libnvidia-ml-dev
+Section: non-free/libdevel
+Architecture: amd64 ppc64el
+Multi-Arch: same
+Depends:
+ ${package:libnvidia-ml1},
+ ${misc:Depends}
+Breaks:
+ nvidia-cuda-dev (<< 10.1.168-4~),
+Replaces:
+ nvidia-cuda-dev (<< 10.1.168-4~),
+Homepage: https://developer.nvidia.com/nvidia-management-library-NVML
+Description: NVIDIA Management Library (NVML) development files
+ The NVIDIA Management Library (NVML) provides a monitoring and management API.
+ It provides a direct access to the queries and commands exposed via nvidia-smi.
+ .
+ This package contains the header file and depends on the driver-provided
+ library.
+
+Package: libcudart10.2
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -263,7 +382,7 @@ Description: NVIDIA CUDA Runtime Library
  This package contains the CUDA Runtime API library for high-level CUDA
  programming, on top of the CUDA Driver API.
 
-Package: libaccinj64-10.0
+Package: libaccinj64-10.2
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -277,7 +396,7 @@ Description: NVIDIA ACCINJ Library (64-bit)
  .
  This package contains the 64-bit ACCINJ runtime library.
 
-Package: libcuinj64-10.0
+Package: libcuinj64-10.2
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -291,7 +410,7 @@ Description: NVIDIA CUINJ Library (64-bit)
  .
  This package contains the 64-bit CUINJ runtime library.
 
-Package: libnvrtc10.0
+Package: libnvrtc10.2
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -318,26 +437,35 @@ Description: NVIDIA Tools Extension Library
  .
  This package contains the NVIDIA Tools Extension runtime library.
 
-Package: libnvvm3
-Architecture: amd64 ppc64el
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Homepage: https://developer.nvidia.com/cuda-llvm-compiler
-Description: NVIDIA NVVM Library
- NVIDIA's CUDA Compiler (NVCC) is based on the widely used LLVM open source
- compiler infrastructure.
- .
- The NVVM library is used by NVCC to compile CUDA binary code to run on NVIDIA
- GPUs.
- .
- This package contains the NVIDIA NVVM runtime library.
+#Package: libnvvm3
+#Architecture: amd64 ppc64el
+#Multi-Arch: same
+#Pre-Depends: ${misc:Pre-Depends}
+#Depends: ${shlibs:Depends}, ${misc:Depends}
+#Homepage: https://developer.nvidia.com/cuda-llvm-compiler
+#Description: NVIDIA NVVM Library
+# NVIDIA's CUDA Compiler (NVCC) is based on the widely used LLVM open source
+# compiler infrastructure.
+# .
+# The NVVM library is used by NVCC to compile CUDA binary code to run on NVIDIA
+# GPUs.
+# .
+# This package contains the NVIDIA NVVM runtime library.
 
-Package: libcupti10.0
+Package: libcupti10.2
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Provides:
+ libnvperf,
+Conflicts:
+ libnvperf,
+Breaks:
+ libcupti10.1 (<< 10.1.243-7~),
+Replaces:
+ libnvperf,
+ libcupti10.1 (<< 10.1.243-7~),
 Homepage: https://developer.nvidia.com/cuda-profiling-tools-interface
 Description: NVIDIA CUDA Profiler Tools Interface runtime library
  The CUDA Profiler Tools Interface (CUPTI) enables the creation of
@@ -352,7 +480,9 @@ Package: libcupti-dev
 Section: non-free/libdevel
 Architecture: amd64 ppc64el
 Multi-Arch: same
-Depends: libcupti${cudart:SoVersion} (= ${binary:Version}), ${misc:Depends}
+Depends:
+ libcupti${cudart:SoVersion} (= ${binary:Version}),
+ ${misc:Depends}
 Recommends: libcupti-doc
 Homepage: https://developer.nvidia.com/cuda-profiling-tools-interface
 Description: NVIDIA CUDA Profiler Tools Interface development files
@@ -367,7 +497,10 @@ Description: NVIDIA CUDA Profiler Tools Interface development files
 Package: libcupti-doc
 Section: non-free/doc
 Architecture: all
-Depends: ${misc:Depends}
+Depends:
+ libjs-html5shiv,
+ libjs-jquery,
+ ${misc:Depends}
 Homepage: https://developer.nvidia.com/cuda-profiling-tools-interface
 Description: NVIDIA CUDA Profiler Tools Interface documentation
  The CUDA Profiler Tools Interface (CUPTI) enables the creation of
@@ -378,7 +511,7 @@ Description: NVIDIA CUDA Profiler Tools Interface documentation
  .
  This package contains the documentation and examples.
 
-Package: libcublas10.0
+Package: libcublas10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -395,7 +528,23 @@ Description: NVIDIA cuBLAS Library
  .
  This package contains the cuBLAS runtime library.
 
-Package: libnvblas10.0
+Package: libcublaslt10
+Architecture: amd64 ppc64el
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: NVIDIA cuBLASLt Library
+ The Compute Unified Device Architecture (CUDA) enables NVIDIA
+ graphics processing units (GPUs) to be used for massively parallel
+ general purpose computation.
+ .
+ The cuBLASLt library is a lightweight GEMM library with a flexible API and
+ tensor core support for INT8 inputs and FP16 CGEMM split-complex matrix
+ multiplication.
+ .
+ This package contains the cuBLASLt runtime library.
+
+Package: libnvblas10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -410,7 +559,7 @@ Description: NVBLAS runtime library
  dynamically routing BLAS calls to one or more NVIDIA GPUs present in the
  system, when the characteristics of the call make it to speedup on a GPU.
 
-Package: libcufft10.0
+Package: libcufft10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -430,7 +579,7 @@ Description: NVIDIA cuFFT Library
  .
  This package contains the cuFFT runtime library.
 
-Package: libcufftw10.0
+Package: libcufftw10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -450,7 +599,7 @@ Description: NVIDIA cuFFTW Library
  .
  This package contains the cuFFTW runtime library.
 
-Package: libcurand10.0
+Package: libcurand10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -469,7 +618,7 @@ Description: NVIDIA cuRAND Library
  .
  This package contains the cuRAND runtime library.
 
-Package: libcusolver10.0
+Package: libcusolver10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -481,7 +630,19 @@ Description: NVIDIA cuSOLVER Library
  .
  This package contains the cuSOLVER runtime library.
 
-Package: libcusparse10.0
+Package: libcusolvermg10
+Architecture: amd64 ppc64el
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: NVIDIA cuSOLVERmg Library
+ The cuSOLVER library contains LAPACK-like functions in dense and sparse
+ linear algebra, including linear solver, least-square solver and eigenvalue
+ solver.
+ .
+ This package contains the cuSOLVERmg runtime library.
+
+Package: libcusparse10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -506,7 +667,7 @@ Description: NVIDIA cuSPARSE Library
  .
  This package contains the cuSPARSE runtime library.
 
-Package: libnppc10.0
+Package: libnppc10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -526,7 +687,7 @@ Description: NVIDIA Performance Primitives core runtime library
  .
  This package contains the NVIDIA Performance Primitives core runtime library.
 
-Package: libnppial10.0
+Package: libnppial10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -538,7 +699,7 @@ Description: NVIDIA Performance Primitives lib for Image Arithmetic and Logic
  This package contains the NVIDIA Performance Primitives runtime library for
  Image Arithmetic and Logic operations, which is a sub-library of nppi.
 
-Package: libnppicc10.0
+Package: libnppicc10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -550,7 +711,7 @@ Description: NVIDIA Performance Primitives lib for Image Color Conversion
  This package contains the NVIDIA Performance Primitives runtime library for
  Image Color and sampling Conversion, which is a sub-library of nppi.
 
-Package: libnppicom10.0
+Package: libnppicom10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -562,7 +723,7 @@ Description: NVIDIA Performance Primitives lib for Image Compression
  This package contains the NVIDIA Performance Primitives runtime library for
  Image Compression, which is a sub-library of nppi.
 
-Package: libnppidei10.0
+Package: libnppidei10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -574,7 +735,7 @@ Description: NVIDIA Performance Primitives lib for Image Data Exchange and Initi
  This package contains the NVIDIA Performance Primitives runtime library for
  Image Data Exchange and Initialization, which is a sub-library of nppi.
 
-Package: libnppif10.0
+Package: libnppif10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -586,7 +747,7 @@ Description: NVIDIA Performance Primitives lib for Image Filters
  This package contains the NVIDIA Performance Primitives runtime library for
  Image Filters, which is a sub-library of nppi.
 
-Package: libnppig10.0
+Package: libnppig10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -598,7 +759,7 @@ Description: NVIDIA Performance Primitives lib for Image Geometry transforms
  This package contains the NVIDIA Performance Primitives runtime library for
  Image Geometry transforms, which is a sub-library of nppi.
 
-Package: libnppim10.0
+Package: libnppim10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -610,7 +771,7 @@ Description: NVIDIA Performance Primitives lib for Image Morphological operation
  This package contains the NVIDIA Performance Primitives runtime library for
  Image Morphological operations, which is a sub-library of nppi.
 
-Package: libnppist10.0
+Package: libnppist10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -622,7 +783,7 @@ Description: NVIDIA Performance Primitives lib for Image Statistics
  This package contains the NVIDIA Performance Primitives runtime library for
  Image Statistics and Linear Transformation, which is a sub-library of nppi.
 
-Package: libnppisu10.0
+Package: libnppisu10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -634,7 +795,7 @@ Description: NVIDIA Performance Primitives lib for Image Support
  This package contains the NVIDIA Performance Primitives runtime library for
  Image Support, which is a sub-library of nppi.
 
-Package: libnppitc10.0
+Package: libnppitc10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -646,7 +807,7 @@ Description: NVIDIA Performance Primitives lib for Image Threshold and Compare
  This package contains the NVIDIA Performance Primitives runtime library for
  Image Threshold and Compare, which is a sub-library of nppi.
 
-Package: libnpps10.0
+Package: libnpps10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -663,7 +824,7 @@ Description: NVIDIA Performance Primitives for signal processing runtime library
  This package contains the NVIDIA Performance Primitives runtime library for
  signal processing.
 
-Package: libnvgraph10.0
+Package: libnvgraph10
 Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -693,8 +854,8 @@ Description: NVIDIA Graph Analytics library (nvGRAPH)
  graph in memory is dominated by the number of edges.
  An M40 with 24 GB can support a graph of up to 2 billion edges.
 
-Package: libnvjpeg10.0
-Architecture: amd64
+Package: libnvjpeg10
+Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -705,23 +866,3 @@ Description: NVIDIA JPEG library (nvJPEG)
  decoding capabilities which efficiently utilize the available GPU resources
  for optimum performance; and the flexibility for users to manage the memory
  allocation needed for decoding.
-
-Package: libthrust-dev
-Section: non-free/libdevel
-Architecture: all
-Multi-Arch: foreign
-Depends: ${misc:Depends}
-Suggests: nvidia-cuda-toolkit
-Description: Thrust - Parallel Algorithms Library
- Thrust is a parallel algorithms library which resembles the C++ Standard
- Template Library (STL). Thrust's high-level interface greatly enhances
- programmer productivity while enabling performance portability between GPUs
- and multicore CPUs. Interoperability with established technologies (such as
- CUDA, TBB, and OpenMP) facilitates integration with existing software.
-
-Package: no-libnvidia-compute
-Architecture: all
-Conflicts: libnvidia-compute-430, libnvidia-compute-435
-Depends:
-Provides: libcuda1, libcuda-10.0-1, libnvidia-ml1
-Description: Do not install driver files in a container.

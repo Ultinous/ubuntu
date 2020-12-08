@@ -1,0 +1,4 @@
+#!/usr/bin/dh-exec --with=filter
+nsight_systems/bin/					usr/lib/nsight-systems/
+nsight_systems/#NSIGHT_SYSTEMS_HOST_DIR#/		usr/lib/nsight-systems/
+nsight_systems/documentation/nsys-exporter/*		usr/share/doc/nsight-systems/

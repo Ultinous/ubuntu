@@ -1,3 +1,0 @@
-libcuinj64.so.#RTSOVERSION# #PACKAGE# #MINVER#
-* Build-Depends-Package: nvidia-cuda-dev
- (symver)libcuinj64.so.#RTSOVERSION# 0

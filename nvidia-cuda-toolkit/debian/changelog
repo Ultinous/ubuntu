@@ -1,15 +1,273 @@
-nvidia-cuda-toolkit (10.0.130-3ultinous4) bionic; urgency=medium
+nvidia-cuda-toolkit (10.2.89-6ultinous1) bionic; urgency=medium
 
-  * Prevent nvidia-compute-* from being installed.
+  * Switch to debhelper-compat (= 12).
+  * Add 'X-Ultinous-Origtars' attribute to control.
+  * Add myself to Uploaders.
+  * Ported to Ultinous.
 
- -- Kozák Miklós <garmine@ultinous.com>  Fri, 08 Nov 2019 11:42:01 +0000
+ -- Kozák Miklós <garmine@ultinous.com>  Wed, 02 Dec 2020 18:22:53 +0000
 
-nvidia-cuda-toolkit (10.0.130-3ultinous1) bionic; urgency=medium
+nvidia-cuda-toolkit (10.2.89-5) unstable; urgency=medium
 
-  * Ported to bionic
-  * Add 'X-Ultinous-Debian-Origtars' attribute to control.
+  * nvidia-cuda-dev, libnvidia-ml-dev: Set Multi-Arch: same.
+    (Closes: #969962)
+  * Update Lintian overrides.
 
- -- Kozák Miklós <garmine@ultinous.com>  Thu, 31 Oct 2019 14:07:55 +0000
+ -- Andreas Beckmann <anbe@debian.org>  Thu, 24 Sep 2020 21:41:41 +0200
+
+nvidia-cuda-toolkit (10.2.89-4) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 07 Aug 2020 02:00:02 +0200
+
+nvidia-cuda-toolkit (10.2.89-3) experimental; urgency=medium
+
+  * Merge changes from 10.1.243-8.
+  * Rename nvidia-cuda-doc to nvidia-cuda-toolkit-doc.
+  * Split nsight-compute-target from nsight-compute.
+  * Split nsight-systems-target from nsight-systems.
+
+ -- Andreas Beckmann <anbe@debian.org>  Tue, 28 Jul 2020 20:21:23 +0200
+
+nvidia-cuda-toolkit (10.2.89-2) experimental; urgency=medium
+
+  * Merge changes from 10.1.243-7.
+  * nsight-compute: Ignore missing dependencies for unused QtWebEngineProcess.
+  * libcupti10.2: Add Breaks+Replaces: libcupti10.1 due to file conflict.
+  * Update Lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 17 Jul 2020 20:44:39 +0200
+
+nvidia-cuda-toolkit (10.2.89-1) experimental; urgency=medium
+
+  * New upstream release 10.2 (Nov 2019).
+  * Refresh patches and fix more typos.
+  * Install new/renamed/moved/... files.
+  * Runtime SOVERSION bump: 10.1 => 10.2, rename core library packages.
+  * Update symbols control files.
+  * Ship both nvvm and nvvmx, do not build libnvvm3.
+  * Update Lintian overrides.
+  * Try to use the system library as replacement for the missing
+    libQt5WebEngineCore.so.5.
+  * Upload to experimental.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sat, 06 Jun 2020 01:24:33 +0200
+
+nvidia-cuda-toolkit (10.1.243-8) unstable; urgency=medium
+
+  * Use vendor-specific alternatives for libcuda.so.1 and libnvidia-ml.so.1.
+  * Fix the no-libcuda1 virtual package generation for Ubuntu.
+  * Fix building cuda-gdb with GCC-10 by adding -fcommon.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 22 Jul 2020 21:50:39 +0200
+
+nvidia-cuda-toolkit (10.1.243-7) unstable; urgency=medium
+
+  * Switch build-dependency to libasound2-dev to avoid pulling in the virtual
+    libasound2 provided by liboss4-salsa-asound2.
+  * libcupti10.1: Add Provides/Conflicts/Replaces: libnvperf to avoid file
+    conflicts on unversioned libnvperf_host.so, libnvperf_target.so.
+  * cuda-gdb: Fix linking against python3.
+  * Use doctools.js and searchtools.js from libjs-sphinxdoc.
+  * Tighten libthrust-dev dependency.
+  * Use dh-exec for arch-dependent installation.
+  * nsight-systems: Reduce Qt5 library footprint.
+  * Reactivate watch file.
+  * Overhaul get-orig-source target.
+  * Overhaul packaging in preparation for CUDA 11.
+  * Update Lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 17 Jul 2020 14:10:08 +0200
+
+nvidia-cuda-toolkit (10.1.243-6) unstable; urgency=medium
+
+  * nsight-systems: Do not ship libstdc++.so.6, libhyphen.so.0.
+  * Use vendor specific jre dependency substitutions.
+  * Adjust B-D to use libjpeg62-dev on Ubuntu.  (Closes: #962263)
+  * Do not build nvidia-openjdk-8-jre on Ubuntu.
+  * Use versioned openjdk-8-jre component tarballs.
+  * nvidia-openjdk-8-jre: Use a snapshot of openjdk-8-jre (8u252-b09-1~deb9u1)
+    from Debian stretch which is backportable to buster.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 05 Jun 2020 19:15:23 +0200
+
+nvidia-cuda-toolkit (10.1.243-5) unstable; urgency=medium
+
+  * Merge changes from 10.1.168-11.
+  * Update Lintian overrides.
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 03 Jun 2020 09:54:22 +0200
+
+nvidia-cuda-toolkit (10.1.243-4) experimental; urgency=medium
+
+  * Merge changes from 10.1.168-9.
+  * Use updated nvidia-openjdk-8-jre on amd64 and ppc64el for
+    nvidia-visual-profiler and nvidia-nsight.
+
+ -- Andreas Beckmann <anbe@debian.org>  Tue, 19 May 2020 00:32:39 +0200
+
+nvidia-cuda-toolkit (10.1.243-3) experimental; urgency=medium
+
+  [ Graham Inggs ]
+  * Switch back to openjdk-8-jre for nvidia-visual-profiler and nvidia-nsight.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sat, 11 Apr 2020 14:56:37 +0200
+
+nvidia-cuda-toolkit (10.1.243-2) experimental; urgency=medium
+
+  * Merge changes from 10.1.168-8.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 01 Apr 2020 15:52:09 +0200
+
+nvidia-cuda-toolkit (10.1.243-1) experimental; urgency=medium
+
+  * New upstream release 10.1 Update 2 (Aug 2019).  (Closes: #935001)
+  * d/copyright: Synchronize with updated EULA.txt.
+  * Refresh patches and fix more typos.
+  * Update symbols control files.
+  * Drop nvidia-openjdk-8-jre package, no longer bundles an ancient JRE.
+  * Adjust to changed upstream layout.
+  * nsight-compute (non-gui) is available for ppc64el, too.
+  * libcusolvermg10: New package for the cuSOLVERmg library.
+  * Update Lintian overrides.
+  * Upload to experimental.
+
+ -- Andreas Beckmann <anbe@debian.org>  Mon, 09 Dec 2019 14:10:25 +0100
+
+nvidia-cuda-toolkit (10.1.168-11) unstable; urgency=medium
+
+  * Do not ship gdb headers conflicting with binutils-dev.  (Closes: #961263)
+
+ -- Andreas Beckmann <anbe@debian.org>  Mon, 25 May 2020 13:57:38 +0200
+
+nvidia-cuda-toolkit (10.1.168-10) unstable; urgency=medium
+
+  * Build cuda-gdb from source.  (Closes: #898045)
+    ./configure flags are based on gdb 7.12 (stretch).
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 20 May 2020 22:45:19 +0200
+
+nvidia-cuda-toolkit (10.1.168-9) unstable; urgency=medium
+
+  * Switch to debhelper-compat (= 13).
+  * Override executable-in-usr-lib.
+  * Add targets for creating component tarballs with openjdk-8-jre snapshots.
+  * Add openjdk-8-jre (8u252-b09-1) snapshot as openjdk-8-{source, jre-amd64,
+    jre-ppc64el} component tarballs.
+  * nvidia-openjdk-8-jre: Replace ancient openjdk-8-jre (8u77) binaries from
+    NVIDIA with a snapshot of openjdk-8-jre (8u252-b09-1) from Debian sid.
+  * Build nvidia-visual-profiler and nvidia-nsight on ppc64el.
+
+ -- Andreas Beckmann <anbe@debian.org>  Mon, 18 May 2020 19:12:19 +0200
+
+nvidia-cuda-toolkit (10.1.168-8) unstable; urgency=medium
+
+  * Add nvidia-cuda-toolkit-gcc compatibility package providing
+    /usr/bin/cuda-gcc, /usr/bin/cuda-g++ symlinks (pointing to gcc-8/g++-8
+    currently) to ease building packages needing a cuda-compatible compiler.
+  * Add tesla-440 driver as alternative.
+  * Update Lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sat, 11 Apr 2020 00:58:49 +0200
+
+nvidia-cuda-toolkit (10.1.168-7) unstable; urgency=medium
+
+  * Adjust dependencies for the packaged tesla driver rename to tesla-418.
+  * Bump Standards-Version to 4.5.0 (no changes needed).
+
+ -- Andreas Beckmann <anbe@debian.org>  Thu, 06 Feb 2020 21:59:47 +0100
+
+nvidia-cuda-toolkit (10.1.168-6) unstable; urgency=medium
+
+  * nvcc.profile: Append -L/usr/lib/<triplet> to the LIBRARIES variable,
+    thanks to Eyal Rozenberg.
+
+ -- Andreas Beckmann <anbe@debian.org>  Tue, 31 Dec 2019 01:10:59 +0100
+
+nvidia-cuda-toolkit (10.1.168-5) unstable; urgency=medium
+
+  [ Andreas Beckmann ]
+  * nvidia-cuda-dev: Depend on libcupti-dev, thanks to Gengyu Rao.
+  * man-typos.patch: Fix more misspellings.
+  * Make libnvidia-ml-dev installable on Ubuntu/ppc64el w/o driver.
+  * Update Lintian overrides.
+
+  [ Graham Inggs ]
+  * [Ubuntu] Add build dependencies on libxi6 and libasound2.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 27 Dec 2019 14:43:31 +0100
+
+nvidia-cuda-toolkit (10.1.168-4) unstable; urgency=medium
+
+  * Split out libnvidia-ml-dev as a separate package.
+  * libnvjpeg10 is available for ppc64el, too.
+  * Refresh Build-Depends.
+
+ -- Andreas Beckmann <anbe@debian.org>  Mon, 23 Dec 2019 22:07:12 +0100
+
+nvidia-cuda-toolkit (10.1.168-3) unstable; urgency=medium
+
+  * Fix tesla driver dependencies.
+
+ -- Andreas Beckmann <anbe@debian.org>  Mon, 25 Nov 2019 19:41:47 +0100
+
+nvidia-cuda-toolkit (10.1.168-2) unstable; urgency=medium
+
+  * Add support for the packaged tesla driver.
+  * Remove Zhou Mo from Uploaders, thanks for all your work! (Closes: #942267)
+  * Bump Standards-Version to 4.4.1 (no changes needed).
+  * Update Lintian overrides.
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 22 Nov 2019 13:47:11 +0100
+
+nvidia-cuda-toolkit (10.1.168-1) experimental; urgency=medium
+
+  [ Graham Inggs ]
+  * New upstream release 10.1 Update 1 (May 2019).  (Closes: #930365)
+  * d/copyright: Synchronize with updated EULA.txt.
+  * Add clang-8 as supported compiler alternative.
+  * nsight-systems: Ship new documentation.
+  * Refresh patches and fix more typos.
+  * Update Lintian overrides.
+  * Upload to experimental.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sat, 17 Aug 2019 14:22:01 +0200
+
+nvidia-cuda-toolkit (10.1.105-3) unstable; urgency=medium
+
+  * Stop building libthrust-dev. It is provided by a separate source package
+    in main, again.  (Closes: #923689)
+  * d/rules{,.defs}: Distinguish between minimal and bundled driver version.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 16 Aug 2019 13:58:15 +0200
+
+nvidia-cuda-toolkit (10.1.105-2) unstable; urgency=medium
+
+  * Bump Standards-Version to 4.4.0 (no changes needed).
+  * man-typos.patch: Fix more misspellings.
+  * Upload to unstable.
+
+ -- Andreas Beckmann <anbe@debian.org>  Wed, 10 Jul 2019 11:07:56 +0200
+
+nvidia-cuda-toolkit (10.1.105-1) experimental; urgency=medium
+
+  * New upstream release 10.1 (Feb 2019).  (Closes: #924488)
+  * Repack the upstream *.run files and keep only the toolkit, dropping driver
+    and (not redistributable) samples.
+  * d/copyright: Synchronize with updated EULA.txt.
+  * SOVERSION bump: 10.0 => 10.1, rename core library packages.
+  * SOVERSION change: 10.0 => 10, rename application library packages.
+  * libcublaslt10: New package for the cuBLASLt library.
+  * nsight-systems: New package for NVIDIA Nsight Systems.
+  * Add gcc-8 and clang-7 as supported compiler alternatives.
+  * Install new/renamed/moved/... files.
+  * Refresh patches and fix more typos.
+  * Update Lintian overrides.
+
+ -- Andreas Beckmann <anbe@debian.org>  Tue, 26 Mar 2019 21:31:01 +0100
 
 nvidia-cuda-toolkit (10.0.130-3) experimental; urgency=medium
 

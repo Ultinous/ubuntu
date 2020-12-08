@@ -1,0 +1,3 @@
+libcublasLt.so.#SOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ (symver)libcublasLt.so.#SOVERSION# 0

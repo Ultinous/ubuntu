@@ -1,1 +1,2 @@
-usr/lib64/libnvjpeg.so.*	#LIBDIR#/
+cuda/lib64/libnvjpeg.so.#SOVERSION#	usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/lib64/libnvjpeg.so.#SOVERSION#.*	usr/lib/#DEB_HOST_MULTIARCH#/

@@ -1,12 +1,21 @@
-usr/include/*.h
-usr/include/*.hpp
-usr/include/crt/*
-usr/include/nvfunctional
-usr/include/nvtx3
-usr/extras/Debugger/include/*.h usr/include/cuda-gdb/
-usr/extras/Debugger/lib64/libcudacore.a	#LIBDIR#/cuda-gdb/
-usr/lib64/lib*.a			#LIBDIR#/
-usr/lib64/lib{acc,cu,npp,nv}*.so	#LIBDIR#/
-usr/lib64/libnvToolsExt.so		#LIBDIR#/
-usr/lib64/stubs/*.so			#LIBDIR#/stubs/
-usr/nvvm/lib64/libnvvm.so		#LIBDIR#/
+#!/usr/bin/dh-exec --with=filter
+cuda/include/[a-mo-z]*.h			usr/include/
+cuda/include/n[a-uw-z]*.h			usr/include/
+cuda/include/nv[A-Za-ln-z]*.h			usr/include/
+cuda/include/*.hpp				usr/include/
+cuda/include/crt/				usr/include/
+cuda/include/cuda/				usr/include/
+cuda/include/nvfunctional			usr/include/
+cuda/include/nvtx3/				usr/include/
+cuda/extras/Debugger/include/*.h		usr/include/cuda-gdb/
+
+cuda/lib64/lib*.a				usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/extras/Debugger/lib64/libcudacore.a	usr/lib/#DEB_HOST_MULTIARCH#/cuda-gdb/
+
+cuda/lib64/libacc*.so				usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/lib64/libcu*.so				usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/lib64/libnpp*.so				usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/lib64/libnv*.so				usr/lib/#DEB_HOST_MULTIARCH#/
+#cuda/nvvm/lib64/libnvvm.so			usr/lib/#DEB_HOST_MULTIARCH#/
+
+cuda/lib64/stubs/*.so				usr/lib/#DEB_HOST_MULTIARCH#/stubs/

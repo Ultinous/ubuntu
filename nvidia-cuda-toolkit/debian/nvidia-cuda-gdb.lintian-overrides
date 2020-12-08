@@ -1,11 +1,1 @@
-no-upstream-changelog
-# The NVIDIA license does not allow any form of modification.
-hardening-no-bindnow
-[amd64]: hardening-no-fortify-functions
-hardening-no-pie
-[amd64]: hardening-no-relro
-binary-has-unneeded-section usr/bin/cuda-gdb .comment
 spelling-error-in-binary
-unstripped-binary-or-object
-[amd64]: embedded-library usr/bin/cuda-gdb: expat
-embedded-library usr/bin/cuda-gdb: zlib

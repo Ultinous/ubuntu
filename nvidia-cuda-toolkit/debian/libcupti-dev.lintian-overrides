@@ -1,1 +1,2 @@
-no-upstream-changelog
+# The NVIDIA license does not allow any form of modification.
+[amd64]: static-library-has-unneeded-section

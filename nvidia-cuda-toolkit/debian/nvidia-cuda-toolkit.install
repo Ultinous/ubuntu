@@ -1,24 +1,32 @@
-usr/bin/bin2c
-usr/bin/crt/link.stub		usr/lib/nvidia-cuda-toolkit/bin/crt/
-usr/bin/crt/prelink.stub	usr/lib/nvidia-cuda-toolkit/bin/crt/
-usr/bin/cudafe++
-usr/bin/cuda-memcheck
-usr/bin/cuobjdump
-usr/bin/fatbinary
-usr/bin/gpu-library-advisor
-usr/bin/nvdisasm
-usr/bin/nvlink
-usr/bin/nvprune
-usr/bin/ptxas
+#!/usr/bin/dh-exec --with=filter
+cuda/bin/bin2c							usr/bin/
+cuda/bin/crt/link.stub						usr/lib/nvidia-cuda-toolkit/bin/crt/
+cuda/bin/crt/prelink.stub					usr/lib/nvidia-cuda-toolkit/bin/crt/
+cuda/bin/cudafe++						usr/bin/
+cuda/bin/cuda-memcheck						usr/bin/
+cuda/bin/cuobjdump						usr/bin/
+cuda/bin/fatbinary						usr/bin/
+cuda/bin/nvdisasm						usr/bin/
+cuda/bin/nvlink							usr/bin/
+cuda/bin/nvprune						usr/bin/
+cuda/bin/ptxas							usr/bin/
 
-usr/bin/nvcc			usr/lib/nvidia-cuda-toolkit/bin/
-debian/nvcc			usr/bin/
-usr/bin/nvcc.profile		etc/
-debian/gcc			usr/lib/nvidia-cuda-toolkit/bin/
-debian/g++			usr/lib/nvidia-cuda-toolkit/bin/
+cuda/bin/nvcc							usr/lib/nvidia-cuda-toolkit/bin/
+debian/nvcc							usr/bin/
+cuda/bin/nvcc.profile						etc/
+debian/gcc							usr/lib/nvidia-cuda-toolkit/bin/
+debian/g++							usr/lib/nvidia-cuda-toolkit/bin/
 
-usr/nvvm/bin/cicc		usr/lib/nvidia-cuda-toolkit/bin/
-usr/nvvm/include/nvvm.h		usr/include/
-usr/nvvm/libdevice/libdevice.10.bc	usr/lib/nvidia-cuda-toolkit/libdevice/
+cuda/nvvm/bin/cicc						usr/lib/nvidia-cuda-toolkit/nvvm/bin/
+cuda/nvvm/lib64/libnvvm.so.3					usr/lib/nvidia-cuda-toolkit/nvvm/lib64/
+cuda/nvvm/lib64/libnvvm.so.3.*					usr/lib/nvidia-cuda-toolkit/nvvm/lib64/
+cuda/nvvmx/bin/cicc						usr/lib/nvidia-cuda-toolkit/nvvmx/bin/
+cuda/nvvmx/lib64/libnvvm.so.3					usr/lib/nvidia-cuda-toolkit/nvvmx/lib64/
+cuda/nvvmx/lib64/libnvvm.so.3.*					usr/lib/nvidia-cuda-toolkit/nvvmx/lib64/
+cuda/nvvm/include/nvvm.h					usr/include/
+cuda/nvvm/libdevice/libdevice.10.bc				usr/lib/nvidia-cuda-toolkit/libdevice/
 
-usr/version.txt			usr/lib/cuda/
+cuda/version.txt						usr/lib/cuda/
+
+cuda/extras/Sanitizer/include/					usr/lib/nvidia-cuda-toolkit/Sanitizer/
+cuda/extras/Sanitizer/libsanitizer-public.so			usr/lib/nvidia-cuda-toolkit/Sanitizer/

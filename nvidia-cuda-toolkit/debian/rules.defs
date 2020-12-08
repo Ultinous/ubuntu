@@ -1,47 +1,71 @@
-CUDA_ARCH_LIST			 = amd64
-CUDA_ARCH_LIST			+= ppc64el
+CUDA_ARCH_LIST				 = amd64
+CUDA_ARCH_LIST				+= ppc64el
 
-#CUDA_PATCH_LIST			+= amd64-patch1
-#CUDA_PATCH_LIST			+= ppc64el-patch1
+ifeq ($(VENDOR),Ubuntu)
+CUDA_ARCH_LIST_NO_DRIVER		+= ppc64el
+endif
 
-CUDA_ARCH_LIST_NO_DRIVER	+= ppc64el
-CUDA_ARCH_LIST_NO_JAVA		+= ppc64el
+package_libcuda1.Debian			+= libcuda1			(>= $${nvidia:MinVersion}) [!armhf !ppc64el] |
+package_libcuda1.Debian			+= libnvidia-tesla-450-cuda1	(>= $${nvidia:MinVersion}) [amd64 i386 arm64 ppc64el] |
+package_libcuda1.Debian			+= libnvidia-tesla-440-cuda1	(>= $${nvidia:MinVersion}) [amd64 i386 ppc64el] |
 
-CUDA_VERSION_DRIVER.amd64	 = 410.48
-CUDA_VERSION_DRIVER.ppc64el	 = $(CUDA_VERSION_DRIVER.amd64)
+package_libcuda1.Ubuntu			+= libnvidia-compute-450	(>= $${nvidia:MinVersion}) [amd64 i386 arm64] |
+package_libcuda1.Ubuntu			+= libnvidia-compute-450-server	(>= $${nvidia:MinVersion}) [amd64 i386 arm64 ppc64el] |
+package_libcuda1.Ubuntu			+= libnvidia-compute-440	(>= $${nvidia:MinVersion}) [amd64 i386] |
+package_libcuda1.Ubuntu			+= libnvidia-compute-440-server	(>= $${nvidia:MinVersion}) [amd64 i386 ppc64el] |
 
-NSIGHT_COMPUTE_VERSION			 = 1.0
-NSIGHT_COMPUTE_DESKTOP_DIR.amd64	 = linux-desktop-glibc_2_11_3-glx-x64
+package_libnvidia-ml1.Debian		+= libnvidia-ml1		(>= $${nvidia:MinVersion}) [!armhf !ppc64el] |
+package_libnvidia-ml1.Debian		+= libnvidia-tesla-450-ml1	(>= $${nvidia:MinVersion}) [amd64 i386 arm64 ppc64el] |
+package_libnvidia-ml1.Debian		+= libnvidia-tesla-440-ml1	(>= $${nvidia:MinVersion}) [amd64 i386 ppc64el] |
 
-CUDA_VERSION_TOOLKIT_FILENAME	 = $(CUDA_VERSION_TOOLKIT)
-CUDA_SOVERSION				 = $(CUDA_VERSION_MAJOR).$(CUDA_VERSION_MINOR)
-CUDART_SOVERSION			 = $(CUDA_VERSION_MAJOR).$(CUDA_VERSION_MINOR)
+package_libnvidia-ml1.Ubuntu		 = $(package_libcuda1.Ubuntu)
 
-CUDA_WATCH_URL			 = https://developer.nvidia.com/cuda-downloads
+package_driver.Debian			+= nvidia-driver		(>= $${nvidia:MinVersion}) [!i386 !armhf !ppc64el] |
+package_driver.Debian			+= nvidia-tesla-450-driver	(>= $${nvidia:MinVersion}) [amd64 arm64 ppc64el] |
+package_driver.Debian			+= nvidia-tesla-440-driver	(>= $${nvidia:MinVersion}) [amd64 ppc64el] |
 
-CUDA_TAR_TYPE.amd64		 = run
-CUDA_TAR_TYPE.ppc64el		 = deb
+package_driver.Ubuntu			 =
 
-CUDA_DL_TYPE.amd64		 = run
-CUDA_DL_TYPE.ppc64el		 = deb
+CUDA_VERSION_DRIVER_MINIMAL.default	 = 440
 
-CUDA_DL_URL_HOST		 = https://developer.nvidia.com
-CUDA_DL_URL_PROD		 = Prod
-CUDA_DL_URL_PATH_BASE		 = compute/cuda/$(CUDA_VERSION_MAJOR).$(CUDA_VERSION_MINOR)/$(CUDA_DL_URL_PROD)
-CUDA_DL_URL_PATH.amd64		 = $(CUDA_DL_URL_PATH_BASE)/local_installers
-CUDA_DL_URL_PATH.ppc64el	 = $(CUDA_DL_URL_PATH.amd64)
+CUDA_VERSION_DRIVER_BUNDLED.default	 = 440.33.01
 
-CUDA_DL_UBUNTU_VERSION.ppc64el	 = 1804
+CUDA_MAN_DATE.default			 = 23 Oct 2019
+CUDA_MAN_DATE.ppc64el			 = 24 Oct 2019
 
-CUDA_DL_FILENAME.amd64.run	 = cuda_$(CUDA_VERSION_TOOLKIT)_$(CUDA_VERSION_DRIVER.amd64)_linux.run
-CUDA_DL_FILENAME.ppc64el.deb	 = cuda-repo-ubuntu$(CUDA_DL_UBUNTU_VERSION.ppc64el)-$(CUDA_VERSION_MAJOR)-$(CUDA_VERSION_MINOR)-local-$(CUDA_VERSION_TOOLKIT)-$(CUDA_VERSION_DRIVER.ppc64el)_1.0-1_ppc64el.deb
 
-get_url_filename		 = $(CUDA_DL_FILENAME.$(1).$(CUDA_DL_TYPE.$(1)):.$(CUDA_DL_TYPE.$(1))=)
-CUDA_URL_FILENAME.amd64		 = $(call get_url_filename,amd64)
-CUDA_URL_FILENAME.ppc64el	 = $(call get_url_filename,ppc64el)
+OPENJDK_VERSION				 = 8u252-b09-1~deb9u1
 
-CUDA_VERSION_APPENDIX.amd64	 = -24817639
-CUDA_FILENAME.amd64		 = cuda-linux.${CUDA_VERSION_TOOLKIT_FILENAME}${CUDA_VERSION_APPENDIX.amd64}.run
 
-CUDA_MAN_DATE.amd64		 = 25 Aug 2018
-CUDA_MAN_DATE.ppc64el		 = $(CUDA_MAN_DATE.amd64)
+NSIGHT_COMPUTE_VERSION			 = 2019.5.0
+NSIGHT_COMPUTE_DESKTOP_DIR.amd64	 = linux-desktop-glibc_2_11_3-x64
+NSIGHT_COMPUTE_DESKTOP_DIR.i386		 = linux-desktop-glibc_2_11_3-x86
+NSIGHT_COMPUTE_DESKTOP_DIR.ppc64el	 = linux-desktop-glibc_2_19_0-ppc64le
+
+NSIGHT_SYSTEMS_VERSION			 = 2019.5.2
+NSIGHT_SYSTEMS_HOST_DIR.amd64		 = host-linux-x64
+
+NSIGHT_SYSTEMS_TARGET_DIR.amd64		 = target-linux-x64
+
+CUDA_WATCH_URL				 = https://developer.nvidia.com/cuda-$(CUDA_VERSION_MAJOR).$(CUDA_VERSION_MINOR)-download-archive
+CUDA_WATCH_URL				 = https://developer.nvidia.com/cuda-downloads
+
+COMPRESS_EXT				 = xz
+
+CUDA_TAR_TYPE.default			 = repack
+
+CUDA_DL_TYPE.default			 = run
+
+CUDA_DL_URL_HOST			 = https://developer.download.nvidia.com
+CUDA_DL_URL_PROD			 = Prod
+CUDA_DL_URL_PATH.default		 = compute/cuda/$(CUDA_VERSION_MAJOR).$(CUDA_VERSION_MINOR)/$(CUDA_DL_URL_PROD)/local_installers
+
+CUDA_DL_FILENAME_ARCH.amd64		 = linux
+CUDA_DL_FILENAME_ARCH.ppc64el		 = linux_ppc64le
+
+CUDA_DL_FILENAME.run			 = cuda_$(CUDA_VERSION_TOOLKIT)_$(call aval,CUDA_VERSION_DRIVER_BUNDLED,$1)_$(call aval,CUDA_DL_FILENAME_ARCH,$1).run
+
+# $1 = arch
+get_dl_url				 = $(CUDA_DL_URL_HOST)/$(call aval,CUDA_DL_URL_PATH,$1)/$(call get_dl_filename,$1)
+get_dl_filename				 = $(or $(call CUDA_DL_FILENAME.$(call aval,CUDA_DL_TYPE,$1),$1),$(error Undefined CUDA_DL_FILENAME.$(call aval,CUDA_DL_TYPE,$1)($1)))
+get_dl_type				 = $(call aval,CUDA_DL_TYPE,$1)

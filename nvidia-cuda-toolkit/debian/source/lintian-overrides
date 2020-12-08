@@ -3,3 +3,14 @@ debian-watch-does-not-check-gpg-signature
 
 # patching is done manually after unpacking the .run files
 patch-file-present-but-not-mentioned-in-series
+
+# there is no source available for this proprietary software
+source-contains-prebuilt-binary
+source-contains-prebuilt-doxygen-documentation
+source-contains-prebuilt-java-object
+source-contains-prebuilt-javascript-object
+source-is-missing
+
+# only binary releases
+upstream-metadata-missing-bug-tracking
+upstream-metadata-missing-repository

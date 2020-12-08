@@ -1,0 +1,5 @@
+# The NVIDIA license does not allow any form of modification.
+hardening-no-bindnow
+hardening-no-fortify-functions
+[!amd64]: hardening-no-relro
+exit-in-shared-library

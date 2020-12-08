@@ -1,31 +1,26 @@
-no-upstream-changelog
 # The NVIDIA license does not allow any form of modification.
-hardening-no-bindnow
-hardening-no-fortify-functions
-hardening-no-pie
-binary-has-unneeded-section
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/RebelPlugin/libRebelPlugin.so: zlib
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/libLinuxPlatformPlugin.so: libssh2
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/libLinuxPlatformPlugin.so: zlib
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/libWindowsPlatformPlugin.so: libssh2
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/libWindowsPlatformPlugin.so: zlib
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/imageformats/libqjpeg.so: libjpeg
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/imageformats/libqtiff.so: tiff
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/libQt5Gui.so.5: libpng
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/libQt5WebEngineCore.so.5: lcms2
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/libQt5WebEngineCore.so.5: libavutil
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/libQt5WebEngineCore.so.5: libjpeg
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/libQt5WebEngineCore.so.5: libpng
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/libQt5WebEngineCore.so.5: openjpeg
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/libQt5WebEngineCore.so.5: srtp
-embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/libcrypto.so.1.0.0: openssl
-embedded-library usr/lib/nsight-compute/target/#NSIGHT_COMPUTE_DESKTOP_DIR#/libcuda-injection.so: zlib
-embedded-library usr/lib/nsight-compute/target/#NSIGHT_COMPUTE_DESKTOP_DIR#/libnvperf_host.so: zlib
-embedded-library usr/lib/nsight-compute/target/#NSIGHT_COMPUTE_DESKTOP_DIR#/nv-nsight-cu-cli: zlib
-shared-lib-without-dependency-information
-shlib-calls-exit
-shlib-with-executable-stack
-spelling-error-in-binary
+[amd64]: hardening-no-bindnow
+[amd64]: hardening-no-fortify-functions
+[amd64]: hardening-no-pie
+[amd64]: binary-has-unneeded-section
+[amd64]: embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/RebelPlugin/libRebelPlugin.so: libssh2
+[amd64]: embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/RebelPlugin/libRebelPlugin.so: zlib
+[amd64]: embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/lib*PlatformPlugin.so: libssh2
+[amd64]: embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/imageformats/libqjpeg.so: libjpeg
+[amd64]: embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/Plugins/imageformats/libqtiff.so: tiff
+[amd64]: embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/libQt5Gui.so.5: libpng
+[amd64]: embedded-library usr/lib/nsight-compute/host/#NSIGHT_COMPUTE_DESKTOP_DIR#/libcrypto.so.1.0.0: openssl
+[amd64]: shared-library-lacks-prerequisites
+[amd64]: exit-in-shared-library
+[amd64]: spelling-error-in-binary
+
+# The package is only available for few architectures.
+[amd64 ppc64el]: arch-dep-package-has-big-usr-share
+[!amd64]: package-contains-no-arch-dependent-files
 
 # Lintian and debhelper disagree w.r.t. a library in a private directory.
-package-has-unnecessary-activation-of-ldconfig-trigger
+[amd64]: package-has-unnecessary-activation-of-ldconfig-trigger
+
+# Some of NVIDIA's binaries expect files at certain relative paths.
+executable-in-usr-lib
+[amd64]: image-file-in-usr-lib

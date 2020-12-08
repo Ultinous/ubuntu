@@ -1,1 +1,2 @@
-usr/lib64/libnppitc.so.*	#LIBDIR#/
+cuda/lib64/libnppitc.so.#SOVERSION#	usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/lib64/libnppitc.so.#SOVERSION#.*	usr/lib/#DEB_HOST_MULTIARCH#/

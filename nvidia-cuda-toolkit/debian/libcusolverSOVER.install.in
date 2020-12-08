@@ -1,1 +1,2 @@
-usr/lib64/libcusolver.so.*	#LIBDIR#/
+cuda/lib64/libcusolver.so.#SOVERSION#	usr/lib/#DEB_HOST_MULTIARCH#/
+cuda/lib64/libcusolver.so.#SOVERSION#.*	usr/lib/#DEB_HOST_MULTIARCH#/

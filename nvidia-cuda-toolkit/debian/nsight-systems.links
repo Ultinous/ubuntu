@@ -1,0 +1,1 @@
+usr/lib/nsight-systems/${env:NSIGHT_SYSTEMS_HOST_DIR}/nsight-sys	usr/bin/nsight-sys

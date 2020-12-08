@@ -1,0 +1,3 @@
+libcusolverMg.so.#SOVERSION# #PACKAGE# #MINVER#
+* Build-Depends-Package: nvidia-cuda-dev
+ (symver)libcusolverMg.so.#SOVERSION# 0

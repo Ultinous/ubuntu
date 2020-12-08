@@ -1,0 +1,4 @@
+cuda/src/*			usr/share/doc/nvidia-cuda-toolkit/examples/
+cuda/nvvm/libnvvm-samples/*	usr/share/doc/nvidia-cuda-toolkit/examples/libnvvm/
+cuda/nvml/example/*		usr/share/doc/nvidia-cuda-toolkit/examples/nvml/
+cuda/extras/Sanitizer/docs/*	usr/share/doc/nvidia-cuda-toolkit/Sanitizer/

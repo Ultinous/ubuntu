@@ -1,13 +1,14 @@
-usr/bin/nvvp
-usr/libnvvp/.eclipseproduct		usr/lib/nvidia-visual-profiler/
-usr/libnvvp/*.html			usr/share/nvidia-visual-profiler/
-usr/libnvvp/*.xml			usr/share/nvidia-visual-profiler/
-usr/libnvvp/configuration		usr/share/nvidia-visual-profiler/
-usr/libnvvp/features			usr/share/nvidia-visual-profiler/
-usr/libnvvp/icon.xpm			usr/share/nvidia-visual-profiler/
-usr/libnvvp/nvvp			usr/lib/nvidia-visual-profiler/
-usr/libnvvp/nvvp.ini			usr/lib/nvidia-visual-profiler/
-usr/libnvvp/p2				usr/share/nvidia-visual-profiler/
-usr/libnvvp/plugins/*			usr/share/nvidia-visual-profiler/plugins/
-usr/libnvvp/plugins-arch/*		usr/lib/nvidia-visual-profiler/plugins/
-usr/libnvvp/readme			usr/share/nvidia-visual-profiler/
+cuda/bin/computeprof		usr/bin/
+cuda/bin/nvvp			usr/bin/
+cuda/libnvvp/.eclipseproduct	usr/lib/nvidia-visual-profiler/
+cuda/libnvvp/*.html		usr/share/nvidia-visual-profiler/
+cuda/libnvvp/*.xml		usr/share/nvidia-visual-profiler/
+cuda/libnvvp/configuration	usr/share/nvidia-visual-profiler/
+cuda/libnvvp/features		usr/share/nvidia-visual-profiler/
+cuda/libnvvp/icon.xpm		usr/share/nvidia-visual-profiler/
+cuda/libnvvp/nvvp		usr/lib/nvidia-visual-profiler/
+cuda/libnvvp/nvvp.ini		usr/lib/nvidia-visual-profiler/
+cuda/libnvvp/p2			usr/share/nvidia-visual-profiler/
+cuda/libnvvp/plugins/*		usr/share/nvidia-visual-profiler/plugins/
+cuda/libnvvp/plugins-arch/*	usr/lib/nvidia-visual-profiler/plugins/
+cuda/libnvvp/readme		usr/share/nvidia-visual-profiler/
