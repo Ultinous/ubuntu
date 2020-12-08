@@ -1,0 +1,16 @@
+# Please acquire these deb files from somewhere: 
+libcudnn7-dev_7.4.2.24-1+cuda10.0_amd64.deb
+libcudnn7-doc_7.4.2.24-1+cuda10.0_amd64.deb
+libcudnn7_7.4.2.24-1+cuda10.0_amd64.deb
+libnvinfer-dev_6.0.1-1+cuda10.0_amd64.deb
+libnvinfer-plugin-dev_6.0.1-1+cuda10.0_amd64.deb
+libnvinfer-plugin6_6.0.1-1+cuda10.0_amd64.deb
+libnvinfer6_6.0.1-1+cuda10.0_amd64.deb
+libnvonnxparsers-dev_6.0.1-1+cuda10.0_amd64.deb
+libnvonnxparsers6_6.0.1-1+cuda10.0_amd64.deb
+libnvparsers-dev_6.0.1-1+cuda10.0_amd64.deb
+libnvparsers6_6.0.1-1+cuda10.0_amd64.deb
+python-libnvinfer-dev_6.0.1-1+cuda10.0_amd64.deb
+python-libnvinfer_6.0.1-1+cuda10.0_amd64.deb
+python3-libnvinfer-dev_6.0.1-1+cuda10.0_amd64.deb
+python3-libnvinfer_6.0.1-1+cuda10.0_amd64.deb
