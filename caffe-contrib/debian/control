@@ -27,8 +27,8 @@ Build-Depends: bc,
                libgtest-dev (>= 1.8.0),
                googletest (>= 1.8.0),
                libgmock-dev,
-               libopencv-dev (= 3.4.0-1cuda10ultinous6),
-               libopencv-shape3.4 (= 3.4.0-1cuda10ultinous6),
+               libopencv-dev (= 3.4.0-2cuda10.2ultinous1),
+               libopencv-shape3.4 (= 3.4.0-2cuda10.2ultinous1),
                libprotobuf-dev,
                libprotoc-dev,
                libsnappy-dev,
@@ -57,9 +57,9 @@ Build-Depends: bc,
                python3-yaml,
 # The above part is synced with main/caffe
 # The following part is CUDA related B-D
-               nvidia-cuda-toolkit (>= 10.0) [amd64 ppc64el],
-               cuda-toolkit-10-0 (>= 10.0) [arm64],
-               libcudnn7-dev (>= 7.4.2.24),
+               nvidia-cuda-toolkit (= 10.2.89-6ultinous2) [amd64 ppc64el],
+               cuda-toolkit-10-0 (= 10.2.89-6ultinous2) [arm64],
+               libcudnn8-dev (= 8.0.5.39-1+cuda10.2),
                gcc-6,
                g++-6,
 Standards-Version: 3.9.8
@@ -67,7 +67,7 @@ Homepage: http://caffe.berkeleyvision.org
 Vcs-Browser: https://salsa.debian.org/science-team/caffe-contrib
 Vcs-Git: https://salsa.debian.org/science-team/caffe-contrib.git
 X-Python-Version: >= 3.5
-X-Ultinous-Upstream-Release: https://github.com/Ultinous/caffe/archive/un-16.tar.gz
+X-Ultinous-Upstream-Release: https://github.com/Ultinous/caffe/archive/un-17.tar.gz
 
 Package: caffe-cuda
 Section: contrib/metapackages

@@ -1,3 +1,14 @@
+caffe-contrib (1.0.0-9cuda10.2ultinous1) bionic; urgency=medium
+
+  * Rebuild with
+    - nvidia-cuda-toolkit=10.2.89-6ultinous2
+    - libcudnn=8.0.5.39-1+cuda10.2
+    - opencv=3.4.0-2cuda10.2ultinous1
+  * Add support for Nvidia server GPUs.
+  * New upstream release: un17
+
+ -- Kozák Miklós <garmine@ultinous.com>  Wed, 09 Dec 2020 12:09:20 +0000
+
 caffe-contrib (1.0.0-8cuda10ultinous5) bionic; urgency=medium
 
   * Rebuild with opencv 3.4.0-1cuda10ultinous6
