@@ -312,7 +312,7 @@ Depends:
  libnvjpeg${cuda:SoVersion} (= ${binary:Version}),
  libcupti-dev (= ${binary:Version}),
  libnvidia-ml-dev (= ${binary:Version}),
- libthrust-dev (>= ${thrust:Version}~),
+ libthrust-dev (= 1.9.7-1-2ultinous1),
  ${misc:Depends}
 Recommends:
  ${package:libcuda1},

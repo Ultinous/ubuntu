@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 # Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
+#export DH_VERBOSE=1
 
 # most flags derived from gdb 7.12 in stretch
 # README.NVIDIA mentions --enable-targets="x86_64-apple-darwin,x86_64-unknown-linux-gnu,arm-elf-linux-gnu,m68k-unknown-linux-gnu"
@@ -37,7 +37,7 @@ watch_url		 = $(CUDA_WATCH_URL)
 PACKAGE_LIST		:= $(shell dh_listpackages)
 CUDA_GDB_VERSION	?= $(CUDA_VERSION_TOOLKIT)
 OPENJDK_VERSION		?= $(error Undefined OPENJDK_VERSION)
-THRUST_VERSION		?= $(or $(strip $(shell perl -ne 'if (/define\s+THRUST_VERSION\s+(\d*)/) { printf "%d.%d.%d\n", $$1 / 100000, $$1 / 100 % 1000, $$1 % 100; }' nvidia-cuda/include/thrust/version.h)),$(error empty THRUST_VERSION))
+#THRUST_VERSION		?= $(or $(strip $(shell perl -ne 'if (/define\s+THRUST_VERSION\s+(\d*)/) { printf "%d.%d.%d\n", $$1 / 100000, $$1 / 100 % 1000, $$1 % 100; }' nvidia-cuda/include/thrust/version.h)),$(error empty THRUST_VERSION))
 CUDA_JAVA_HOME		?= /usr/lib/jvm/java-8-openjdk-$(DEB_HOST_ARCH)
 jre_pkg			?= $(filter nvidia-openjdk-8-jre,$(PACKAGE_LIST))
 thrust_pkg		?= $(filter libthrust-dev,$(PACKAGE_LIST))
@@ -325,7 +325,6 @@ endif
 
 ifneq (,$(thrust_pkg))
 override_dh_gencontrol-indep:
-	dh_gencontrol -p$(thrust_pkg) -- -v$(THRUST_VERSION)~$(DEB_VERSION)
 	dh_gencontrol --remaining-packages
 endif
 
@@ -340,7 +339,6 @@ endif
 		-V'cudart:SoVersion=$(CUDART_SOVERSION)' \
 		-V'cuda:SoVersion=$(CUDA_SOVERSION)' \
 		-V'nvidia:MinVersion=$(version_driver)' \
-		-V'thrust:Version=$(THRUST_VERSION)' \
 		-V'cuda:arch:has-no-driver=$(if $(filter $(DEB_HOST_ARCH),$(CUDA_ARCH_LIST_NO_DRIVER)),,!)$(DEB_HOST_ARCH)' \
 		-V'cuda:arch:has-nvidia-profiler=$(if $(nvidia_profiler_pkg),,!)$(DEB_HOST_ARCH)' \
 		-V'cuda:arch:has-nvidia-visual-profiler=$(if $(visual_profiler_pkg),,!)$(DEB_HOST_ARCH)' \

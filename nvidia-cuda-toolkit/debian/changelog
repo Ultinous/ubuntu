@@ -1,3 +1,9 @@
+nvidia-cuda-toolkit (10.2.89-6ultinous2) bionic; urgency=medium
+
+  * Fix libthrust dependency version.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Wed, 09 Dec 2020 14:04:36 +0000
+
 nvidia-cuda-toolkit (10.2.89-6ultinous1) bionic; urgency=medium
 
   * Switch to debhelper-compat (= 12).
