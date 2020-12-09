@@ -1,3 +1,10 @@
+opencv (3.4.0-2cuda10.2ultinous1) bionic; urgency=medium
+
+  * Rebuild with nvidia-cuda-toolkit=10.2.89-6ultinous2
+  * Add support for Nvidia server GPUS.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Wed, 09 Dec 2020 12:06:27 +0000
+
 opencv (3.4.0-1cuda10ultinous6) bionic; urgency=medium
 
   * Rebuild with ffmpeg 4.2.3-1ultinous1
