@@ -1,0 +1,26 @@
+Source: libthrust
+Section: libdevel
+Priority: optional
+Maintainer: Debian NVIDIA Maintainers <pkg-nvidia-devel@lists.alioth.debian.org>
+Uploaders:
+ Andreas Beckmann <anbe@debian.org>,
+Build-Depends:
+ debhelper-compat (= 12),
+Rules-Requires-Root: no
+Standards-Version: 4.5.0
+Homepage: https://github.com/thrust/thrust
+Vcs-Browser: https://salsa.debian.org/nvidia-team/libthrust
+Vcs-Git: https://salsa.debian.org/nvidia-team/libthrust.git
+X-Ultinous-Upstream-Release: https://github.com/NVIDIA/thrust/archive/1.9.7-1.tar.gz
+
+Package: libthrust-dev
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Suggests: nvidia-cuda-toolkit
+Description: Thrust - Parallel Algorithms Library
+ Thrust is a parallel algorithms library which resembles the C++ Standard
+ Template Library (STL). Thrust's high-level interface greatly enhances
+ programmer productivity while enabling performance portability between GPUs
+ and multicore CPUs. Interoperability with established technologies (such as
+ CUDA, TBB, and OpenMP) facilitates integration with existing software.
