@@ -9,3 +9,4 @@ equivs/pool/*
 !pool/files.txt
 
 *.log
+email.txt
