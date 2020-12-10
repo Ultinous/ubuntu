@@ -59,7 +59,8 @@ Build-Depends: bc,
 # The following part is CUDA related B-D
                nvidia-cuda-toolkit (= 10.2.89-6ultinous3) [amd64 ppc64el],
                cuda-toolkit-10-2 (= 10.2.89-1) [arm64],
-               libcudnn8-dev (= 8.0.5.39-1+cuda10.2),
+               libcudnn8-dev (= 8.0.5.39-1+cuda10.2) [amd64 ppc64el],
+               libcudnn8-dev (= 8.0.0.180-1+cuda10.2) [arm64],
                gcc-6,
                g++-6,
 Standards-Version: 3.9.8
