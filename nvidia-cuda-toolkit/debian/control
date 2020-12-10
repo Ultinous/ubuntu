@@ -319,6 +319,10 @@ Recommends:
  libgl1-mesa-dev | libgl-dev,
  libvdpau-dev,
  libnvcuvid1,
+Provides:
+ libcublas-dev,
+ cuda-nvrtc-dev-10-2,
+ cuda-cudart-dev-10-2,
 Breaks:
  libcuda1 (<< ${nvidia:MinVersion}),
 Description: NVIDIA CUDA development files
@@ -415,6 +419,7 @@ Architecture: amd64 ppc64el
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Provides: cuda-nvrtc-10-2
 Description: CUDA Runtime Compilation (NVIDIA NVRTC Library)
  CUDA Runtime Compilation library (nvrtc) provides an API to compile
  CUDA-C++ device source code at runtime.

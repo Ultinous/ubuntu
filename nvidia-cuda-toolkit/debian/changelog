@@ -1,3 +1,13 @@
+nvidia-cuda-toolkit (10.2.89-6ultinous3) bionic; urgency=medium
+
+  * nvida-cuda-dev now provides
+    - libcublas-dev
+    - cuda-nvrtc-dev-10-2
+    - cuda-cudart-dev-10-2
+  * libnvrtc10.2 now provides cuda-nvrtc-10-2
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 10 Dec 2020 13:13:27 +0000
+
 nvidia-cuda-toolkit (10.2.89-6ultinous2) bionic; urgency=medium
 
   * Fix libthrust dependency version.
