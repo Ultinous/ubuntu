@@ -1,3 +1,9 @@
+caffe-contrib (1.0.0-9cuda10.2ultinous5) bionic; urgency=medium
+
+  * New upstream release: un20
+
+ -- Kozák Miklós <garmine@ultinous.com>  Mon, 21 Dec 2020 15:18:25 +0000
+
 caffe-contrib (1.0.0-9cuda10.2ultinous4) bionic; urgency=medium
 
   * New upstream release: un19
