@@ -1,3 +1,9 @@
+caffe-contrib (1.0.0-9cuda10.2ultinous7) bionic; urgency=medium
+
+  * New debug pre-release: dbg1
+
+ -- Szabó Attila <attila@ultinous.com>  Mon, 04 Jan 2021 05:42:24 +0000
+
 caffe-contrib (1.0.0-9cuda10.2ultinous6) bionic; urgency=medium
 
   * New upstream release: un21
