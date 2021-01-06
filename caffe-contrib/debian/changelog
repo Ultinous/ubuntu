@@ -1,3 +1,9 @@
+caffe-contrib (1.0.0-9cuda10.2ultinous9) bionic; urgency=medium
+
+  * New upstream release: un22
+
+ -- Kozák Miklós <garmine@ultinous.com>  Wed, 06 Jan 2021 14:57:21 +0000
+
 caffe-contrib (1.0.0-9cuda10.2ultinous8) bionic; urgency=medium
 
   * New debug pre-release: dbg2
