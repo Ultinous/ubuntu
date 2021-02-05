@@ -1,0 +1,13 @@
+Source: docker-util
+Section: utils
+Priority: optional
+Maintainer: Lengyel Zsolt <zsolt@ultinous.com>
+Build-Depends: debhelper (>= 10), dh-cargo, libssl-dev
+Standards-Version: 4.1.2
+
+Package: docker-util
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, docker-ce-cli
+Description: General purpose Docker image management tool
+ General purpose Docker image management and build tool
+ See README for details on GitHub
