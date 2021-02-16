@@ -1,3 +1,9 @@
+opencv (3.4.0-2cuda10.2ultinous3) bionic; urgency=medium
+
+  * Rebuild with ffmpeg=7:4.3.1-1ultinous1
+
+ -- Kozák Miklós <garmine@ultinous.com>  Tue, 16 Feb 2021 22:43:29 +0000
+
 opencv (3.4.0-2cuda10.2ultinous2) bionic; urgency=medium
 
   * Rebuild with nvidia-cuda-toolkit=10.2.89-6ultinous3
