@@ -1,3 +1,9 @@
+caffe-contrib (1.0.0-9cuda10.2ultinous10) bionic; urgency=medium
+
+  * Rebuild with opencv=3.4.0-2cuda10.2ultinous3
+
+ -- Kozák Miklós <garmine@ultinous.com>  Tue, 16 Feb 2021 22:43:38 +0000
+
 caffe-contrib (1.0.0-9cuda10.2ultinous9) bionic; urgency=medium
 
   * New upstream release: un22
