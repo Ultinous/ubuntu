@@ -18,6 +18,11 @@ endif
 override_dh_auto_configure:
 	dh_auto_configure -- $(CONFIGURE_FLAGS)
 
+ifeq ($(DEB_HOST_ARCH),arm64)
+# Ultinous hack: tests now require GPU due to this ffmpeg's nVidia patch.
+override_dh_auto_test:
+endif
+
 override_dh_installman:
 	rst2man debian/fpcalc.rst > debian/fpcalc.1
 	dh_installman

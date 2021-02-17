@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3991219..421aabe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -90,12 +90,15 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
+ find_package(FFmpeg)
+ 
+ if(FFMPEG_LIBRARIES)
+-	cmake_push_check_state(RESET)
+-	set(CMAKE_REQUIRED_LIBRARIES ${FFMPEG_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} -lm)
+-	check_function_exists(av_packet_unref HAVE_AV_PACKET_UNREF)
+-	check_function_exists(av_frame_alloc HAVE_AV_FRAME_ALLOC)
+-	check_function_exists(av_frame_free HAVE_AV_FRAME_FREE)
+-	cmake_pop_check_state()
++#	cmake_push_check_state(RESET)
++#	set(CMAKE_REQUIRED_LIBRARIES ${FFMPEG_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} -lm)
++#	check_function_exists(av_packet_unref HAVE_AV_PACKET_UNREF)
++#	check_function_exists(av_frame_alloc HAVE_AV_FRAME_ALLOC)
++#	check_function_exists(av_frame_free HAVE_AV_FRAME_FREE)
++	set(HAVE_AV_PACKET_UNREF ON CACHE BOOL "")
++	set(HAVE_AV_FRAME_ALLOC ON CACHE BOOL "")
++	set(HAVE_AV_FRAME_FREE ON CACHE BOOL "")
++#	cmake_pop_check_state()
+ endif()
+ 
+ if(NOT FFT_LIB OR FFT_LIB STREQUAL "fftw3" OR FFT_LIB STREQUAL "fftw3f")
