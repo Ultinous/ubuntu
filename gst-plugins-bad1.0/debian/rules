@@ -215,6 +215,13 @@ common-binary-fixup-arch::
 		dh_gstscancodecs
 #	LD_LIBRARY_PATH=debian/libgstreamer-plugins-bad1.0-0/usr/lib/$(DEB_HOST_MULTIARCH):debian/libgstreamer-opencv1.0-0/usr/lib/$(DEB_HOST_MULTIARCH):$(LD_LIBRARY_PATH) \
 
+ifeq ($(DEB_HOST_ARCH),arm64)
+
+# Ultinous hack: we can not run the unit tests on Jetson because it requires GPU.
+override_dh_auto_test:
+
+endif
+
 clean::
 	# get rid of the sym links
 	for i in $(PLUGINS); do \
