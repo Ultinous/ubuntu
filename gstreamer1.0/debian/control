@@ -28,7 +28,8 @@ Build-Depends: debhelper (>= 9),
                gobject-introspection (>= 0.9.12-4~),
                gir1.2-glib-2.0,
                gir1.2-freedesktop,
-               libcap-dev [linux-any]
+               libcap-dev [linux-any],
+               libunwind-dev
 Build-Depends-Indep: libglib2.0-doc
 Standards-Version: 3.9.3
 Vcs-Git: https://salsa.debian.org/gstreamer-team/gstreamer1.0.git
@@ -43,7 +44,8 @@ Section: libs
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-         libcap2-bin [linux-any]
+         libcap2-bin [linux-any],
+         libunwind8
 Suggests: gstreamer1.0-tools,
 Breaks: gstreamer1.0-plugins-base (<< 1.8.0),
         gstreamer1.0-plugins-bad (<< 1.11.1),
@@ -88,7 +90,8 @@ Depends: libgstreamer1.0-0 (= ${binary:Version}),
          libglib2.0-dev,
          ${shlibs:Depends},
          ${misc:Depends},
-         gir1.2-gstreamer-1.0 (= ${binary:Version})
+         gir1.2-gstreamer-1.0 (= ${binary:Version}),
+         libunwind-dev
 Conflicts: libgstreamer-plugins-bad1.0-dev (<< 1.13.1)
 Replaces: libgstreamer-plugins-bad1.0-dev (<< 1.13.1)
 Recommends: debhelper
