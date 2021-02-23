@@ -12,3 +12,4 @@ ffmpeg_n4.3.1_avc_mkv_fix.patch
 ffmpeg_n4.3.1_assert_handler.patch
 ffmpeg_n4.3.1_rtp_ntp.patch
 ffmpeg_n4.3.1_ucppw.patch
+ffmpeg_n4.3.1_nvv4l2_dec.patch

@@ -44,8 +44,6 @@ FLAVORS = standard extra static
 #   --enable-mbedtls                Already using gnutls as TLS implementation
 #   --enable-libmodplug             see #849840: replaced with libopenmpt
 #   --enable-libsrt                 see #933180: links against OpenSSL (license incompatibility)
-#   --enable-libv4l2                This is only needed for very old devices and may cause problems for others.
-#                                   Should anyone need it, using LD_PRELOAD pointing on libv4l2 has the same effect.
 #   --enable-opencv                 Does not build with OpenCV >= 3.4
 #   --enable-pocketsphinx           see #941377: package dependencies are slightly broken
 # The following flags are not added by Ultinous, because necessary libraries are not in Ubuntu Bionic:
@@ -53,6 +51,10 @@ FLAVORS = standard extra static
 #   --enable-libvidstab \
 # Ultinous does not need the following flags:
 #   --enable-libmysofa \
+# Ultinous does need the following flags even though Debian said we don't:
+#   --enable-libv4l2                This is only needed for very old devices and may cause problems for others.
+#                                   Should anyone need it, using LD_PRELOAD pointing on libv4l2 has the same effect.
+#                                   This flag is needed on Jetson because nVidia docs said this.
 
 CONFIG := --prefix=/usr \
 	--extra-version="$(DEB_REVISION)" \
@@ -154,6 +156,17 @@ endif
 #ifeq ($(DEB_HOST_ARCH),amd64)
 #	CONFIG += --enable-nvenc
 #endif
+
+# Ultinous needs this on Jetson because nVidia docs said so
+ifeq ($(DEB_HOST_ARCH),arm64)
+	CONFIG += --enable-nvv4l2dec \
+		--enable-libv4l2 \
+		--extra-libs="-lnvbuf_utils -lnvll -lv4l2" \
+		--extra-cflags="-I /usr/src/jetson_multimedia_api/include/"
+else
+	CONFIG += --disable-nvv4l2dec \
+		--disable-libv4l2
+endif
 
 # ffmpeg is involved in build-dependency cycles with x264 and chromaprint, so disable them in stage one.
 # Also disable frei0r, which build-depends on opencv.
@@ -268,10 +281,18 @@ override_dh_auto_build-arch:
 		dh_auto_build -a --sourcedirectory=debian/"$$flavor" || (cat debian/"$$flavor"/config.log && exit 1); \
 	done
 
+ifneq ($(DEB_HOST_ARCH),arm64)
+
 # Set the library path for the dynamic linker, because the tests otherwise don't find the libraries.
 override_dh_auto_test-arch:
 	export LD_LIBRARY_PATH="libavcodec:libavdevice:libavfilter:libavformat:libavresample:libavutil:libpostproc:libswresample:libswscale"; \
 		dh_auto_test -a --sourcedirectory=debian/standard -- -k
+else
+
+# Ultinous hack: we can not run the unit tests on Jetson because it requires GPU.
+override_dh_auto_test-arch:
+
+endif
 
 # No tests for indep build.
 override_dh_auto_test-indep:
@@ -307,7 +328,11 @@ override_dh_shlibdeps:
 		ver=${DEB_VERSION}; \
 		echo "$$lib $$abi $$pkg (= $$ver)" >> debian/shlibs.local; \
 	done
+ifeq ($(DEB_HOST_ARCH),arm64)
+	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+else
 	dh_shlibdeps
+endif
 
 override_dh_missing:
 	dh_missing --list-missing

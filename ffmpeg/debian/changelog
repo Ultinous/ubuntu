@@ -1,3 +1,15 @@
+ffmpeg (7:4.3.1-2ultinous1) bionic; urgency=medium
+
+  [ Kozák Miklós ]
+  * Add Jetson specific flags and dependencies on arm64
+  * Disable unit tests 'cause GPU
+
+  [ Szabó Attila ]
+  * Add Ultinous patch for nvv4l2dec
+  * Add infinite workarounds for DEBILAN
+
+ -- Kozák Miklós <garmine@ultinous.com>  Tue, 23 Feb 2021 14:58:33 +0000
+
 ffmpeg (7:4.3.1-1ultinous1) bionic; urgency=medium
 
   [ Kozák Miklós ]
