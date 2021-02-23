@@ -1,14 +1,14 @@
-commit abec98f4bd83a69979e29bfc9261980cd6328d2c
+commit 212b21576bbefcb1ce2287d3895f1e1fdce42712
 Author: Szabó Attila <attila@ultinous.com>
 Date:   2020-03-16 10:10:32 +0100
 
     assert_handler
 
 diff --git a/libavutil/Makefile b/libavutil/Makefile
-index 8a7a44e4b5..b5a27f3386 100644
+index 9b08372eb2..98efed6827 100644
 --- a/libavutil/Makefile
 +++ b/libavutil/Makefile
-@@ -91,7 +91,8 @@ ARCH_HEADERS = bswap.h                                                  \
+@@ -95,7 +95,8 @@ ARCH_HEADERS = bswap.h                                                  \
  BUILT_HEADERS = avconfig.h                                              \
                  ffversion.h
  

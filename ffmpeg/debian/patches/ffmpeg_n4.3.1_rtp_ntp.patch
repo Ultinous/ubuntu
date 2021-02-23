@@ -1,27 +1,14 @@
-commit caddc7eb7b52f676fe3ab771a111e6e54de9b303
+commit c0ef07e7c55131f1a72520df6e16530363a75f4e
 Author: Szabó Attila <attila@ultinous.com>
 Date:   2020-03-16 10:11:08 +0100
 
     rtp_ntp
 
-diff --git a/libavcodec/avcodec.h b/libavcodec/avcodec.h
-index d234271c5b..ab4e253c3a 100644
---- a/libavcodec/avcodec.h
-+++ b/libavcodec/avcodec.h
-@@ -1496,6 +1496,8 @@ typedef struct AVPacket {
- 
-     int64_t pos;                            ///< byte position in stream, -1 if unknown
- 
-+    int64_t rtp_ntp_timestamp;  /// Camera NTP time in microseconds since 1970-01-01, 0 if unknown
-+
- #if FF_API_CONVERGENCE_DURATION
-     /**
-      * @deprecated Same as the duration field, but as int64_t. This was required
 diff --git a/libavcodec/avpacket.c b/libavcodec/avpacket.c
-index 2b20067211..a72025a9bb 100644
+index dce26cb31a..5ecfe2d687 100644
 --- a/libavcodec/avpacket.c
 +++ b/libavcodec/avpacket.c
-@@ -46,6 +46,7 @@ FF_ENABLE_DEPRECATION_WARNINGS
+@@ -48,6 +48,7 @@ FF_ENABLE_DEPRECATION_WARNINGS
      pkt->buf                  = NULL;
      pkt->side_data            = NULL;
      pkt->side_data_elems      = 0;
@@ -29,11 +16,24 @@ index 2b20067211..a72025a9bb 100644
  }
  
  AVPacket *av_packet_alloc(void)
+diff --git a/libavcodec/packet.h b/libavcodec/packet.h
+index 41485f4527..6f7cb71e01 100644
+--- a/libavcodec/packet.h
++++ b/libavcodec/packet.h
+@@ -374,6 +374,8 @@ typedef struct AVPacket {
+ 
+     int64_t pos;                            ///< byte position in stream, -1 if unknown
+ 
++    int64_t rtp_ntp_timestamp;  ///< Camera NTP time in microseconds since 1970-01-01, 0 if unknown
++
+ #if FF_API_CONVERGENCE_DURATION
+     /**
+      * @deprecated Same as the duration field, but as int64_t. This was required
 diff --git a/libavformat/rtpdec.c b/libavformat/rtpdec.c
-index e75a34cb93..839f3052f8 100644
+index 3d5b200099..cb305f3959 100644
 --- a/libavformat/rtpdec.c
 +++ b/libavformat/rtpdec.c
-@@ -591,6 +591,24 @@ void ff_rtp_parse_set_crypto(RTPDemuxContext *s, const char *suite,
+@@ -589,6 +589,24 @@ void ff_rtp_parse_set_crypto(RTPDemuxContext *s, const char *suite,
   */
  static void finalize_packet(RTPDemuxContext *s, AVPacket *pkt, uint32_t timestamp)
  {

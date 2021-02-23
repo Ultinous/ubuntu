@@ -1,29 +1,27 @@
-commit 30f734e72efd5584b4650d584b88f7e2008ce0c5
+commit 1ad374c3502f1d447fa65648b625837681ee2133
 Author: Szabó Attila <attila@ultinous.com>
 Date:   2020-03-16 10:11:39 +0100
 
     ucppw
 
-diff --git a/libavcodec/avcodec.h b/libavcodec/avcodec.h
-index ab4e253c3a..e564696a95 100644
---- a/libavcodec/avcodec.h
-+++ b/libavcodec/avcodec.h
-@@ -1412,7 +1412,12 @@ enum AVPacketSideDataType {
-      * If its value becomes huge, some code using it
-      * needs to be updated as it assumes it to be smaller than other limits.
+diff --git a/libavcodec/packet.h b/libavcodec/packet.h
+index 6f7cb71e01..0ed28e32a7 100644
+--- a/libavcodec/packet.h
++++ b/libavcodec/packet.h
+@@ -282,6 +282,11 @@ enum AVPacketSideDataType {
       */
--    AV_PKT_DATA_NB
-+    AV_PKT_DATA_NB,
-+
+     AV_PKT_DATA_DOVI_CONF,
+ 
 +    /**
 +     * Custom info filled by ucppw demuxer.
 +     */
-+    AV_PKT_DATA_UCPPW
- };
- 
- #define AV_PKT_DATA_QUALITY_FACTOR AV_PKT_DATA_QUALITY_STATS //DEPRECATED
++    AV_PKT_DATA_UCPPW,
++
+     /**
+      * The number of side data types.
+      * This is not part of the public API/ABI in the sense that it may
 diff --git a/libavformat/Makefile b/libavformat/Makefile
-index a434b005a4..fdc5c42426 100644
+index 0658fa3710..65e0516fc2 100644
 --- a/libavformat/Makefile
 +++ b/libavformat/Makefile
 @@ -3,6 +3,7 @@ DESC = FFmpeg container format library
@@ -43,7 +41,7 @@ index a434b005a4..fdc5c42426 100644
  OBJS-$(CONFIG_AA_DEMUXER)                += aadec.o
  OBJS-$(CONFIG_AAC_DEMUXER)               += aacdec.o apetag.o img2.o rawdec.o
 diff --git a/libavformat/allformats.c b/libavformat/allformats.c
-index cd00834807..f4e441cdca 100644
+index a7c5c9db89..a39b26f305 100644
 --- a/libavformat/allformats.c
 +++ b/libavformat/allformats.c
 @@ -28,6 +28,7 @@

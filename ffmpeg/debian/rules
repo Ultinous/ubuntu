@@ -63,7 +63,6 @@ CONFIG := --prefix=/usr \
 	--enable-gpl \
 	--disable-stripping \
 	--enable-avresample --disable-filter=resample \
-	--enable-avisynth \
 	--enable-gnutls \
 	--enable-ladspa \
 	--enable-libass \

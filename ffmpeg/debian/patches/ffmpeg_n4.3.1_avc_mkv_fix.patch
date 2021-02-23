@@ -1,16 +1,16 @@
-commit bc47b62a7e13823e4cf70a3dcc75c08e8af6e914
+commit aa0becda0dc719a8a540a0d77707cdfe640f8c24
 Author: Szabó Attila <attila@ultinous.com>
 Date:   2020-05-29 11:29:48 +0200
 
     avc_mkv_fix
 
 diff --git a/libavformat/avc.c b/libavformat/avc.c
-index a041e84357..be7bc2f3e4 100644
+index cc452d71a8..d2dd91ffa5 100644
 --- a/libavformat/avc.c
 +++ b/libavformat/avc.c
 @@ -113,6 +113,8 @@ int ff_isom_write_avcc(AVIOContext *pb, const uint8_t *data, int len)
-     uint32_t sps_size = 0, pps_size = 0;
-     int ret, nb_sps = 0, nb_pps = 0;
+     uint32_t sps_size = 0, pps_size = 0, sps_ext_size = 0;
+     int ret, nb_sps = 0, nb_pps = 0, nb_sps_ext = 0;
  
 +    if(len == 0)
 +      return 0;

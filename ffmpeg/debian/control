@@ -7,9 +7,8 @@ Uploaders: Andreas Cadhalpun <Andreas.Cadhalpun@googlemail.com>,
  Alexander Strasser <eclipse7@gmx.net>,
  Reinhard Tartler <siretart@tauware.de>,
  Balint Reczey <balint@balintreczey.hu>,
- James Cowgill <jcowgill@debian.org>
- , Lengyel Zsolt <zsolt@ultinous.com>
- , Kozák Miklós <garmine@ultinous.com>
+ James Cowgill <jcowgill@debian.org>,
+ Kozák Miklós <garmine@ultinous.com>
 Rules-Requires-Root: no
 Homepage: https://ffmpeg.org/
 Standards-Version: 4.1.4
@@ -186,7 +185,7 @@ Build-Depends:
  nasm,
 # autodetected zlib
  zlib1g-dev
-X-Ultinous-Upstream-Release: https://ffmpeg.org/releases/ffmpeg-4.2.3.tar.xz
+X-Ultinous-Upstream-Release: https://ffmpeg.org/releases/ffmpeg-4.3.1.tar.xz
 
 Package: ffmpeg
 Architecture: any
