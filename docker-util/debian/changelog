@@ -1,3 +1,9 @@
+docker-util (1.15.3) bionic; urgency=medium
+
+  * New release 1.15.3 
+
+ -- Kristof Frank <oturw@ultinous.com>  Mon, 01 Mar 2021 10:55:29 +0000
+
 docker-util (1.15.2) bionic; urgency=medium
 
   * New release 1.15.2
