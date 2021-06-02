@@ -1,0 +1,76 @@
+diff --git a/Tests/RunCMake/CommandLineTar/RunCMakeTest.cmake b/Tests/RunCMake/CommandLineTar/RunCMakeTest.cmake
+index a64af952..4d1b3966 100644
+--- a/Tests/RunCMake/CommandLineTar/RunCMakeTest.cmake
++++ b/Tests/RunCMake/CommandLineTar/RunCMakeTest.cmake
+@@ -27,7 +27,6 @@ run_cmake(gnutar)
+ run_cmake(gnutar-gz)
+ run_cmake(pax)
+ run_cmake(pax-xz)
+-run_cmake(pax-zstd)
+ run_cmake(paxr)
+ run_cmake(paxr-bz2)
+ run_cmake(zip)
+diff --git a/Tests/RunCMake/CommandLineTar/pax-zstd.cmake b/Tests/RunCMake/CommandLineTar/pax-zstd.cmake
+deleted file mode 100644
+index c2a304d8..00000000
+--- a/Tests/RunCMake/CommandLineTar/pax-zstd.cmake
++++ /dev/null
+@@ -1,10 +0,0 @@
+-set(OUTPUT_NAME "test.tar.zstd")
+-
+-set(COMPRESSION_FLAGS cvf)
+-set(COMPRESSION_OPTIONS --format=pax --zstd)
+-
+-set(DECOMPRESSION_FLAGS xvf)
+-
+-include(${CMAKE_CURRENT_LIST_DIR}/roundtrip.cmake)
+-
+-check_magic("28b52ffd0058" LIMIT 6 HEX)
+diff --git a/Tests/RunCMake/File_Archive/RunCMakeTest.cmake b/Tests/RunCMake/File_Archive/RunCMakeTest.cmake
+index 3908f424..89f50e69 100644
+--- a/Tests/RunCMake/File_Archive/RunCMakeTest.cmake
++++ b/Tests/RunCMake/File_Archive/RunCMakeTest.cmake
+@@ -5,7 +5,6 @@ run_cmake(gnutar)
+ run_cmake(gnutar-gz)
+ run_cmake(pax)
+ run_cmake(pax-xz)
+-run_cmake(pax-zstd)
+ run_cmake(paxr)
+ run_cmake(paxr-bz2)
+ run_cmake(zip)
+@@ -22,5 +21,4 @@ run_cmake(argument-validation-compression-level-1)
+ run_cmake(argument-validation-compression-level-2)
+ run_cmake(gnutar-gz-compression-level)
+ run_cmake(pax-xz-compression-level)
+-run_cmake(pax-zstd-compression-level)
+ run_cmake(paxr-bz2-compression-level)
+diff --git a/Tests/RunCMake/File_Archive/pax-zstd-compression-level.cmake b/Tests/RunCMake/File_Archive/pax-zstd-compression-level.cmake
+deleted file mode 100644
+index 73fd84dd..00000000
+--- a/Tests/RunCMake/File_Archive/pax-zstd-compression-level.cmake
++++ /dev/null
+@@ -1,10 +0,0 @@
+-set(OUTPUT_NAME "test.tar.zstd")
+-
+-set(ARCHIVE_FORMAT pax)
+-set(COMPRESSION_TYPE Zstd)
+-
+-include(${CMAKE_CURRENT_LIST_DIR}/compression-level.cmake)
+-
+-check_compression_level("1")
+-check_compression_level("5")
+-check_compression_level("9")
+diff --git a/Tests/RunCMake/File_Archive/pax-zstd.cmake b/Tests/RunCMake/File_Archive/pax-zstd.cmake
+deleted file mode 100644
+index ba3036ea..00000000
+--- a/Tests/RunCMake/File_Archive/pax-zstd.cmake
++++ /dev/null
+@@ -1,8 +0,0 @@
+-set(OUTPUT_NAME "test.tar.zstd")
+-
+-set(ARCHIVE_FORMAT pax)
+-set(COMPRESSION_TYPE Zstd)
+-
+-include(${CMAKE_CURRENT_LIST_DIR}/roundtrip.cmake)
+-
+-check_magic("28b52ffd0058" LIMIT 6 HEX)
