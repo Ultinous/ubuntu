@@ -1,3 +1,9 @@
+caffe-contrib (1.0.0-9cuda10.2ultinous11) bionic; urgency=medium
+
+  * Disabled opencv
+
+ -- FRANK Kristof <oturw@hans.lan.ultinous.com>  Fri, 04 Jun 2021 08:13:11 +0000
+
 caffe-contrib (1.0.0-9cuda10.2ultinous10) bionic; urgency=medium
 
   * Rebuild with opencv=3.4.0-2cuda10.2ultinous3
