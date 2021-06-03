@@ -1,0 +1,365 @@
+diff --git a/nvmpi.h b/nvmpi.h
+index 0116021..981b189 100644
+--- a/nvmpi.h
++++ b/nvmpi.h
+@@ -71,7 +71,8 @@ extern "C" {
+ 
+ 	int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet);
+ 
+-	int nvmpi_decoder_get_frame(nvmpictx* ctx,nvFrame* frame,bool wait);
++	int nvmpi_decoder_get_frame_locked(nvmpictx* ctx, nvFrame* frame);
++	void nvmpi_decoder_release_frame_lock(nvmpictx* ctx);
+ 
+ 	int nvmpi_decoder_close(nvmpictx* ctx);
+ 
+diff --git a/nvmpi_dec.cpp b/nvmpi_dec.cpp
+index 51278f6..778ae15 100644
+--- a/nvmpi_dec.cpp
++++ b/nvmpi_dec.cpp
+@@ -2,6 +2,7 @@
+ #include "nvmpi.h"
+ #include "NvVideoDecoder.h"
+ #include "nvbuf_utils.h"
++#include <atomic>
+ #include <vector>
+ #include <iostream>
+ #include <thread>
+@@ -11,39 +12,49 @@
+ #include <condition_variable>
+ 
+ #define CHUNK_SIZE 4000000
+-#define MAX_BUFFERS 32
+ 
+ #define TEST_ERROR(condition, message, errorCode)    \
+ 	if (condition)                               \
+-{                                                    \
+-	std::cout<< message;			     \
+-}
++	{                                                    \
++		std::cout << message << " (error code " << errorCode << ')' << std::endl; \
++		abort(); \
++	}
+ 
+ using namespace std;
+ 
++enum class BufState : uint8_t
++{
++	READY, WAITING
++};
++
+ struct nvmpictx
+ {
+ 	NvVideoDecoder *dec{nullptr};
+-	bool eos{false};
++	std::atomic<bool> eos{false};
+ 	bool got_res_event{false};
+ 	int index{0};
+ 	unsigned int coded_width{0};
+ 	unsigned int coded_height{0};
+ 	int dst_dma_fd{0};
+ 	int numberCaptureBuffers{0};
+-	int dmaBufferFileDescriptor[MAX_BUFFERS];
++	std::vector<int> dmaBufferFileDescriptor;
+ 	nvPixFormat out_pixfmt;
+ 	unsigned int decoder_pixfmt{0};
+ 	std::thread * dec_capture_loop{nullptr};
+ 	std::mutex* mutex{nullptr};
+ 	std::condition_variable* has_frame_cv{nullptr};
+-	std::queue<int> * frame_pools{nullptr};
+-	unsigned char * bufptr_0[MAX_BUFFERS];
+-	unsigned char * bufptr_1[MAX_BUFFERS];
+-	unsigned char * bufptr_2[MAX_BUFFERS];
++	std::vector<uint8_t> bufptr_0;
++	std::vector<uint8_t> bufptr_1;
++	std::vector<uint8_t> bufptr_2;
+ 	unsigned int frame_size[MAX_NUM_PLANES];
+ 	unsigned int frame_linesize[MAX_NUM_PLANES];
+-	unsigned long long timestamp[MAX_BUFFERS];
++	unsigned long long timestamp{0};
++	BufState bufState{BufState::WAITING};
++	std::atomic<size_t> inQ{0};
++
++	nvmpictx() = default;
++	nvmpictx(nvmpictx const &) = delete;
++	nvmpictx & operator=(nvmpictx const &) = delete;
+ };
+ 
+ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx){
+@@ -79,14 +90,10 @@ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx
+ 
+ 	for (int index = 0; index < ctx->numberCaptureBuffers; index++)
+ 	{
+-		if (ctx->dmaBufferFileDescriptor[index] != 0)
+-		{	
+-			ret = NvBufferDestroy(ctx->dmaBufferFileDescriptor[index]);
+-			TEST_ERROR(ret < 0, "Failed to Destroy NvBuffer", ret);
+-		}
+-
++		ret = NvBufferDestroy(ctx->dmaBufferFileDescriptor[index]);
++		TEST_ERROR(ret < 0, "Failed to Destroy NvBuffer", ret);
+ 	}
+-
++	ctx->dmaBufferFileDescriptor.clear();
+ 
+ 	ret=ctx->dec->setCapturePlaneFormat(format.fmt.pix_mp.pixelformat,format.fmt.pix_mp.width,format.fmt.pix_mp.height);
+ 	TEST_ERROR(ret < 0, "Error in setting decoder capture plane format", ret);
+@@ -94,7 +101,7 @@ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx
+ 	ctx->dec->getMinimumCapturePlaneBuffers(minimumDecoderCaptureBuffers);
+ 	TEST_ERROR(ret < 0, "Error while getting value of minimum capture plane buffers",ret);
+ 
+-	ctx->numberCaptureBuffers = minimumDecoderCaptureBuffers + 5;
++	ctx->numberCaptureBuffers = minimumDecoderCaptureBuffers;
+ 
+ 
+ 
+@@ -147,8 +154,9 @@ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx
+ 
+ 
+ 	ret = NvBufferCreateEx (&ctx->dst_dma_fd, &input_params);
+-	TEST_ERROR(ret == -1, "create dst_dmabuf failed", error);
++	TEST_ERROR(ret == -1, "create dst_dmabuf failed", ret);
+ 
++	ctx->dmaBufferFileDescriptor.resize(ctx->numberCaptureBuffers, 0);
+ 	for (int index = 0; index < ctx->numberCaptureBuffers; index++)
+ 	{
+ 		cParams.width = crop.c.width;
+@@ -196,7 +204,7 @@ void *dec_capture_loop_fcn(void *arg){
+ 	struct v4l2_format v4l2Format;
+ 	struct v4l2_crop v4l2Crop;
+ 	struct v4l2_event v4l2Event;
+-	int ret,buf_index=0;
++	int ret;
+ 
+ 	while (!(ctx->dec->isInError()||ctx->eos)){
+ 		NvBuffer *dec_buffer;
+@@ -222,11 +230,7 @@ void *dec_capture_loop_fcn(void *arg){
+ 			v4l2_buf.m.planes = planes;
+ 
+ 			if (ctx->dec->capture_plane.dqBuffer(v4l2_buf, &dec_buffer, NULL, 0)){
+-				if (errno == EAGAIN)
+-				{
+-					usleep(1000);
+-				}
+-				else
++				if(errno != EAGAIN)
+ 				{
+ 
+ 					ERROR_MSG("Error while calling dequeue at capture plane");
+@@ -255,9 +259,8 @@ void *dec_capture_loop_fcn(void *arg){
+ 			transform_params.src_rect = src_rect;
+ 			transform_params.dst_rect = dest_rect;
+ 
+-			ctx->mutex->lock();
+-
+ 			if(!ctx->eos){
++				std::unique_lock<std::mutex> lock(*ctx->mutex);
+ 
+ 				ret = NvBufferTransform(dec_buffer->planes[0].fd, ctx->dst_dma_fd, &transform_params);
+ 				TEST_ERROR(ret==-1, "Transform failed",ret);
+@@ -265,13 +268,13 @@ void *dec_capture_loop_fcn(void *arg){
+ 				NvBufferParams parm;
+ 				ret = NvBufferGetParams(ctx->dst_dma_fd, &parm);
+ 
+-				if(!ctx->frame_size[0]){
++				while(ctx->bufState == BufState::READY)
++					ctx->has_frame_cv->wait(lock);
+ 
+-					for(int index=0;index<MAX_BUFFERS;index++){
+-						ctx->bufptr_0[index]=new unsigned char[parm.psize[0]];//Y
+-						ctx->bufptr_1[index]=new unsigned char[parm.psize[1]];//UV or UU
+-						ctx->bufptr_2[index]=new unsigned char[parm.psize[2]];//VV
+-					}
++				if(!ctx->frame_size[0]){
++					ctx->bufptr_0.resize(parm.psize[0]);//Y
++					ctx->bufptr_1.resize(parm.psize[1]);//UV or UU
++					ctx->bufptr_2.resize(parm.psize[2]);//VV
+ 				}
+ 
+ 
+@@ -284,21 +287,17 @@ void *dec_capture_loop_fcn(void *arg){
+ 				ctx->frame_size[2]=parm.psize[2];
+ 
+ 
+-				ret=NvBuffer2Raw(ctx->dst_dma_fd,0,parm.width[0],parm.height[0],ctx->bufptr_0[buf_index]);
+-				ret=NvBuffer2Raw(ctx->dst_dma_fd,1,parm.width[1],parm.height[1],ctx->bufptr_1[buf_index]);	
++				ret=NvBuffer2Raw(ctx->dst_dma_fd,0,parm.width[0],parm.height[0],ctx->bufptr_0.data());
++				ret=NvBuffer2Raw(ctx->dst_dma_fd,1,parm.width[1],parm.height[1],ctx->bufptr_1.data());
+ 				if(ctx->out_pixfmt==NV_PIX_YUV420)
+-					ret=NvBuffer2Raw(ctx->dst_dma_fd,2,parm.width[2],parm.height[2],ctx->bufptr_2[buf_index]);	
++					ret=NvBuffer2Raw(ctx->dst_dma_fd,2,parm.width[2],parm.height[2],ctx->bufptr_2.data());
+ 
+-				ctx->frame_pools->push(buf_index);
+-				ctx->timestamp[buf_index]= (v4l2_buf.timestamp.tv_usec % 1000000) + (v4l2_buf.timestamp.tv_sec * 1000000UL);
++				ctx->timestamp = (v4l2_buf.timestamp.tv_usec % 1000000) + (v4l2_buf.timestamp.tv_sec * 1000000UL);
+ 
+-				buf_index=(buf_index+1)%MAX_BUFFERS;
+-
+-			}
+-			
+-			ctx->mutex->unlock();
+-
+-			if (ctx->eos) {
++				ctx->bufState = BufState::READY;
++				TEST_ERROR(ctx->inQ == 0, "no frame in queue", ctx->inQ);
++				--ctx->inQ;
++			} else {
+ 				break;
+ 			}
+ 
+@@ -360,6 +359,12 @@ nvmpictx* nvmpi_create_decoder(nvCodingType codingType,nvPixFormat pixFormat){
+ 	ret = ctx->dec->setFrameInputMode(0);
+ 	TEST_ERROR(ret < 0, "Error in decoder setFrameInputMode for NALU", ret);
+ 
++	ret = ctx->dec->setMaxPerfMode(1);
++	TEST_ERROR(ret < 0, "Error in decoder setMaxPerfMode", ret);
++
++	ret = ctx->dec->disableDPB();
++	TEST_ERROR(ret < 0, "Error in decoder disableDPB", ret);
++
+ 	ret = ctx->dec->output_plane.setupPlane(V4L2_MEMORY_USERPTR, 10, false, true);
+ 	TEST_ERROR(ret < 0, "Error while setting up output plane", ret);
+ 
+@@ -372,16 +377,8 @@ nvmpictx* nvmpi_create_decoder(nvCodingType codingType,nvPixFormat pixFormat){
+ 	ctx->got_res_event=false;
+ 	ctx->index=0;
+ 	ctx->frame_size[0]=0;
+-	ctx->frame_pools=new std::queue<int>;
+ 	ctx->mutex = new std::mutex();
+ 	ctx->has_frame_cv = new std::condition_variable();
+-	for(int index=0;index<MAX_BUFFERS;index++)
+-		ctx->dmaBufferFileDescriptor[index]=0;
+-	for(int index=0;index<MAX_BUFFERS;index++){
+-		ctx->bufptr_0[index] = nullptr;
+-		ctx->bufptr_1[index] = nullptr;
+-		ctx->bufptr_2[index] = nullptr;
+-	}
+ 	ctx->numberCaptureBuffers=0;
+ 	ctx->dec_capture_loop=new thread(dec_capture_loop_fcn,ctx);
+ 
+@@ -409,10 +406,12 @@ int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet){
+ 		ret = ctx->dec->output_plane.dqBuffer(v4l2_buf, &nvBuffer, NULL, -1);
+ 		if (ret < 0) {
+ 			cout << "Error DQing buffer at output plane" << std::endl;
+-			return false;
++			return -1;
+ 		}
+ 	}
+ 
++	++ctx->inQ;
++
+ 	memcpy(nvBuffer->planes[0].data,packet->payload,packet->payload_size);
+ 	nvBuffer->planes[0].bytesused=packet->payload_size;
+ 
+@@ -434,7 +433,7 @@ int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet){
+ 	ret = ctx->dec->output_plane.qBuffer(v4l2_buf, NULL);
+ 	if (ret < 0) {
+ 		std::cout << "Error Qing buffer at output plane" << std::endl;
+-		return false;
++		return -1;
+ 	}
+ 
+ 	if (ctx->index < ctx->dec->output_plane.getNumBuffers())
+@@ -451,23 +450,22 @@ int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet){
+ }
+ 
+ 
+-int nvmpi_decoder_get_frame(nvmpictx* ctx,nvFrame* frame,bool wait){
++int nvmpi_decoder_get_frame_locked(nvmpictx* ctx,nvFrame* frame){
+ 	
+-	int ret,picture_index;
++	int ret;
+ 	std::unique_lock<std::mutex> lock(*ctx->mutex);
+ 
+-	if (wait) {
+-		while (ctx->frame_pools->empty() && !ctx->eos && !ctx->dec->isInError()) {
+-			ctx->has_frame_cv->wait(lock);
+-		}
+-	}
++	if(ctx->bufState != BufState::READY && ctx->inQ == 0)
++		return -EAGAIN;
+ 
+-	if (ctx->frame_pools->empty()) {
+-		return -1;
+-	}
++	while(ctx->bufState == BufState::WAITING && !ctx->eos && !ctx->dec->isInError())
++		if(ctx->has_frame_cv->wait_for(lock, std::chrono::milliseconds(80)) == std::cv_status::timeout)
++			return -EAGAIN;
+ 
+-	picture_index=ctx->frame_pools->front();
+-	ctx->frame_pools->pop();
++	if(ctx->eos)
++		return -1;
++	if(ctx->dec->isInError())
++		return -2;
+ 
+ 	frame->width=ctx->coded_width;
+ 	frame->height=ctx->coded_height;
+@@ -476,24 +474,29 @@ int nvmpi_decoder_get_frame(nvmpictx* ctx,nvFrame* frame,bool wait){
+ 	frame->linesize[1]=ctx->frame_linesize[1];
+ 	frame->linesize[2]=ctx->frame_linesize[2];
+ 
+-	frame->payload[0]=ctx->bufptr_0[picture_index];
+-	frame->payload[1]=ctx->bufptr_1[picture_index];
+-	frame->payload[2]=ctx->bufptr_2[picture_index];
++	frame->payload[0]=ctx->bufptr_0.data();
++	frame->payload[1]=ctx->bufptr_1.data();
++	frame->payload[2]=ctx->bufptr_2.data();
+ 
+ 	frame->payload_size[0]=ctx->frame_size[0];
+ 	frame->payload_size[1]=ctx->frame_size[1];
+ 	frame->payload_size[2]=ctx->frame_size[2];
+-	frame->timestamp=ctx->timestamp[picture_index];
++	frame->timestamp=ctx->timestamp;
++
++	lock.release();
+ 
+ 	return 0;
++}
+ 
++void nvmpi_decoder_release_frame_lock(nvmpictx* ctx){
++	ctx->bufState = BufState::WAITING;
++	ctx->mutex->unlock();
++	ctx->has_frame_cv->notify_one();
+ }
+ 
+ int nvmpi_decoder_close(nvmpictx* ctx){
+-
+-	ctx->mutex->lock();
+ 	ctx->eos=true;
+-	ctx->mutex->unlock();
++	ctx->has_frame_cv->notify_all();
+ 	
+ 	ctx->dec->capture_plane.setStreamStatus(false);
+ 	
+@@ -511,25 +514,19 @@ int nvmpi_decoder_close(nvmpictx* ctx){
+ 
+ 	for (int index = 0; index < ctx->numberCaptureBuffers; index++)
+ 	{
+-		if (ctx->dmaBufferFileDescriptor[index] != 0)
+-		{	
+-			int ret = NvBufferDestroy(ctx->dmaBufferFileDescriptor[index]);
+-			TEST_ERROR(ret < 0, "Failed to Destroy NvBuffer", ret);
+-		}
+-
++		int ret = NvBufferDestroy(ctx->dmaBufferFileDescriptor[index]);
++		TEST_ERROR(ret < 0, "Failed to Destroy NvBuffer", ret);
+ 	}
++	ctx->dmaBufferFileDescriptor.clear();
+ 	
+ 	delete ctx->dec; ctx->dec = nullptr;
+ 
+-	for(int index=0;index<MAX_BUFFERS;index++){
+-		delete[] ctx->bufptr_0[index];
+-		delete[] ctx->bufptr_1[index];
+-		delete[] ctx->bufptr_2[index];
+-	}
++	ctx->bufptr_0.clear();
++	ctx->bufptr_1.clear();
++	ctx->bufptr_2.clear();
+ 
+ 	delete ctx->mutex; ctx->mutex = nullptr;
+ 	delete ctx->has_frame_cv; ctx->has_frame_cv = nullptr;
+-	delete ctx->frame_pools; ctx->frame_pools = nullptr;
+ 
+ 	delete ctx; ctx = nullptr;
+ 

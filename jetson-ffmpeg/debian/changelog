@@ -1,0 +1,5 @@
+jetson-ffmpeg (1-1) bionic; urgency=medium
+
+  * Initial release. Commit: 20067187641389ba309bd3ca51933718b6b475ef
+
+ -- Kozák Miklós <garmine@ultinous.com>  Thu, 03 Jun 2021 12:59:52 +0000
