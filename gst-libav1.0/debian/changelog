@@ -1,3 +1,9 @@
+gst-libav1.0 (1.16.2-2ffmpeg4ultinous2) bionic; urgency=medium
+
+  * Rebuild for new ffmpeg packages.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Fri, 04 Jun 2021 10:44:56 +0000
+
 gst-libav1.0 (1.16.2-2ffmpeg4ultinous1) bionic; urgency=medium
 
   * Backported to Bionic.
