@@ -18,6 +18,9 @@ endif
 override_dh_auto_configure:
 	dh_auto_configure -- $(CONFIGURE_FLAGS)
 
+override_dh_shlibdeps:
+	dh_shlibdeps -- -xlibavcodec58 -xlibavutil56 -xlibavformat58 -xlibswresample3
+
 override_dh_installman:
 	rst2man debian/fpcalc.rst > debian/fpcalc.1
 	dh_installman
