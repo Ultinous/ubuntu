@@ -1,0 +1,18 @@
+Source: jetson-ffmpeg
+Section: devel
+Priority: optional
+Maintainer: ULTINOUS LTD <sysadmins@ultinous.com>
+Uploaders: Kozák Miklós <garmine@ultinous.com>
+Build-Depends:
+  cmake,
+  debhelper (>=9),
+  nvidia-l4t-jetson-multimedia-api-dev
+Standards-Version: 3.9.8
+Homepage: https://github.com/jocover/jetson-ffmpeg
+X-Ultinous-Upstream-Release: http://can-i-haz-files/ubuntu/pool/src/jetson-ffmpeg-20067187641389ba309bd3ca51933718b6b475ef.tar.gz
+
+Package: jetson-ffmpeg
+Architecture: arm64
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: L4T Multimedia API for ffmpeg

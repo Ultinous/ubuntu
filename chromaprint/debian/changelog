@@ -1,3 +1,9 @@
+chromaprint (1.4.3-3ultinous2) bionic; urgency=medium
+
+  * Rebuild for new ffmpeg packages.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Fri, 04 Jun 2021 10:44:41 +0000
+
 chromaprint (1.4.3-3ultinous1) bionic; urgency=medium
 
   * Backported chromaprint (1.4.3-3) to bionic

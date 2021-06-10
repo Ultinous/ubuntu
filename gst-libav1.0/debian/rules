@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+export DH_VERBOSE=1
+
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/gnome.mk
 include /usr/share/cdbs/1/rules/utils.mk
@@ -37,6 +39,8 @@ DEB_CONFIGURE_EXTRA_FLAGS += --with-system-libav \
                              --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
                              --with-package-name=$(GST_PACKAGE_NAME) \
                              --with-package-origin=$(GST_PACKAGE_ORIGIN)
+
+DEB_DH_SHLIBDEPS_ARGS_ALL := -- -xlibavcodec58 -xlibavfilter7 -xlibavformat58 -xlibavutil56
 
 DEB_INSTALL_DOCS_ALL += debian/README.Debian NEWS
 

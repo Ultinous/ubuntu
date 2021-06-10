@@ -1,4 +1,4 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: cmake
 Source: http://www.cmake.org/files/v*/
 
@@ -26,6 +26,10 @@ Copyright: 2001-2006 A. Maitland Bottoms <bottoms@debian.org>
   2010 Kai Wasserbäch <debian@carbon-project.org>
   2014 Felix Geyer <fgeyer@debian.org>
 License: BSD-3-clause
+
+Files: debian/debtoolchainfilegen
+Copyright: 2018 Helmut Grohne <helmut@subdivi.de>
+License: BSD-2-clause
 
 Files: Source/LexerParser/cmFortranParserTokens.h
 Copyright: 1984, 1989-1990, 2000-2011 Free Software Foundation, Inc.

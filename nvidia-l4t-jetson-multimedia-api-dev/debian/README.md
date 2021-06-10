@@ -22,7 +22,6 @@
     rm -rf usr/src/jetson_multimedia_api/argus/samples/
     rm -rf usr/src/jetson_multimedia_api/argus/docs/
     rm -rf usr/src/jetson_multimedia_api/argus/apps/camera/docs/
-    rm -rf usr/src/jetson_multimedia_api/samples/
 
 ## 6. Verify that no unnecessary files remained
 
@@ -41,7 +40,6 @@
     sed -i -E '\@^[a-z0-9]+  usr/src/jetson_multimedia_api/argus/samples@d' md5sums
     sed -i -E '\@^[a-z0-9]+  usr/src/jetson_multimedia_api/argus/docs@d' md5sums
     sed -i -E '\@^[a-z0-9]+  usr/src/jetson_multimedia_api/argus/apps/camera/docs@d' md5sums
-    sed -i -E '\@^[a-z0-9]+  usr/src/jetson_multimedia_api/samples@d' md5sums
 
 ## 10. Update Package, Installed-Size and Depends fields inside control
 

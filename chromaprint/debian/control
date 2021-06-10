@@ -3,16 +3,19 @@ Priority: optional
 Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
 Uploaders:
  Sebastian Ramacher <sramacher@debian.org>,
- Reinhard Tartler <siretart@tauware.de>
- , Lengyel Zsolt <zsolt@ultinous.com>
+ Reinhard Tartler <siretart@tauware.de>,
+ Kozák Miklós <garmine@ultinous.com>
 Build-Depends:
  cmake,
  debhelper (>= 11),
- libavcodec-dev,
- libavformat-dev,
  libgtest-dev,
- libswresample-dev,
- python3-docutils (>= 0.6)
+ python3-docutils (>= 0.6),
+# libavcodec-dev | libavcodec-nvidia-dev [arm64],
+ libavcodec-dev,
+# libavformat-dev | libavformat-nvidia-dev [arm64],
+ libavformat-dev,
+# libswresample-dev | libswresample-nvidia-dev [arm64],
+ libswresample-dev
 Standards-Version: 4.1.4
 Section: libs
 Homepage: https://acoustid.org/chromaprint
@@ -40,7 +43,9 @@ Architecture: any
 Multi-Arch: same
 Depends:
  ${misc:Depends},
- ${shlibs:Depends}
+ ${shlibs:Depends},
+ libavcodec58 | libavcodec-nvidia58 [arm64],
+ libavutil56 | libavutil-nvidia56 [arm64]
 Description: audio fingerprint library
  Chromaprint is a library for calculating audio fingerprints
  which are used by the Acoustid service. Its main purpose is to provide an
@@ -51,7 +56,11 @@ Section: sound
 Architecture: any
 Depends:
  ${misc:Depends},
- ${shlibs:Depends}
+ ${shlibs:Depends},
+ libavcodec58 | libavcodec-nvidia58 [arm64],
+ libavutil56 | libavutil-nvidia56 [arm64],
+ libavformat58 | libavformat-nvidia58 [arm64],
+ libswresample3 | libswresample-nvidia3 [arm64]
 Description: audio fingerprinting library - tools
  Chromaprint is a library for calculating audio fingerprints
  which are used by the Acoustid service. Its main purpose is to provide an
