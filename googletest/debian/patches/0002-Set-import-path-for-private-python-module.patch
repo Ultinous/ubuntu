@@ -7,10 +7,10 @@ Subject: Set import path for private python module.
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/googlemock/scripts/generator/gmock_gen.py b/googlemock/scripts/generator/gmock_gen.py
-index 8cc0d13..68af073 100755
+index 9d528a5..df9613c 100755
 --- a/googlemock/scripts/generator/gmock_gen.py
 +++ b/googlemock/scripts/generator/gmock_gen.py
-@@ -22,8 +22,7 @@ import os
+@@ -21,8 +21,7 @@ import os
  import sys
  
  if __name__ == '__main__':

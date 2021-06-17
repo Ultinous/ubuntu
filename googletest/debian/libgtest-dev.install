@@ -1,4 +1,4 @@
 debian/tmp/usr/lib/*/libgtest*
-debian/tmp/usr/include/gtest
-debian/tmp/usr/lib/*/cmake/GTest
+debian/tmp/usr/lib/*/cmake/GTest/*
 debian/tmp/usr/lib/*/pkgconfig/gtest*pc
+debian/tmp/usr/include/gtest

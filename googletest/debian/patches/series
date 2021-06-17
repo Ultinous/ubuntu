@@ -1,6 +1,7 @@
-makefile-example.patch
-gtest-cc-use-cmath.patch
-0003-inconsistency-with-GTEST_HAS_PTHREAD-in-library-inte.patch
-0004-Set-import-path-for-private-python-module.patch
-0005-Stop-TestInfo-Run-calling-a-function-through-null-po.patch
-0006-Remove-Werror-from-cxx_base_flags.patch
+0001-inconsistency-with-GTEST_HAS_PTHREAD-in-library-inte.patch
+0002-Set-import-path-for-private-python-module.patch
+0003-Remove-Werror-from-cxx_base_flags.patch
+0004-Use-python-3-for-installed-script-gmock_gen.patch
+0005-Add-GoogleTest-version-to-each-sub-project-to-allow-.patch
+0006-Fix-gtest-help-test-failure-on-GNU-kFreeBSD.patch
+0007-Port-to-GNU-Hurd.patch

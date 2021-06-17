@@ -8,12 +8,14 @@ CXXFLAGS += -fPIC
 
 ifeq ($(DEB_HOST_ARCH),hppa)
 CXXFLAGS += -mlong-calls
-else ifeq ($(DEB_BUILD_ARCH), mips)
+else ifeq ($(DEB_HOST_ARCH), mips)
+CXXFLAGS += -mxgot -g1
+else ifeq ($(DEB_HOST_ARCH), mips64el)
 CXXFLAGS += -mxgot
-else ifeq ($(DEB_BUILD_ARCH), mips64el)
-CXXFLAGS += -mxgot
-else ifeq ($(DEB_BUILD_ARCH), mipsel)
-CXXFLAGS += -mxgot
+else ifeq ($(DEB_HOST_ARCH), mipsel)
+CXXFLAGS += -mxgot -g1
+else ifeq ($(DEB_HOST_ARCH), sh4)
+CXXFLAGS += -g1
 endif
 
 export CXXFLAGS
@@ -30,15 +32,20 @@ ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	cd obj-* && ctest || (cat Testing/Temporary/LastTest.log; exit 1)
 endif
 
+override_dh_prep-indep:
+	dh_prep
+	find googletest -iname autom4te.cache -o -iname __pycache__ -type d | xargs rm -rf
+	find googletest -iname LICENSE -o -iname .gitignore -o -iname '*.pyc' | xargs rm -f
+	find googletest -iname '*.py' | xargs chmod -x
+	rm -rf googletest/*/msvc
+
+override_dh_prep-arch:
+	dh_prep
+	cp googlemock/scripts/generator/gmock_gen.py googlemock/scripts/generator/gmock_gen
+
 override_dh_install:
 	dh_install
-	find debian/googletest/usr/src/googletest -iname LICENSE -o -iname .gitignore -o -iname '*.pyc' | xargs rm
-	find debian/googletest/usr/src/googletest -iname '*.py' | xargs chmod -x
-	rm -rf debian/googletest/usr/src/googletest/*/msvc
-	for f in $$(ls debian/googletest-tools/usr/bin/*.py); \
-	  do mv $$f $$(echo $$f | sed s/\.py//); \
-	done
-	chmod a-x -R debian/googletest-tools/usr/share/googletest-tools/generator/cpp/*
+	find debian -iname '*.py' -print0 | xargs -0 chmod -x
 
 override_dh_clean:
 	dh_clean

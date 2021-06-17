@@ -1,0 +1,134 @@
+From 0e035d9005ac02a339d871ef2e62542ab478d55e Mon Sep 17 00:00:00 2001
+From: Mattias Ellert <mattias.ellert@physics.uu.se>
+Date: Wed, 30 Dec 2020 13:50:04 +0100
+Subject: [PATCH] Port to GNU/Hurd
+
+---
+ googletest/include/gtest/internal/gtest-port-arch.h |  2 ++
+ googletest/include/gtest/internal/gtest-port.h      | 13 ++++++++++---
+ googletest/src/gtest-port.cc                        |  2 +-
+ googletest/test/googletest-port-test.cc             |  2 +-
+ googletest/test/gtest_help_test.py                  |  3 ++-
+ 5 files changed, 16 insertions(+), 6 deletions(-)
+
+diff --git a/googletest/include/gtest/internal/gtest-port-arch.h b/googletest/include/gtest/internal/gtest-port-arch.h
+index 813bf2c6..a75cd5bb 100644
+--- a/googletest/include/gtest/internal/gtest-port-arch.h
++++ b/googletest/include/gtest/internal/gtest-port-arch.h
+@@ -78,6 +78,8 @@
+ # define GTEST_OS_FREEBSD 1
+ #elif defined __Fuchsia__
+ # define GTEST_OS_FUCHSIA 1
++#elif defined(__GNU__)
++# define GTEST_OS_GNU_HURD 1
+ #elif defined(__GLIBC__) && defined(__FreeBSD_kernel__)
+ # define GTEST_OS_GNU_KFREEBSD 1
+ #elif defined __linux__
+diff --git a/googletest/include/gtest/internal/gtest-port.h b/googletest/include/gtest/internal/gtest-port.h
+index 6b66362f..ce1862f6 100644
+--- a/googletest/include/gtest/internal/gtest-port.h
++++ b/googletest/include/gtest/internal/gtest-port.h
+@@ -116,6 +116,7 @@
+ //   GTEST_OS_DRAGONFLY - DragonFlyBSD
+ //   GTEST_OS_FREEBSD  - FreeBSD
+ //   GTEST_OS_FUCHSIA  - Fuchsia
++//   GTEST_OS_GNU_HURD - GNU/Hurd
+ //   GTEST_OS_GNU_KFREEBSD - GNU/kFreeBSD
+ //   GTEST_OS_HAIKU    - Haiku
+ //   GTEST_OS_HPUX     - HP-UX
+@@ -543,13 +544,14 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
+   (GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_HPUX || GTEST_OS_QNX ||          \
+    GTEST_OS_FREEBSD || GTEST_OS_NACL || GTEST_OS_NETBSD || GTEST_OS_FUCHSIA || \
+    GTEST_OS_DRAGONFLY || GTEST_OS_GNU_KFREEBSD || GTEST_OS_OPENBSD ||          \
+-   GTEST_OS_HAIKU)
++   GTEST_OS_HAIKU || GTEST_OS_GNU_HURD)
+ #endif  // GTEST_HAS_PTHREAD
+ 
+ #if GTEST_HAS_PTHREAD
+ // gtest-port.h guarantees to #include <pthread.h> when GTEST_HAS_PTHREAD is
+ // true.
+ # include <pthread.h>  // NOLINT
++# include <sched.h>    // NOLINT
+ 
+ // For timespec and nanosleep, used below.
+ # include <time.h>  // NOLINT
+@@ -603,7 +605,8 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
+      (GTEST_OS_WINDOWS_DESKTOP && _MSC_VER) || GTEST_OS_WINDOWS_MINGW ||  \
+      GTEST_OS_AIX || GTEST_OS_HPUX || GTEST_OS_OPENBSD || GTEST_OS_QNX || \
+      GTEST_OS_FREEBSD || GTEST_OS_NETBSD || GTEST_OS_FUCHSIA ||           \
+-     GTEST_OS_DRAGONFLY || GTEST_OS_GNU_KFREEBSD || GTEST_OS_HAIKU)
++     GTEST_OS_DRAGONFLY || GTEST_OS_GNU_KFREEBSD || GTEST_OS_HAIKU ||     \
++     GTEST_OS_GNU_HURD)
+ # define GTEST_HAS_DEATH_TEST 1
+ #endif
+ 
+@@ -623,7 +626,8 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
+ 
+ // Determines whether test results can be streamed to a socket.
+ #if GTEST_OS_LINUX || GTEST_OS_GNU_KFREEBSD || GTEST_OS_DRAGONFLY || \
+-    GTEST_OS_FREEBSD || GTEST_OS_NETBSD || GTEST_OS_OPENBSD
++    GTEST_OS_FREEBSD || GTEST_OS_NETBSD || GTEST_OS_OPENBSD ||       \
++    GTEST_OS_GNU_HURD
+ # define GTEST_CAN_STREAM_RESULTS_ 1
+ #endif
+ 
+@@ -1331,6 +1335,9 @@ class ThreadWithParam : public ThreadWithParamBase {
+   void Join() {
+     if (!finished_) {
+       GTEST_CHECK_POSIX_SUCCESS_(pthread_join(thread_, nullptr));
++      // Yield to the joining thread to ensure its destructors are run
++      // before marking the thread as finished.
++      sched_yield();
+       finished_ = true;
+     }
+   }
+diff --git a/googletest/src/gtest-port.cc b/googletest/src/gtest-port.cc
+index 3f39f71c..989c59ae 100644
+--- a/googletest/src/gtest-port.cc
++++ b/googletest/src/gtest-port.cc
+@@ -98,7 +98,7 @@ const int kStdOutFileno = STDOUT_FILENO;
+ const int kStdErrFileno = STDERR_FILENO;
+ #endif  // _MSC_VER
+ 
+-#if GTEST_OS_LINUX
++#if GTEST_OS_LINUX || GTEST_OS_GNU_HURD
+ 
+ namespace {
+ template <typename T>
+diff --git a/googletest/test/googletest-port-test.cc b/googletest/test/googletest-port-test.cc
+index 4a87df0b..e3ad4dde 100644
+--- a/googletest/test/googletest-port-test.cc
++++ b/googletest/test/googletest-port-test.cc
+@@ -280,7 +280,7 @@ TEST(FormatCompilerIndependentFileLocationTest, FormatsUknownFileAndLine) {
+ 
+ #if GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_QNX || GTEST_OS_FUCHSIA || \
+     GTEST_OS_DRAGONFLY || GTEST_OS_FREEBSD || GTEST_OS_GNU_KFREEBSD || \
+-    GTEST_OS_NETBSD || GTEST_OS_OPENBSD
++    GTEST_OS_NETBSD || GTEST_OS_OPENBSD || GTEST_OS_GNU_HURD
+ void* ThreadFunc(void* data) {
+   internal::Mutex* mutex = static_cast<internal::Mutex*>(data);
+   mutex->Lock();
+diff --git a/googletest/test/gtest_help_test.py b/googletest/test/gtest_help_test.py
+index 8d953bbd..54d45047 100755
+--- a/googletest/test/gtest_help_test.py
++++ b/googletest/test/gtest_help_test.py
+@@ -43,6 +43,7 @@ import gtest_test_utils
+ 
+ 
+ IS_LINUX = os.name == 'posix' and os.uname()[0] == 'Linux'
++IS_GNUHURD = os.name == 'posix' and os.uname()[0] == 'GNU'
+ IS_GNUKFREEBSD = os.name == 'posix' and os.uname()[0] == 'GNU/kFreeBSD'
+ IS_WINDOWS = os.name == 'nt'
+ 
+@@ -112,7 +113,7 @@ class GTestHelpTest(gtest_test_utils.TestCase):
+     self.assertEquals(0, exit_code)
+     self.assert_(HELP_REGEX.search(output), output)
+ 
+-    if IS_LINUX or IS_GNUKFREEBSD:
++    if IS_LINUX or IS_GNUHURD or IS_GNUKFREEBSD:
+       self.assert_(STREAM_RESULT_TO_FLAG in output, output)
+     else:
+       self.assert_(STREAM_RESULT_TO_FLAG not in output, output)
+-- 
+2.29.2
+

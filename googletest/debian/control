@@ -2,20 +2,17 @@ Source: googletest
 Homepage: https://github.com/google/googletest
 Section: devel
 Maintainer: Steve M. Robbins <smr@debian.org>
-Uploaders: Fredrik Hallenberg <hallon@debian.org>,
-           Kristof Frank <oturw@ultinous.com>
-           , Lengyel Zsolt <zsolt@ultinous.com>
-           , Kozák Miklós <garmine@ultinous.com>
+Uploaders: Szabó Attila <attila@ultinous.com>, Fredrik Hallenberg <hallon@debian.org>
 Priority: optional
-Build-Depends: debhelper (>= 11), cmake, python:native
+Build-Depends: debhelper (>= 11), cmake, python3:native
 Standards-Version: 4.1.4
 Vcs-Git: https://salsa.debian.org/debian/googletest.git
 Vcs-Browser: https://salsa.debian.org/debian/googletest
-X-Ultinous-Upstream-Release: https://github.com/google/googletest/archive/release-1.8.1.tar.gz
+X-Ultinous-Debian-Origtars: http://de.archive.ubuntu.com/ubuntu/pool/universe/g/googletest/googletest_1.10.0.20201025.orig.tar.gz 
 
 Package: googletest
-Architecture: any
-Multi-Arch: same
+Architecture: all
+Multi-Arch: foreign
 Section: libdevel
 Depends: ${misc:Depends}
 Conflicts: libgtest-dev (<< 1.8.0), google-mock (<< 1.8.0)
@@ -60,7 +57,7 @@ Package: googletest-tools
 Architecture: any
 Multi-Arch: same
 Section: libdevel
-Depends: ${misc:Depends}, python:any
+Depends: ${misc:Depends}, python3:any
 Conflicts: googletest (<= 1.8.0-8)
 Replaces: googletest (<= 1.8.0-8)
 Description: Google's C++ test framework sources
@@ -71,7 +68,7 @@ Package: libgtest-dev
 Architecture: any
 Multi-Arch: same
 Section: libdevel
-Depends: ${misc:Depends}, googletest (= ${binary:Version})
+Depends: ${misc:Depends}, googletest (= ${source:Version})
 Conflicts: googletest (<= 1.8.0-8)
 Replaces: googletest (<= 1.8.0-8)
 Description: Google's framework for writing C++ tests
@@ -113,7 +110,7 @@ Package: google-mock
 Architecture: any
 Multi-Arch: same
 Section: oldlibs
-Depends: ${misc:Depends}, googletest (= ${binary:Version})
+Depends: ${misc:Depends}, googletest (= ${source:Version})
 Description: Google's framework for writing and using C++ mock classes
  NOTE: This is a transitional package, retained for backwards compatibility.
  New code should instead use either package libgmock-dev (for compiled lib)

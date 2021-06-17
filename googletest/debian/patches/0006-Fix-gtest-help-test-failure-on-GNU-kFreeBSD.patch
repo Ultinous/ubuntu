@@ -1,0 +1,33 @@
+From ed1bf868464cfef290c89cad70ba0c908bf63ae9 Mon Sep 17 00:00:00 2001
+From: Mattias Ellert <mattias.ellert@physics.uu.se>
+Date: Fri, 25 Dec 2020 14:58:19 +0100
+Subject: [PATCH] Fix gtest-help-test failure on GNU/kFreeBSD
+
+---
+ googletest/test/gtest_help_test.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/googletest/test/gtest_help_test.py b/googletest/test/gtest_help_test.py
+index 609615e8..8d953bbd 100755
+--- a/googletest/test/gtest_help_test.py
++++ b/googletest/test/gtest_help_test.py
+@@ -43,6 +43,7 @@ import gtest_test_utils
+ 
+ 
+ IS_LINUX = os.name == 'posix' and os.uname()[0] == 'Linux'
++IS_GNUKFREEBSD = os.name == 'posix' and os.uname()[0] == 'GNU/kFreeBSD'
+ IS_WINDOWS = os.name == 'nt'
+ 
+ PROGRAM_PATH = gtest_test_utils.GetTestExecutablePath('gtest_help_test_')
+@@ -111,7 +112,7 @@ class GTestHelpTest(gtest_test_utils.TestCase):
+     self.assertEquals(0, exit_code)
+     self.assert_(HELP_REGEX.search(output), output)
+ 
+-    if IS_LINUX:
++    if IS_LINUX or IS_GNUKFREEBSD:
+       self.assert_(STREAM_RESULT_TO_FLAG in output, output)
+     else:
+       self.assert_(STREAM_RESULT_TO_FLAG not in output, output)
+-- 
+2.29.2
+
