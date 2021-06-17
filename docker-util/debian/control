@@ -2,14 +2,14 @@ Source: docker-util
 Section: utils
 Priority: optional
 Maintainer: ULTINOUS LTD <sysadmins@ultinous.com>
-Uploaders: Lengyel Zsolt <zsolt@ultinous.com>,
+Uploaders: Szabó Attila <attila@ultinous.com>,
   Frank Kristof <oturw@ultinous.com>,
   Kozák Miklós <garmine@ultinous.com>
 Build-Depends: debhelper (>= 10), dh-cargo, libssl-dev
 Standards-Version: 4.1.2
 Vcs-Git: git@github.com:Ultinous/docker-util.git
 Vcs-Browser: https://github.com:Ultinous/docker-util.git
-X-Ultinous-Upstream-Release: http://can-i-haz-files/gentoo/docker-util-release-1.15.3.tar.gz
+X-Ultinous-Upstream-Release: http://can-i-haz-files/gentoo/docker-util-release-1.16.1.tar.gz
 
 Package: docker-util
 Architecture: any
