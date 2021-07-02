@@ -1,3 +1,9 @@
+ffmpeg-nvidia (7:4.3.1-3ultinous1) bionic; urgency=medium
+
+  * Encoder
+
+ -- Szabó Attila <attila@ultinous.com>  Fri, 02 Jul 2021 10:44:15 +0000
+
 ffmpeg-nvidia (7:4.3.1-2ultinous1) bionic; urgency=medium
 
   *  Add nvmpi patch

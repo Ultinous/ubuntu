@@ -1,19 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c85e9f0..db0145b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,8 +1,9 @@
+ cmake_minimum_required(VERSION 3.9)
+ project(nvmpi VERSION 1.0.0 DESCRIPTION "nvidia multimedia api")
+ 
+-set(CMAKE_C_FLAGS“$ {CMAKE_C_FLAGS} -fPIC”)
+-set(CMAKE_CXX_FLAGS“$ {CMAKE_CXX_FLAGS} -fPIC”)
++set(WARNING_FLAGS "-Wall -Wextra -Wno-error=unused-parameter -Werror -Wno-sign-compare")
++set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC ${WARNING_FLAGS}")
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC ${WARNING_FLAGS}")
+ #set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath-link=/lib")
+ #set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath-link=/usr/lib/aarch64-linux-gnu")
+ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-rpath-link=/usr/lib/aarch64-linux-gnu/tegra")
 diff --git a/nvmpi.h b/nvmpi.h
-index 0116021..981b189 100644
+index 0116021..bf8a520 100644
 --- a/nvmpi.h
 +++ b/nvmpi.h
-@@ -71,7 +71,8 @@ extern "C" {
+@@ -3,7 +3,8 @@
+ #include <stdlib.h>
+ #include <stdbool.h>
  
- 	int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet);
+-typedef struct nvmpictx nvmpictx;
++typedef struct nvmpi_dec_ctx nvmpi_dec_ctx;
++typedef struct nvmpi_enc_ctx nvmpi_enc_ctx;
+ 
+ typedef enum {
+ 	NV_PIX_NV12,
+@@ -24,7 +25,6 @@ typedef struct _NVENCPARAM{
+ 	unsigned int idr_interval;
+ 	unsigned int fps_n;
+ 	unsigned int fps_d;
+-	int capture_num;
+ 	unsigned int max_b_frames;
+ 	unsigned int refs;
+ 	unsigned int qmax;
+@@ -67,21 +67,23 @@ typedef enum {
+ extern "C" {
+ #endif
+ 
+-	nvmpictx* nvmpi_create_decoder(nvCodingType codingType,nvPixFormat pixFormat);
++	nvmpi_dec_ctx* nvmpi_create_decoder(nvCodingType codingType,nvPixFormat pixFormat);
+ 
+-	int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet);
++	int nvmpi_decoder_put_packet(nvmpi_dec_ctx* ctx,nvPacket* packet);
  
 -	int nvmpi_decoder_get_frame(nvmpictx* ctx,nvFrame* frame,bool wait);
-+	int nvmpi_decoder_get_frame_locked(nvmpictx* ctx, nvFrame* frame);
-+	void nvmpi_decoder_release_frame_lock(nvmpictx* ctx);
++	int nvmpi_decoder_get_frame_locked(nvmpi_dec_ctx* ctx, nvFrame* frame);
++	void nvmpi_decoder_release_frame_lock(nvmpi_dec_ctx* ctx);
  
- 	int nvmpi_decoder_close(nvmpictx* ctx);
+-	int nvmpi_decoder_close(nvmpictx* ctx);
++	int nvmpi_decoder_close(nvmpi_dec_ctx* ctx);
  
+-	nvmpictx* nvmpi_create_encoder(nvCodingType codingType,nvEncParam * param);
++	nvmpi_enc_ctx* nvmpi_create_encoder(nvCodingType codingType,nvEncParam * param);
+ 		
+-	int nvmpi_encoder_put_frame(nvmpictx* ctx,nvFrame* frame);
++	int nvmpi_encoder_put_frame(nvmpi_enc_ctx* ctx,nvFrame* frame);
+ 
+-	int nvmpi_encoder_get_packet(nvmpictx* ctx,nvPacket* packet);
++	int nvmpi_encoder_get_packet_locked(nvmpi_enc_ctx* ctx,nvPacket* packet);
++	void nvmpi_encoder_release_packet_lock(nvmpi_enc_ctx* ctx);
+ 
+-	int nvmpi_encoder_close(nvmpictx* ctx);
++	int nvmpi_encoder_close(nvmpi_enc_ctx* ctx);
+ 
+ #ifdef __cplusplus
+ }
 diff --git a/nvmpi_dec.cpp b/nvmpi_dec.cpp
-index 51278f6..778ae15 100644
+index 51278f6..c58fc9c 100644
 --- a/nvmpi_dec.cpp
 +++ b/nvmpi_dec.cpp
 @@ -2,6 +2,7 @@
@@ -24,30 +80,34 @@ index 51278f6..778ae15 100644
  #include <vector>
  #include <iostream>
  #include <thread>
-@@ -11,39 +12,49 @@
+@@ -11,47 +12,58 @@
  #include <condition_variable>
  
  #define CHUNK_SIZE 4000000
 -#define MAX_BUFFERS 32
  
- #define TEST_ERROR(condition, message, errorCode)    \
- 	if (condition)                               \
+-#define TEST_ERROR(condition, message, errorCode)    \
+-	if (condition)                               \
 -{                                                    \
 -	std::cout<< message;			     \
 -}
-+	{                                                    \
-+		std::cout << message << " (error code " << errorCode << ')' << std::endl; \
-+		abort(); \
-+	}
++#define TEST_ERROR(condition, message, errorCode) \
++	do { \
++		if (condition) { \
++			std::cout << message << " (error code " << errorCode << ')' << std::endl; \
++			abort(); \
++		} \
++	} while(false)
  
  using namespace std;
  
+-struct nvmpictx
 +enum class BufState : uint8_t
 +{
 +	READY, WAITING
 +};
 +
- struct nvmpictx
++struct nvmpi_dec_ctx
  {
  	NvVideoDecoder *dec{nullptr};
 -	bool eos{false};
@@ -79,13 +139,24 @@ index 51278f6..778ae15 100644
 +	BufState bufState{BufState::WAITING};
 +	std::atomic<size_t> inQ{0};
 +
-+	nvmpictx() = default;
-+	nvmpictx(nvmpictx const &) = delete;
-+	nvmpictx & operator=(nvmpictx const &) = delete;
++	nvmpi_dec_ctx() = default;
++	nvmpi_dec_ctx(nvmpi_dec_ctx const &) = delete;
++	nvmpi_dec_ctx & operator=(nvmpi_dec_ctx const &) = delete;
  };
  
- void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx){
-@@ -79,14 +90,10 @@ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx
+-void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx){
++void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpi_dec_ctx* ctx){
+ 	
+ 	int32_t minimumDecoderCaptureBuffers;
+ 	int ret=0;
+-	NvBufferCreateParams input_params = {0};
+-	NvBufferCreateParams cParams = {0};
++	NvBufferCreateParams input_params{};
++	NvBufferCreateParams cParams{};
+ 
+ 	ret = ctx->dec->capture_plane.getFormat(format);	
+ 	TEST_ERROR(ret < 0, "Error: Could not get format from decoder capture plane", ret);
+@@ -79,14 +91,10 @@ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx
  
  	for (int index = 0; index < ctx->numberCaptureBuffers; index++)
  	{
@@ -103,7 +174,7 @@ index 51278f6..778ae15 100644
  
  	ret=ctx->dec->setCapturePlaneFormat(format.fmt.pix_mp.pixelformat,format.fmt.pix_mp.width,format.fmt.pix_mp.height);
  	TEST_ERROR(ret < 0, "Error in setting decoder capture plane format", ret);
-@@ -94,7 +101,7 @@ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx
+@@ -94,7 +102,7 @@ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx
  	ctx->dec->getMinimumCapturePlaneBuffers(minimumDecoderCaptureBuffers);
  	TEST_ERROR(ret < 0, "Error while getting value of minimum capture plane buffers",ret);
  
@@ -112,7 +183,7 @@ index 51278f6..778ae15 100644
  
  
  
-@@ -147,8 +154,9 @@ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx
+@@ -147,8 +155,9 @@ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx
  
  
  	ret = NvBufferCreateEx (&ctx->dst_dma_fd, &input_params);
@@ -123,7 +194,15 @@ index 51278f6..778ae15 100644
  	for (int index = 0; index < ctx->numberCaptureBuffers; index++)
  	{
  		cParams.width = crop.c.width;
-@@ -196,7 +204,7 @@ void *dec_capture_loop_fcn(void *arg){
+@@ -190,13 +199,13 @@ void respondToResolutionEvent(v4l2_format &format, v4l2_crop &crop,nvmpictx* ctx
+ 	ctx->got_res_event = true;
+ }
+ 
+-void *dec_capture_loop_fcn(void *arg){
+-	nvmpictx* ctx=(nvmpictx*)arg;
++void dec_capture_loop_fcn(void *arg){
++	nvmpi_dec_ctx* ctx=(nvmpi_dec_ctx*)arg;
+ 	
  	struct v4l2_format v4l2Format;
  	struct v4l2_crop v4l2Crop;
  	struct v4l2_event v4l2Event;
@@ -132,7 +211,7 @@ index 51278f6..778ae15 100644
  
  	while (!(ctx->dec->isInError()||ctx->eos)){
  		NvBuffer *dec_buffer;
-@@ -222,11 +230,7 @@ void *dec_capture_loop_fcn(void *arg){
+@@ -222,11 +231,7 @@ void *dec_capture_loop_fcn(void *arg){
  			v4l2_buf.m.planes = planes;
  
  			if (ctx->dec->capture_plane.dqBuffer(v4l2_buf, &dec_buffer, NULL, 0)){
@@ -145,22 +224,23 @@ index 51278f6..778ae15 100644
  				{
  
  					ERROR_MSG("Error while calling dequeue at capture plane");
-@@ -255,9 +259,8 @@ void *dec_capture_loop_fcn(void *arg){
+@@ -255,23 +260,22 @@ void *dec_capture_loop_fcn(void *arg){
  			transform_params.src_rect = src_rect;
  			transform_params.dst_rect = dest_rect;
  
 -			ctx->mutex->lock();
 -
  			if(!ctx->eos){
-+				std::unique_lock<std::mutex> lock(*ctx->mutex);
- 
+-
  				ret = NvBufferTransform(dec_buffer->planes[0].fd, ctx->dst_dma_fd, &transform_params);
  				TEST_ERROR(ret==-1, "Transform failed",ret);
-@@ -265,13 +268,13 @@ void *dec_capture_loop_fcn(void *arg){
+ 
  				NvBufferParams parm;
  				ret = NvBufferGetParams(ctx->dst_dma_fd, &parm);
++				TEST_ERROR(ret==-1, "GetParams failed",ret);
  
 -				if(!ctx->frame_size[0]){
++				std::unique_lock<std::mutex> lock(*ctx->mutex);
 +				while(ctx->bufState == BufState::READY)
 +					ctx->has_frame_cv->wait(lock);
  
@@ -176,7 +256,7 @@ index 51278f6..778ae15 100644
  				}
  
  
-@@ -284,21 +287,17 @@ void *dec_capture_loop_fcn(void *arg){
+@@ -284,21 +288,17 @@ void *dec_capture_loop_fcn(void *arg){
  				ctx->frame_size[2]=parm.psize[2];
  
  
@@ -206,7 +286,33 @@ index 51278f6..778ae15 100644
  				break;
  			}
  
-@@ -360,6 +359,12 @@ nvmpictx* nvmpi_create_decoder(nvCodingType codingType,nvPixFormat pixFormat){
+@@ -315,15 +315,15 @@ void *dec_capture_loop_fcn(void *arg){
+ 	ctx->has_frame_cv->notify_all();
+ }
+ 
+-nvmpictx* nvmpi_create_decoder(nvCodingType codingType,nvPixFormat pixFormat){
++nvmpi_dec_ctx* nvmpi_create_decoder(nvCodingType codingType,nvPixFormat pixFormat){
+ 	
+ 	int ret;
+ 	log_level = LOG_LEVEL_INFO;
+ 
+-	nvmpictx* ctx=new nvmpictx;
++	nvmpi_dec_ctx* ctx=new nvmpi_dec_ctx;
+ 
+ 	ctx->dec = NvVideoDecoder::createVideoDecoder("dec0");
+-	TEST_ERROR(!ctx->dec, "Could not create decoder",ret);
++	TEST_ERROR(!ctx->dec, "Could not create decoder", "nullptr");
+ 
+ 	ret=ctx->dec->subscribeEvent(V4L2_EVENT_RESOLUTION_CHANGE, 0, 0);
+ 	TEST_ERROR(ret < 0, "Could not subscribe to V4L2_EVENT_RESOLUTION_CHANGE", ret);
+@@ -353,13 +353,18 @@ nvmpictx* nvmpi_create_decoder(nvCodingType codingType,nvPixFormat pixFormat){
+ 	}
+ 
+ 	ret=ctx->dec->setOutputPlaneFormat(ctx->decoder_pixfmt, CHUNK_SIZE);
+-
+ 	TEST_ERROR(ret < 0, "Could not set output plane format", ret);
+ 
+ 	//ctx->nalu_parse_buffer = new char[CHUNK_SIZE];
  	ret = ctx->dec->setFrameInputMode(0);
  	TEST_ERROR(ret < 0, "Error in decoder setFrameInputMode for NALU", ret);
  
@@ -236,6 +342,15 @@ index 51278f6..778ae15 100644
  	ctx->numberCaptureBuffers=0;
  	ctx->dec_capture_loop=new thread(dec_capture_loop_fcn,ctx);
  
+@@ -391,7 +388,7 @@ nvmpictx* nvmpi_create_decoder(nvCodingType codingType,nvPixFormat pixFormat){
+ 
+ 
+ 
+-int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet){
++int nvmpi_decoder_put_packet(nvmpi_dec_ctx* ctx,nvPacket* packet){
+ 	int ret;
+ 	
+ 	struct v4l2_buffer v4l2_buf;
 @@ -409,10 +406,12 @@ int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet){
  		ret = ctx->dec->output_plane.dqBuffer(v4l2_buf, &nvBuffer, NULL, -1);
  		if (ret < 0) {
@@ -250,24 +365,26 @@ index 51278f6..778ae15 100644
  	memcpy(nvBuffer->planes[0].data,packet->payload,packet->payload_size);
  	nvBuffer->planes[0].bytesused=packet->payload_size;
  
-@@ -434,7 +433,7 @@ int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet){
+@@ -432,10 +431,7 @@ int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet){
+ 
+ 
  	ret = ctx->dec->output_plane.qBuffer(v4l2_buf, NULL);
- 	if (ret < 0) {
- 		std::cout << "Error Qing buffer at output plane" << std::endl;
+-	if (ret < 0) {
+-		std::cout << "Error Qing buffer at output plane" << std::endl;
 -		return false;
-+		return -1;
- 	}
+-	}
++	TEST_ERROR(ret < 0, "Error while queueing buffer at output plane", ret);
  
  	if (ctx->index < ctx->dec->output_plane.getNumBuffers())
-@@ -451,23 +450,22 @@ int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet){
+ 		ctx->index++;
+@@ -451,23 +447,20 @@ int nvmpi_decoder_put_packet(nvmpictx* ctx,nvPacket* packet){
  }
  
  
 -int nvmpi_decoder_get_frame(nvmpictx* ctx,nvFrame* frame,bool wait){
-+int nvmpi_decoder_get_frame_locked(nvmpictx* ctx,nvFrame* frame){
- 	
+-	
 -	int ret,picture_index;
-+	int ret;
++int nvmpi_decoder_get_frame_locked(nvmpi_dec_ctx* ctx,nvFrame* frame){
  	std::unique_lock<std::mutex> lock(*ctx->mutex);
  
 -	if (wait) {
@@ -294,7 +411,7 @@ index 51278f6..778ae15 100644
  
  	frame->width=ctx->coded_width;
  	frame->height=ctx->coded_height;
-@@ -476,24 +474,29 @@ int nvmpi_decoder_get_frame(nvmpictx* ctx,nvFrame* frame,bool wait){
+@@ -476,24 +469,29 @@ int nvmpi_decoder_get_frame(nvmpictx* ctx,nvFrame* frame,bool wait){
  	frame->linesize[1]=ctx->frame_linesize[1];
  	frame->linesize[2]=ctx->frame_linesize[2];
  
@@ -310,28 +427,29 @@ index 51278f6..778ae15 100644
  	frame->payload_size[2]=ctx->frame_size[2];
 -	frame->timestamp=ctx->timestamp[picture_index];
 +	frame->timestamp=ctx->timestamp;
-+
+ 
+-	return 0;
 +	lock.release();
  
- 	return 0;
-+}
++	return 0;
+ }
  
-+void nvmpi_decoder_release_frame_lock(nvmpictx* ctx){
+-int nvmpi_decoder_close(nvmpictx* ctx){
++void nvmpi_decoder_release_frame_lock(nvmpi_dec_ctx* ctx){
 +	ctx->bufState = BufState::WAITING;
 +	ctx->mutex->unlock();
 +	ctx->has_frame_cv->notify_one();
- }
++}
  
- int nvmpi_decoder_close(nvmpictx* ctx){
--
 -	ctx->mutex->lock();
++int nvmpi_decoder_close(nvmpi_dec_ctx* ctx){
  	ctx->eos=true;
 -	ctx->mutex->unlock();
 +	ctx->has_frame_cv->notify_all();
  	
  	ctx->dec->capture_plane.setStreamStatus(false);
  	
-@@ -511,25 +514,19 @@ int nvmpi_decoder_close(nvmpictx* ctx){
+@@ -511,25 +509,19 @@ int nvmpi_decoder_close(nvmpictx* ctx){
  
  	for (int index = 0; index < ctx->numberCaptureBuffers; index++)
  	{
@@ -362,4 +480,337 @@ index 51278f6..778ae15 100644
 -	delete ctx->frame_pools; ctx->frame_pools = nullptr;
  
  	delete ctx; ctx = nullptr;
+ 
+diff --git a/nvmpi_enc.cpp b/nvmpi_enc.cpp
+index 43f267d..f88b7d4 100644
+--- a/nvmpi_enc.cpp
++++ b/nvmpi_enc.cpp
+@@ -1,6 +1,8 @@
+ #include "nvmpi.h"
+ #include "NvVideoEncoder.h"
+ #include "nvbuf_utils.h"
++#include <atomic>
++#include <condition_variable>
+ #include <vector>
+ #include <iostream>
+ #include <thread>
+@@ -8,20 +10,27 @@
+ #include <queue>
+ 
+ #define CHUNK_SIZE 2*1024*1024
+-#define MAX_BUFFERS 32
+-#define TEST_ERROR(condition, message, errorCode)    \
+-	if (condition)                               \
+-{                                                    \
+-	std::cout<< message;                         \
+-}
++#define NUM_BUFFERS 1
+ 
++#define TEST_ERROR(condition, message, errorCode) \
++	do { \
++		if (condition) { \
++			std::cout << message << " (error code " << errorCode << ')' << std::endl; \
++			abort(); \
++		} \
++	} while(false)
+ 
+ using namespace std;
+ 
+-struct nvmpictx{
++enum class BufState : uint8_t
++{
++	READY, WAITING
++};
++
++struct nvmpi_enc_ctx{
+ 	NvVideoEncoder *enc;
++	std::atomic<bool> eos{false};
+ 	int index;
+-	std::queue<int> * packet_pools;
+ 	uint32_t width;
+ 	uint32_t height;
+ 	uint32_t profile;
+@@ -44,77 +53,78 @@ struct nvmpictx{
+ 	uint32_t num_reference_frames;
+ 	bool insert_sps_pps_at_idr;
+ 
+-	uint32_t packets_buf_size;
+-	uint32_t packets_num;
+-	unsigned char * packets[MAX_BUFFERS];
+-	uint32_t packets_size[MAX_BUFFERS];
+-	bool packets_keyflag[MAX_BUFFERS];
+-	uint64_t timestamp[MAX_BUFFERS];
+-	int buf_index;
++	std::mutex mutex;
++	std::condition_variable cond;
++	BufState bufState{BufState::WAITING};
++	std::atomic<size_t> inQ{0};
++	std::vector<uint8_t> packet;
++	bool keyflag;
++	uint64_t timestamp;
++
++	nvmpi_enc_ctx() = default;
++	nvmpi_enc_ctx(nvmpi_dec_ctx const &) = delete;
++	nvmpi_enc_ctx & operator=(nvmpi_enc_ctx const &) = delete;
+ };
+ 
+ 
+-static bool encoder_capture_plane_dq_callback(struct v4l2_buffer *v4l2_buf, NvBuffer * buffer, NvBuffer * shared_buffer, void *arg){
+-
+-	nvmpictx *ctx = (nvmpictx *) arg;
+-	NvVideoEncoder *enc = ctx->enc;
+-	//uint32_t frame_num = ctx->enc->capture_plane.getTotalDequeuedBuffers() - 1;
++static bool encoder_capture_plane_dq_callback(struct v4l2_buffer *v4l2_buf, NvBuffer * buffer, NvBuffer * /*shared_buffer*/, void *arg){
++	nvmpi_enc_ctx *ctx = (nvmpi_enc_ctx *) arg;
+ 
+ 	if (v4l2_buf == NULL)
+ 	{
+ 		cout << "Error while dequeing buffer from output plane" << endl;
++		ctx->eos = true;
++		ctx->cond.notify_one();
+ 		return false;
+ 	}
+ 
+ 	if (buffer->planes[0].bytesused == 0)
+ 	{
+-		cout << "Got 0 size buffer in capture \n";
++		cout << "Got 0 size buffer in capture" << endl;
++		ctx->eos = true;
++		ctx->cond.notify_one();
+ 		return false;
+ 	}
+ 
+-	if(ctx->packets_buf_size < buffer->planes[0].bytesused){
+-
+-		ctx->packets_buf_size=buffer->planes[0].bytesused;
+-
+-		for(int index=0;index< ctx->packets_num;index++){
+-			delete[] ctx->packets[index];
+-			ctx->packets[index]=new unsigned char[ctx->packets_buf_size];	
+-		}
+-	}
++	std::unique_lock<std::mutex> lock(ctx->mutex);
++	while(ctx->bufState == BufState::READY && !ctx->eos)
++		ctx->cond.wait(lock);
+ 
+-	ctx->packets_size[ctx->buf_index]=buffer->planes[0].bytesused;
+-	memcpy(ctx->packets[ctx->buf_index],buffer->planes[0].data,buffer->planes[0].bytesused);
++	if(ctx->eos)
++		return false;
+ 
+-	ctx->timestamp[ctx->buf_index] = (v4l2_buf->timestamp.tv_usec % 1000000) + (v4l2_buf->timestamp.tv_sec * 1000000UL);
++	if(ctx->packet.size() != buffer->planes[0].bytesused)
++		ctx->packet.resize(buffer->planes[0].bytesused);
++	memcpy(ctx->packet.data(), buffer->planes[0].data, buffer->planes[0].bytesused);
+ 
+-	ctx->packet_pools->push(ctx->buf_index);
++	ctx->timestamp = (v4l2_buf->timestamp.tv_usec % 1000000) + (v4l2_buf->timestamp.tv_sec * 1000000UL);
+ 
+ 	v4l2_ctrl_videoenc_outputbuf_metadata enc_metadata;
+ 	ctx->enc->getMetadata(v4l2_buf->index, enc_metadata);
+-	if(enc_metadata.KeyFrame){
+-		ctx->packets_keyflag[ctx->buf_index]=true;
+-	}else{
+-		ctx->packets_keyflag[ctx->buf_index]=false;
+-	}
+-
+-	ctx->buf_index=(ctx->buf_index+1)%ctx->packets_num;	
++	ctx->keyflag = enc_metadata.KeyFrame;
+ 
+ 	if (ctx->enc->capture_plane.qBuffer(*v4l2_buf, NULL) < 0)
+ 	{
+-
+ 		ERROR_MSG("Error while Qing buffer at capture plane");
++		ctx->eos = true;
++		ctx->cond.notify_one();
+ 		return false;
+ 	}
+ 
++	ctx->bufState = BufState::READY;
++	TEST_ERROR(ctx->inQ == 0, "no frame in queue", ctx->inQ);
++	--ctx->inQ;
++	ctx->cond.notify_one();
++
+ 	return true;
+ }
+ 
+ 
+-nvmpictx* nvmpi_create_encoder(nvCodingType codingType,nvEncParam * param){
++nvmpi_enc_ctx* nvmpi_create_encoder(nvCodingType codingType,nvEncParam * param){
+ 
+ 	int ret;
+ 	log_level = LOG_LEVEL_INFO;
+-	nvmpictx *ctx=new nvmpictx;
++	nvmpi_enc_ctx *ctx=new nvmpi_enc_ctx;
+ 	ctx->index=0;
+ 	ctx->width=param->width;
+ 	ctx->height=param->height;
+@@ -125,15 +135,12 @@ nvmpictx* nvmpi_create_encoder(nvCodingType codingType,nvEncParam * param){
+ 	ctx->fps_n = param->fps_n;
+ 	ctx->fps_d = param->fps_d;
+ 	ctx->iframe_interval = param->iframe_interval;
+-	ctx->packet_pools=new std::queue<int>;
+-	ctx->buf_index=0;
+ 	ctx->enable_extended_colorformat=false;
+-	ctx->packets_num=param->capture_num;
+ 	ctx->qmax=param->qmax;
+ 	ctx->qmin=param->qmin;
+ 	ctx->num_b_frames=param->max_b_frames;
+ 	ctx->num_reference_frames=param->refs;
+-	ctx->insert_sps_pps_at_idr=(param->insert_spspps_idr==1)?true:false;
++	ctx->insert_sps_pps_at_idr=param->insert_spspps_idr==1;
+ 
+ 	switch(param->profile){
+ 		case 77://FF_PROFILE_H264_MAIN
+@@ -230,21 +237,15 @@ nvmpictx* nvmpi_create_encoder(nvCodingType codingType,nvEncParam * param){
+ 	if(param->mode_vbr)
+ 		ctx->ratecontrol=V4L2_MPEG_VIDEO_BITRATE_MODE_VBR;
+ 
+-	ctx->packets_buf_size=CHUNK_SIZE;
+-
+-	for(int index=0;index<MAX_BUFFERS;index++)
+-		ctx->packets[index]=new unsigned char[ctx->packets_buf_size];
+-
+ 	if(codingType==NV_VIDEO_CodingH264){
+ 		ctx->encoder_pixfmt=V4L2_PIX_FMT_H264;
+ 	}else if(codingType==NV_VIDEO_CodingHEVC){
+ 		ctx->encoder_pixfmt=V4L2_PIX_FMT_H265;
+ 	}
+ 	ctx->enc=NvVideoEncoder::createVideoEncoder("enc0");
+-	TEST_ERROR(!ctx->enc, "Could not create encoder",ret);
++	TEST_ERROR(!ctx->enc, "Could not create encoder", ctx->enc);
+ 
+ 	ret = ctx->enc->setCapturePlaneFormat(ctx->encoder_pixfmt, ctx->width,ctx->height, CHUNK_SIZE);
+-
+ 	TEST_ERROR(ret < 0, "Could not set output plane format", ret);
+ 
+ 	switch (ctx->profile)
+@@ -265,9 +266,11 @@ nvmpictx* nvmpi_create_encoder(nvCodingType codingType,nvEncParam * param){
+ 	else{
+ 		ret = ctx->enc->setOutputPlaneFormat(ctx->raw_pixfmt, ctx->width,ctx->height);
+ 	}
+-
+ 	TEST_ERROR(ret < 0, "Could not set output plane format", ret);
+ 
++	ret = ctx->enc->setMaxPerfMode(1);
++	TEST_ERROR(ret < 0, "Error in encoder setMaxPerfMode", ret);
++
+ 	ret = ctx->enc->setBitrate(ctx->bitrate);
+ 	TEST_ERROR(ret < 0, "Could not set encoder bitrate", ret);
+ 
+@@ -335,10 +338,10 @@ nvmpictx* nvmpi_create_encoder(nvCodingType codingType,nvEncParam * param){
+ 	ret = ctx->enc->setFrameRate(ctx->fps_n, ctx->fps_d);
+ 	TEST_ERROR(ret < 0, "Could not set framerate", ret);
+ 
+-	ret = ctx->enc->output_plane.setupPlane(V4L2_MEMORY_USERPTR, ctx->packets_num, false, true);
++	ret = ctx->enc->output_plane.setupPlane(V4L2_MEMORY_USERPTR, NUM_BUFFERS, false, true);
+ 	TEST_ERROR(ret < 0, "Could not setup output plane", ret);
+ 
+-	ret = ctx->enc->capture_plane.setupPlane(V4L2_MEMORY_MMAP, ctx->packets_num, true, false);
++	ret = ctx->enc->capture_plane.setupPlane(V4L2_MEMORY_MMAP, NUM_BUFFERS, true, false);
+ 	TEST_ERROR(ret < 0, "Could not setup capture plane", ret);
+ 
+ 	ret = ctx->enc->subscribeEvent(V4L2_EVENT_EOS,0,0);
+@@ -374,16 +377,13 @@ nvmpictx* nvmpi_create_encoder(nvCodingType codingType,nvEncParam * param){
+ }
+ 
+ 
+-int nvmpi_encoder_put_frame(nvmpictx* ctx,nvFrame* frame){
++int nvmpi_encoder_put_frame(nvmpi_enc_ctx* ctx,nvFrame* frame){
+ 	int ret;
+ 
+-	struct v4l2_buffer v4l2_buf;
+-	struct v4l2_plane planes[MAX_PLANES];
++	struct v4l2_buffer v4l2_buf{};
++	struct v4l2_plane planes[MAX_PLANES]{};
+ 	NvBuffer *nvBuffer;
+ 
+-	memset(&v4l2_buf, 0, sizeof(v4l2_buf));
+-	memset(planes, 0, sizeof(planes));
+-
+ 	v4l2_buf.m.planes = planes;
+ 
+ 	if(ctx->enc->isInError())
+@@ -399,11 +399,13 @@ int nvmpi_encoder_put_frame(nvmpictx* ctx,nvFrame* frame){
+ 		ret = ctx->enc->output_plane.dqBuffer(v4l2_buf, &nvBuffer, NULL, -1);
+ 		if (ret < 0) {
+ 			cout << "Error DQing buffer at output plane" << std::endl;
+-			return false;
++			return -1;
+ 		}
+ 
+ 	}
+ 
++	++ctx->inQ;
++
+ 	memcpy(nvBuffer->planes[0].data,frame->payload[0],frame->payload_size[0]);
+ 	memcpy(nvBuffer->planes[1].data,frame->payload[1],frame->payload_size[1]);
+ 	memcpy(nvBuffer->planes[2].data,frame->payload[2],frame->payload_size[2]);
+@@ -421,39 +423,48 @@ int nvmpi_encoder_put_frame(nvmpictx* ctx,nvFrame* frame){
+ 	return 0;
+ }
+ 
+-int nvmpi_encoder_get_packet(nvmpictx* ctx,nvPacket* packet){
++int nvmpi_encoder_get_packet_locked(nvmpi_enc_ctx* ctx,nvPacket* packet){
++	std::unique_lock<std::mutex> lock(ctx->mutex);
+ 
+-	int ret,packet_index;
++	if(ctx->bufState != BufState::READY && ctx->inQ == 0)
++		return -EAGAIN;
+ 
+-	if(ctx->packet_pools->empty())
++	while(ctx->bufState == BufState::WAITING && !ctx->eos && !ctx->enc->isInError())
++		if(ctx->cond.wait_for(lock, std::chrono::milliseconds(80)) == std::cv_status::timeout)
++			return -EAGAIN;
++
++	if(ctx->eos)
+ 		return -1;
++	if(ctx->enc->isInError())
++		return -2;
+ 
+-	packet_index= ctx->packet_pools->front();
++	packet->payload = ctx->packet.data();
++	packet->payload_size = ctx->packet.size();
++	packet->pts = ctx->timestamp;
+ 
+-	auto ts = ctx->timestamp[packet_index];
+-	auto size = ctx->packets_size[packet_index];
+-	if((ts > 0) && (size == 0)) // Old packet, but 0-0 skip!
+-	{
+-		return -1;
+-	}
++	packet->flags = 0;
++	if(ctx->keyflag)
++		packet->flags |= 0x0001; // AV_PKT_FLAG_KEY 0x0001
+ 
+-	packet->payload=ctx->packets[packet_index];
+-	packet->pts=ts;
++	lock.release();
+ 
+-	packet->payload_size=size;
+-	if(ctx->packets_keyflag[packet_index])
+-		packet->flags|= 0x0001;//AV_PKT_FLAG_KEY 0x0001
+-	ctx->packets_size[packet_index] = 0; // mark as readed
+-	ctx->packet_pools->pop();
+ 	return 0;
+ }
+ 
+-int nvmpi_encoder_close(nvmpictx* ctx){
++void nvmpi_encoder_release_packet_lock(nvmpi_enc_ctx* ctx)
++{
++	ctx->bufState = BufState::WAITING;
++	ctx->mutex.unlock();
++	ctx->cond.notify_one();
++}
+ 
++int nvmpi_encoder_close(nvmpi_enc_ctx* ctx){
++	ctx->eos = true;
++	ctx->cond.notify_all();
+ 	ctx->enc->capture_plane.stopDQThread();
+ 	ctx->enc->capture_plane.waitForDQThread(1000);
+ 	delete ctx->enc;
+-	delete ctx->packet_pools;
+ 	delete ctx;
++	return 0;
+ }
  

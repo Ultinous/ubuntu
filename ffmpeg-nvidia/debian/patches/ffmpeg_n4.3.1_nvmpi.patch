@@ -1,4 +1,4 @@
-commit ac81f7ba7bac9d735ecb4b0ba32f130d6c4d8b87
+commit 41ff0a68d6560484f3a7950f5a4c9297f607422c
 Author: Szabó Attila <attila@ultinous.com>
 Date:   2021-04-09 07:00:52 +0200
 
@@ -191,7 +191,7 @@ index 80f128cade..6042901a75 100644
  extern AVCodec ff_vp9_vaapi_encoder;
 diff --git a/libavcodec/nvmpi_dec.c b/libavcodec/nvmpi_dec.c
 new file mode 100644
-index 0000000000..31f67d32fe
+index 0000000000..cd56acf6a3
 --- /dev/null
 +++ b/libavcodec/nvmpi_dec.c
 @@ -0,0 +1,182 @@
@@ -216,7 +216,7 @@ index 0000000000..31f67d32fe
 +
 +typedef struct {
 +	char eos_reached;
-+	nvmpictx* ctx;
++	nvmpi_dec_ctx* ctx;
 +	AVClass *av_class;
 +} nvmpiDecodeContext;
 +
@@ -379,10 +379,10 @@ index 0000000000..31f67d32fe
 +
 diff --git a/libavcodec/nvmpi_enc.c b/libavcodec/nvmpi_enc.c
 new file mode 100644
-index 0000000000..22b4116351
+index 0000000000..9beb92c8c4
 --- /dev/null
 +++ b/libavcodec/nvmpi_enc.c
-@@ -0,0 +1,271 @@
+@@ -0,0 +1,287 @@
 +#include <nvmpi.h>
 +#include "avcodec.h"
 +#include "internal.h"
@@ -397,8 +397,7 @@ index 0000000000..22b4116351
 +
 +typedef struct {
 +	const AVClass *class;
-+	nvmpictx* ctx;
-+	int num_capture_buffers;
++	nvmpi_enc_ctx* ctx;
 +	int profile;
 +	int level;
 +	int rc;
@@ -422,7 +421,6 @@ index 0000000000..22b4116351
 +	param.fps_d=avctx->framerate.den;
 +	param.profile=nvmpi_context->profile& ~FF_PROFILE_H264_INTRA;
 +	param.level=nvmpi_context->level;
-+	param.capture_num=nvmpi_context->num_capture_buffers;
 +	param.hw_preset_type=nvmpi_context->preset;
 +	param.insert_spspps_idr=(avctx->flags & AV_CODEC_FLAG_GLOBAL_HEADER)?0:1;
 +
@@ -458,7 +456,7 @@ index 0000000000..22b4116351
 +		nvPacket packet={0};
 +		int i;
 +		int ret;
-+		nvmpictx* _ctx;
++		nvmpi_enc_ctx* _ctx;
 +		av_image_alloc(dst, linesize,avctx->width,avctx->height,avctx->pix_fmt,1);
 +
 +		_ctx=nvmpi_create_encoder(NV_VIDEO_CodingH264,&param);
@@ -475,7 +473,7 @@ index 0000000000..22b4116351
 +
 +			nvmpi_encoder_put_frame(_ctx,&_nvframe);
 +
-+			ret=nvmpi_encoder_get_packet(_ctx,&packet);
++			ret=nvmpi_encoder_get_packet_locked(_ctx,&packet);
 +
 +			if(ret<0)
 +				continue;
@@ -490,6 +488,8 @@ index 0000000000..22b4116351
 +			avctx->extradata	= av_mallocz( avctx->extradata_size + AV_INPUT_BUFFER_PADDING_SIZE );
 +			memcpy( avctx->extradata, packet.payload,avctx->extradata_size);
 +			memset( avctx->extradata + avctx->extradata_size, 0, AV_INPUT_BUFFER_PADDING_SIZE );
++
++			nvmpi_encoder_release_packet_lock(_ctx);
 +
 +			break;
 +
@@ -523,6 +523,9 @@ index 0000000000..22b4116351
 +		_nvframe.payload[0]=frame->data[0];
 +		_nvframe.payload[1]=frame->data[1];
 +		_nvframe.payload[2]=frame->data[2];
++		_nvframe.payload_size[0]=frame->linesize[0]*frame->height;
++		_nvframe.payload_size[1]=frame->linesize[1]*frame->height/2;
++		_nvframe.payload_size[2]=frame->linesize[2]*frame->height/2;
 +
 +		_nvframe.linesize[0]=frame->linesize[0];
 +		_nvframe.linesize[1]=frame->linesize[1];
@@ -536,15 +539,28 @@ index 0000000000..22b4116351
 +		res=nvmpi_encoder_put_frame(nvmpi_context->ctx,&_nvframe);
 +
 +		if(res<0)
-+			return res;
++			return AVERROR_UNKNOWN;
 +	}
 +
 +
-+	if(nvmpi_encoder_get_packet(nvmpi_context->ctx,&packet)<0)
-+		return 0;
++	res = nvmpi_encoder_get_packet_locked(nvmpi_context->ctx,&packet);
++	if(res < 0)
++		switch(res)
++		{
++			case -1:
++				return AVERROR_EOF;
++			case -EAGAIN:
++				return AVERROR(EAGAIN);
++			default:
++				return AVERROR_UNKNOWN;
++		}
 +
 +
-+	ff_alloc_packet2(avctx,pkt,packet.payload_size,packet.payload_size);
++	res = ff_alloc_packet2(avctx,pkt,packet.payload_size,packet.payload_size);
++	if(res < 0){
++		nvmpi_encoder_release_packet_lock(nvmpi_context->ctx);
++		return res;
++	}
 +
 +	memcpy(pkt->data,packet.payload,packet.payload_size);
 +	pkt->dts=pkt->pts=packet.pts;
@@ -552,6 +568,7 @@ index 0000000000..22b4116351
 +	if(packet.flags& AV_PKT_FLAG_KEY)
 +		pkt->flags = AV_PKT_FLAG_KEY;
 +
++	nvmpi_encoder_release_packet_lock(nvmpi_context->ctx);
 +
 +	*got_packet = 1;
 +
@@ -584,7 +601,6 @@ index 0000000000..22b4116351
 +#define VE AV_OPT_FLAG_VIDEO_PARAM | AV_OPT_FLAG_ENCODING_PARAM
 +
 +static const AVOption options[] = {
-+	{ "num_capture_buffers", "Number of buffers in the capture context", OFFSET(num_capture_buffers), AV_OPT_TYPE_INT, {.i64 = 10 }, 1, 32, AV_OPT_FLAG_VIDEO_PARAM | AV_OPT_FLAG_ENCODING_PARAM },
 +	/// Profile,
 +
 +	{ "profile",  "Set the encoding profile", OFFSET(profile), AV_OPT_TYPE_INT,   { .i64 = FF_PROFILE_UNKNOWN },       FF_PROFILE_UNKNOWN, FF_PROFILE_H264_HIGH, VE, "profile" },

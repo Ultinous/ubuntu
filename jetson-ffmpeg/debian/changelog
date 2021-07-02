@@ -1,3 +1,9 @@
+jetson-ffmpeg (2-1) bionic; urgency=medium
+
+  * Encoder
+
+ -- Szabó Attila <attila@ultinous.com>  Fri, 02 Jul 2021 10:43:12 +0000
+
 jetson-ffmpeg (1-1) bionic; urgency=medium
 
   * Initial release. Commit: 20067187641389ba309bd3ca51933718b6b475ef
