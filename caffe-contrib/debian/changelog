@@ -1,3 +1,9 @@
+caffe-contrib (1.0.0-9cuda10.2ultinous12) bionic; urgency=medium
+
+  * Rebuild with nvidia-cuda-toolkit=10.2.89-6ultinous4
+
+ -- Kozák Miklós <garmine@ultinous.com>  Mon, 12 Jul 2021 14:27:55 +0000
+
 caffe-contrib (1.0.0-9cuda10.2ultinous11) bionic; urgency=medium
 
   * Disabled opencv
