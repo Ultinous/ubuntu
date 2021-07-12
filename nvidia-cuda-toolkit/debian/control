@@ -282,8 +282,6 @@ Architecture: amd64 ppc64el
 Multi-Arch: same
 Depends:
  libcudart${cudart:SoVersion} (= ${binary:Version}),
- libaccinj64-${cudart:SoVersion} (= ${binary:Version}) [${cuda:arch:has-nvidia-profiler}],
- libcuinj64-${cudart:SoVersion} (= ${binary:Version}) [${cuda:arch:has-nvidia-profiler}],
  libnvrtc${cudart:SoVersion} (= ${binary:Version}),
  libnvtoolsext1 (= ${binary:Version}),
 # libnvvm3 (= ${binary:Version}),
@@ -310,8 +308,6 @@ Depends:
  libnpps${cuda:SoVersion} (= ${binary:Version}),
  libnvgraph${cuda:SoVersion} (= ${binary:Version}),
  libnvjpeg${cuda:SoVersion} (= ${binary:Version}),
- libcupti-dev (= ${binary:Version}),
- libnvidia-ml-dev (= ${binary:Version}),
  libthrust-dev (= 1.9.7-1-2ultinous1),
  ${misc:Depends}
 Recommends:
