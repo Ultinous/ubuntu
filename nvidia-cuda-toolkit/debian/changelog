@@ -1,3 +1,9 @@
+nvidia-cuda-toolkit (10.2.89-6ultinous5) bionic; urgency=medium
+
+  * Remove junk from nvidia-cuda-toolkit binary pkg.
+
+ -- Kozák Miklós <garmine@ultinous.com>  Tue, 13 Jul 2021 13:17:57 +0000
+
 nvidia-cuda-toolkit (10.2.89-6ultinous4) bionic; urgency=medium
 
   * Remove nvidia management library related things.

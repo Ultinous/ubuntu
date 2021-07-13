@@ -59,7 +59,6 @@ Package: nvidia-cuda-toolkit
 Section: non-free/devel
 Architecture: amd64 ppc64el
 Depends:
- nvidia-profiler (= ${binary:Version}) [${cuda:arch:has-nvidia-profiler}],
  nvidia-cuda-dev (= ${binary:Version}),
  nvidia-opencl-dev (= ${binary:Version}) | opencl-dev,
  gcc-8 | clang-8 | clang-7 | gcc-7 | clang-6.0 | clang-5.0 | clang-4.0 | clang-3.9 | clang-3.8 | clang (<< 1:9~) | gcc-6 | gcc-5 | gcc-4.9 | gcc-4.8,
