@@ -57,7 +57,7 @@ Build-Depends: bc,
                python3-yaml,
 # The above part is synced with main/caffe
 # The following part is CUDA related B-D
-               nvidia-cuda-toolkit (= 10.2.89-6ultinous4) [amd64 ppc64el],
+               nvidia-cuda-toolkit (= 10.2.89-6ultinous5) [amd64 ppc64el],
                cuda-toolkit-10-2 (= 10.2.89-1) [arm64],
                libcudnn8-dev (= 8.0.5.39-1+cuda10.2) [amd64 ppc64el],
                libcudnn8-dev (= 8.0.0.180-1+cuda10.2) [arm64],

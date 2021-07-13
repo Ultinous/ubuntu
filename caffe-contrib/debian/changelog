@@ -1,3 +1,9 @@
+caffe-contrib (1.0.0-9cuda10.2ultinous13) bionic; urgency=medium
+
+  * Rebuild with nvidia-cuda-toolkit=10.2.89-6ultinous5
+
+ -- Kozák Miklós <garmine@ultinous.com>  Tue, 13 Jul 2021 13:18:05 +0000
+
 caffe-contrib (1.0.0-9cuda10.2ultinous12) bionic; urgency=medium
 
   * Rebuild with nvidia-cuda-toolkit=10.2.89-6ultinous4
