@@ -1,3 +1,9 @@
+protobuf (3.7.0-1ultinous3) bionic; urgency=medium
+
+  * Fix build with googletest 1.10
+
+ -- Kozák Miklós <garmine@ultinous.com>  Fri, 30 Jul 2021 11:00:25 +0000
+
 protobuf (3.7.0-1ultinous2) bionic; urgency=medium
 
   * Add 'X-Ultinous-Upstream-Release' attribute to control.

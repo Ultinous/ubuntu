@@ -1,0 +1,74 @@
+diff --git a/cmake/FindGMock.cmake b/cmake/FindGMock.cmake
+deleted file mode 100644
+index ed58b90..0000000
+--- a/cmake/FindGMock.cmake
++++ /dev/null
+@@ -1,26 +0,0 @@
+-if(NOT GTEST_FOUND)
+-  message(ERROR "GTest required for GMock")
+-endif()
+-
+-get_filename_component(GTEST_LIBRARY_DIR "${GTEST_LIBRARIES}" DIRECTORY CACHE)
+-find_path(GMock_INCLUDE_DIR gmock/gmock.h PATHS ${GTEST_INCLUDE_DIRS} NO_DEFAULT_PATH DOC "Path to GMock include directory.")
+-find_library(GMock_LIBRARY NAMES gmock PATHS ${GTEST_LIBRARY_DIR} NO_DEFAULT_PATH DOC "Path to gmock library.")
+-find_library(GMock_MAIN_LIBRARY NAMES gmock_main PATHS ${GTEST_LIBRARY_DIR} NO_DEFAULT_PATH DOC "Path to gmock_main library.")
+-mark_as_advanced(GTEST_LIBRARY_DIR GMock_INCLUDE_DIR GMock_LIBRARY GMock_MAIN_LIBRARY)
+-
+-include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(GMock REQUIRED_VARS GMock_INCLUDE_DIR GMock_LIBRARY GMock_MAIN_LIBRARY)
+-
+-if(NOT TARGET GMock::GMock)
+-  add_library(GMock::GMock INTERFACE IMPORTED)
+-  set_target_properties(GMock::GMock PROPERTIES
+-    INTERFACE_INCLUDE_DIRECTORIES "${GMock_INCLUDE_DIR}"
+-    INTERFACE_LINK_LIBRARIES "GTest::GTest;${GMock_LIBRARY}"
+-  )
+-endif()
+-if(NOT TARGET GMock::Main)
+-  add_library(GMock::Main INTERFACE IMPORTED)
+-  set_target_properties(GMock::Main PROPERTIES
+-    INTERFACE_LINK_LIBRARIES "GMock::GMock;${GMock_MAIN_LIBRARY}"
+-  )
+-endif()
+diff --git a/cmake/tests.cmake b/cmake/tests.cmake
+index af134e1..1f0beb0 100644
+--- a/cmake/tests.cmake
++++ b/cmake/tests.cmake
+@@ -1,5 +1,4 @@
+ find_package(GTest REQUIRED)
+-find_package(GMock REQUIRED)
+ 
+ option(protobuf_ABSOLUTE_TEST_PLUGIN_PATH
+   "Using absolute test_plugin path in tests" ON)
+@@ -196,7 +195,7 @@ if(MINGW)
+ endif()
+ 
+ add_executable(tests ${tests_files} ${common_test_files} ${tests_proto_files} ${lite_test_proto_files})
+-target_link_libraries(tests libprotoc libprotobuf GMock::Main)
++target_link_libraries(tests libprotoc libprotobuf GTest::gmock_main)
+ 
+ set(test_plugin_files
+   ${protobuf_source_dir}/src/google/protobuf/compiler/mock_code_generator.cc
+@@ -206,19 +205,19 @@ set(test_plugin_files
+ )
+ 
+ add_executable(test_plugin ${test_plugin_files})
+-target_link_libraries(test_plugin libprotoc libprotobuf GMock::GMock)
++target_link_libraries(test_plugin libprotoc libprotobuf GTest::gmock)
+ 
+ set(lite_test_files
+   ${protobuf_source_dir}/src/google/protobuf/lite_unittest.cc
+ )
+ add_executable(lite-test ${lite_test_files} ${common_lite_test_files} ${lite_test_proto_files})
+-target_link_libraries(lite-test libprotobuf-lite GMock::GMock GTest::Main)
++target_link_libraries(lite-test libprotobuf-lite GTest::gmock GTest::gtest_main)
+ 
+ set(lite_arena_test_files
+   ${protobuf_source_dir}/src/google/protobuf/lite_arena_unittest.cc
+ )
+ add_executable(lite-arena-test ${lite_arena_test_files} ${common_lite_test_files} ${lite_test_proto_files})
+-target_link_libraries(lite-arena-test libprotobuf-lite GMock::GMock GTest::Main)
++target_link_libraries(lite-arena-test libprotobuf-lite GTest::gmock GTest::gtest_main)
+ 
+ add_custom_target(check
+   COMMAND tests

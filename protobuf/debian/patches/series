@@ -6,3 +6,4 @@ disable_local_gmock.patch
 external_gtest.patch
 build-with-cmake.patch
 set-so-version.patch
+gtest-10-fix.patch
