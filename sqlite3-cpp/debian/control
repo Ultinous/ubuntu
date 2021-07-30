@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Kristof Frank <oturw@ultinous.com>
 Uploaders: Lengyel Zsolt <zsolt@ultinous.com>,
            Kozák Miklós <garmine@ultinous.com>
-Build-Depends: debhelper (>= 11), cmake, libsqlite3-dev, libgtest-dev
+Build-Depends: debhelper (>= 11), cmake, libsqlite3-dev, libgtest-dev, libgmock-dev
 Standards-Version: 4.1.4
 Vcs-Git: https://github.com/SRombauts/SQLiteCpp.git
 Vcs-Browser: https://github.com/SRombauts/SQLiteCpp
