@@ -1,3 +1,9 @@
+crow (1.1-1ultinous1) bionic; urgency=medium
+
+  * New release
+
+ -- Szabó Attila <attila@ultinous.com>  Wed, 29 Sep 2021 05:34:15 +0000
+
 crow (1.0-1ultinous1) bionic; urgency=medium
 
   * Ported to bionic.

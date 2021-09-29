@@ -12,7 +12,7 @@ Standards-Version: 3.9.8
 Homepage: https://github.com/Ultinous/crow
 Vcs-Git: https://github.com/Ultinous/crow.git
 Vcs-Browser: https://github.com/Ultinous/crow
-X-Ultinous-Upstream-Release: https://github.com/Ultinous/crow/archive/un_v1.tar.gz
+X-Ultinous-Upstream-Release: https://github.com/Ultinous/crow/archive/un_v1.1.tar.gz
 
 Package: libcrow-dev
 Architecture: all
