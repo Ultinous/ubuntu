@@ -1,3 +1,9 @@
+docker-util (1.17.0) bionic; urgency=medium
+
+  * New release 1.17.0
+
+ -- Szabó Attila <attila@ultinous.com>  Thu, 30 Sep 2021 05:54:30 +0000
+
 docker-util (1.16.2) bionic; urgency=medium
 
   * New release 1.16.2
