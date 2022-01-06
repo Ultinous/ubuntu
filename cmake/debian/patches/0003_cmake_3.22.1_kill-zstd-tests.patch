@@ -1,0 +1,30 @@
+diff --git a/Tests/RunCMake/CommandLineTar/RunCMakeTest.cmake b/Tests/RunCMake/CommandLineTar/RunCMakeTest.cmake
+index a64af952..4d1b3966 100644
+--- a/Tests/RunCMake/CommandLineTar/RunCMakeTest.cmake
++++ b/Tests/RunCMake/CommandLineTar/RunCMakeTest.cmake
+@@ -27,7 +27,6 @@ run_cmake(gnutar)
+ run_cmake(gnutar-gz)
+ run_cmake(pax)
+ run_cmake(pax-xz)
+-run_cmake(pax-zstd)
+ run_cmake(paxr)
+ run_cmake(paxr-bz2)
+ run_cmake(zip)
+diff --git a/Tests/RunCMake/File_Archive/RunCMakeTest.cmake b/Tests/RunCMake/File_Archive/RunCMakeTest.cmake
+index 3908f424..89f50e69 100644
+--- a/Tests/RunCMake/File_Archive/RunCMakeTest.cmake
++++ b/Tests/RunCMake/File_Archive/RunCMakeTest.cmake
+@@ -5,7 +5,6 @@ run_cmake(gnutar)
+ run_cmake(gnutar-gz)
+ run_cmake(pax)
+ run_cmake(pax-xz)
+-run_cmake(pax-zstd)
+ run_cmake(paxr)
+ run_cmake(paxr-bz2)
+ run_cmake(zip)
+@@ -22,5 +21,4 @@ run_cmake(argument-validation-compression-level-1)
+ run_cmake(argument-validation-compression-level-2)
+ run_cmake(gnutar-gz-compression-level)
+ run_cmake(pax-xz-compression-level)
+-run_cmake(pax-zstd-compression-level)
+ run_cmake(paxr-bz2-compression-level)

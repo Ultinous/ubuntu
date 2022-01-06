@@ -1,40 +1,46 @@
 Source: cmake
 Section: devel
 Priority: optional
-Maintainer: Debian CMake Team <pkg-cmake-team@lists.alioth.debian.org>
-Uploaders: Lisandro Damián Nicanor Pérez Meyer <lisandro@debian.org>,
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian CMake Team <pkg-cmake-team@lists.alioth.debian.org>
+Uploaders: Kozák Miklós <garmine@ultinous.com>,
+           Lisandro Damián Nicanor Pérez Meyer <lisandro@debian.org>,
            Felix Geyer <fgeyer@debian.org>,
-	   Kozák Miklós <garmine@ultinous.com>
+           Timo Röhling <roehling@debian.org>
 Build-Depends: debhelper-compat (= 12),
+               cmake <cross>,
                freebsd-glue [kfreebsd-any],
-               libarchive-dev (>= 3.3.3),
-               libcurl4-openssl-dev | libcurl-ssl-dev,
-               libexpat1-dev,
-               libjsoncpp-dev,
-               libncurses5-dev,
-               librhash-dev,
-               libuv1-dev (>= 1.10),
+               libarchive-dev (>= 3.3.3) <!pkg.cmake.bootstrap>,
+               libcurl4-openssl-dev <!pkg.cmake.bootstrap> | libcurl-ssl-dev <!pkg.cmake.bootstrap>,
+               libexpat1-dev <!pkg.cmake.bootstrap>,
+               libjsoncpp-dev <!pkg.cmake.bootstrap>,
+               libncurses5-dev <!pkg.cmake.bootstrap !pkg.cmake.nogui>,
+               librhash-dev <!pkg.cmake.bootstrap>,
+               libssl-dev <pkg.cmake.bootstrap>,
+               libuv1-dev (>= 1.10) <!pkg.cmake.bootstrap>,
                procps [!hurd-any],
                python3-sphinx,
                python3-sphinxcontrib.qthelp | python3-sphinx (<< 2.0),
-               qtbase5-dev <!stage1>,
-               zlib1g-dev
+               qtbase5-dev <!pkg.cmake.bootstrap !pkg.cmake.nogui>,
+               zlib1g-dev <!pkg.cmake.bootstrap>
+Build-Depends-Indep:
+               dh-elpa,
 Rules-Requires-Root: no
-Standards-Version: 4.1.3
+Standards-Version: 4.6.0
 Vcs-Git: https://salsa.debian.org/cmake-team/cmake.git
 Vcs-Browser: https://salsa.debian.org/cmake-team/cmake
 Homepage: https://cmake.org/
-X-Ultinous-Upstream-Release: https://github.com/Kitware/CMake/releases/download/v3.20.3/cmake-3.20.3.tar.gz
+X-Ultinous-Debian-Origtars: http://de.archive.ubuntu.com/ubuntu/pool/main/c/cmake/cmake_3.22.1.orig.tar.gz 
 
 Package: cmake
 Architecture: any
 Multi-Arch: foreign
-Depends: cmake-data (= ${source:Version}),
-         procps [!hurd-any],
-         ${misc:Depends},
-         ${shlibs:Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         cmake-data (= ${source:Version}),
+         procps [!hurd-any]
 Recommends: gcc, make
-Suggests: cmake-doc, ninja-build
+Suggests: cmake-doc, ninja-build, cmake-format
 Description: cross-platform, open-source make system
  CMake is used to control the software compilation process using
  simple platform and compiler independent configuration files. CMake
@@ -53,7 +59,8 @@ Description: cross-platform, open-source make system
 Package: cmake-data
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}
+Depends: ${misc:Depends},
+         ${elpa:Depends}
 Description: CMake data files (modules, templates and documentation)
  This package provides CMake architecture independent data files (modules,
  templates, documentation etc.). Unless you have cmake installed, you probably
@@ -61,7 +68,10 @@ Description: CMake data files (modules, templates and documentation)
 
 Package: cmake-curses-gui
 Architecture: any
-Depends: cmake (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
+Build-Profiles: <!pkg.cmake.bootstrap !pkg.cmake.nogui>
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         cmake (= ${binary:Version})
 Description: curses based user interface for CMake (ccmake)
  CMake is used to control the software compilation process using simple
  platform and compiler independent configuration files. CMake generates native
@@ -75,8 +85,10 @@ Description: curses based user interface for CMake (ccmake)
 
 Package: cmake-qt-gui
 Architecture: any
-Build-Profiles: <!stage1>
-Depends: cmake (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
+Build-Profiles: <!pkg.cmake.bootstrap !pkg.cmake.nogui>
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         cmake (= ${binary:Version})
 Provides: cmake-gui
 Description: Qt based user interface for CMake (cmake-gui)
  CMake is used to control the software compilation process using simple
@@ -91,8 +103,12 @@ Description: Qt based user interface for CMake (cmake-gui)
 
 Package: cmake-doc
 Architecture: all
+Build-Profiles: <!pkg.cmake.bootstrap>
+Multi-Arch: foreign
 Section: doc
-Depends: ${misc:Depends}, ${sphinxdoc:Depends}, cmake-data (= ${source:Version})
+Depends: ${misc:Depends},
+         ${sphinxdoc:Depends},
+         cmake-data (= ${source:Version})
 Recommends: doc-base
 Suggests: cmake
 Description: extended documentation in various formats for CMake
