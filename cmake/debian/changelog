@@ -1,8 +1,173 @@
-cmake (3.20.3-1ultinous1) bionic; urgency=medium
+cmake (3.22.1-2ultinous1) bionic; urgency=medium
 
-  * New upstream release
+  * Backported to bionic.
 
- -- Kozák Miklós <garmine@ultinous.com>  Tue, 01 Jun 2021 10:27:34 +0000
+ -- Kozák Miklós <garmine@ultinous.com>  Wed, 05 Jan 2022 13:45:23 +0000
+
+cmake (3.22.1-1ubuntu1) jammy; urgency=low
+
+  * Merge from Debian unstable. Remaining changes:
+    - Append -latomic on RISCV, as some atomics need libatomic support.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 28 Dec 2021 19:55:36 -0800
+
+cmake (3.22.1-1) unstable; urgency=medium
+
+  [ Mathieu Malaterre ]
+  * d/control: Add cmake-format to Suggests: line
+
+  [ Timo Röhling ]
+  * New upstream version 3.22.1
+
+ -- Timo Röhling <roehling@debian.org>  Wed, 08 Dec 2021 00:19:44 +0100
+
+cmake (3.22.0-1) unstable; urgency=medium
+
+  * Add lintian overrides for various false positives
+  * New upstream version 3.22.0
+  * Refresh patches
+    - Drop Fix-cross-compilation-with-MPI.patch (applied upstream)
+    - Drop Fix-RunCMake.CPack_DEB.EXTRA-on-Debian-non-Linux-OSe.patch
+      (applied upstream)
+    - Drop Make-FindFLTK-safe-to-include-multiple-times.patch
+      (applied upstream)
+    - Keep Prefer-Debian-default-version-of-Python.patch
+      (Debian-specific)
+    - Keep Fix-check_symbol_exists-with-pedantic-errors.patch
+      (accepted by upstream, targeted for 3.23 release)
+
+ -- Timo Röhling <roehling@debian.org>  Sat, 20 Nov 2021 13:55:40 +0100
+
+cmake (3.21.4-1ubuntu2) jammy; urgency=medium
+
+  * No-change rebuild against libjsoncpp25
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 14 Dec 2021 18:19:15 +0000
+
+cmake (3.21.4-1ubuntu1) jammy; urgency=medium
+
+  * Merge from Debian Sid. Remaining changes:
+    - Append -latomic on RISCV, as some atomics need libatomic support
+      (LP: #1876814).
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Thu, 11 Nov 2021 07:55:02 -0600
+
+cmake (3.21.4-1) unstable; urgency=medium
+
+  * Also unset _proxy variables for ninja autopkgtest (Fixup for #960179)
+  * New upstream version 3.21.4
+  * Refresh patches
+    - Keep Prefer-Debian-default-version-of-Python.patch
+      (Debian-specific)
+    - Update Fix-cross-compilation-with-MPI.patch
+      (modified by upstream, targeted for 3.22 release)
+    - Keep Fix-RunCMake.CPack_DEB.EXTRA-on-Debian-non-Linux-OSe.patch
+      (accepted by upstream, targeted for 3.22 release)
+    - Drop Fix-misinterpretation-of-Debian-Policy-on-LIBEXECDIR.patch
+      (applied by upstream)
+    - Keep Make-FindFLTK-safe-to-include-multiple-times.patch
+      (accepted by upstream, targeted for 3.22 release)
+    - Keep Fix-check_symbol_exists-with-pedantic-errors.patch
+      (accepted by upstream, targeted for 3.23 release)
+
+ -- Timo Röhling <roehling@debian.org>  Tue, 02 Nov 2021 14:18:06 +0100
+
+cmake (3.21.3-5ubuntu1) jammy; urgency=medium
+
+  * Merge from Debian Sid. Remaining changes:
+    - Unset proxy settings during autopkgtest. Tests try to resolve
+      no-site and match stderr, with bad network on armhf autopkgtest
+      runners instead the stderr is failing to resolve squid.internal.
+    - Append -latomic on RISCV, as some atomics need libatomic support
+      (LP: #1876814).
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Wed, 27 Oct 2021 02:14:06 -0500
+
+cmake (3.21.3-5) unstable; urgency=medium
+
+  * Package can be cross-compiled now
+  * Make FindFLTK safe to include multiple times (Closes: #671746)
+  * Fix check_symbols_exists() with -pedantic-errors (Closes: #777542)
+
+ -- Timo Röhling <roehling@debian.org>  Fri, 22 Oct 2021 14:24:08 +0200
+
+cmake (3.21.3-4) unstable; urgency=medium
+
+  * Fix misinterpretation of Debian Policy on LIBEXECDIR
+  * New build profile: cmake.pkg.nogui
+
+ -- Timo Röhling <roehling@debian.org>  Thu, 07 Oct 2021 21:03:50 +0200
+
+cmake (3.21.3-3) unstable; urgency=medium
+
+  * Fix FTBFS on non-Linux systems (Closes: #995288)
+
+ -- Timo Röhling <roehling@debian.org>  Wed, 29 Sep 2021 10:25:25 +0200
+
+cmake (3.21.3-2) unstable; urgency=medium
+
+  * Prevent dh_elpha from disabling the test suite
+  * Make dh_elpa B-D-Indep
+  * Skip spuriously failing tests on kfreebsd-*
+  * New build profile: pkg.cmake.bootstrap
+
+ -- Timo Röhling <roehling@debian.org>  Sat, 25 Sep 2021 14:34:09 +0200
+
+cmake (3.21.3-1) unstable; urgency=medium
+
+  * New upstream version 3.21.3
+  * Migrate emacsen helpers to dh_elpa (Closes: #802915)
+    - M-x cmake-mode autoload is interactive now (Closes: #729598)
+  * Update d/watch to version 4
+
+ -- Timo Röhling <roehling@debian.org>  Tue, 21 Sep 2021 00:36:54 +0200
+
+cmake (3.21.2-1) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Trim trailing whitespace.
+  * Fix day-of-week for changelog entries 1.2-1, 1.0-1, 1.2-1, 1.0-1.
+  * Drop transition for old debug package migration.
+
+  [ Timo Röhling ]
+  * New upstream version 3.21.2
+    - Map LANGUAGE source file property to compiler language flag
+      (Closes: #728108)
+    - Rewrite documentation for UseJava.cmake (Closes: #986327)
+    - Add PostgreSQL 13 to list of known versions (Closes: #990623)
+  * Update patches
+    - Drop Compile_with_FILE_OFFSET_BITS_64_on_32-bit_Linux.patch
+      (accepted by upstream)
+    - Drop disable_fileapi_json_extra_test.patch
+      (no longer needed)
+    - New patch Fix-cross-compilation-with-MPI.patch (Closes: #943312)
+    - New patch Prefer-Debian-default-version-of-Python.patch (Closes: #945825)
+  * Bump Standards-Version to 4.6.0
+  * Switch to debhelper version 13
+  * Unset *_proxy variables in autopkgtest (Closes: #960179)
+  * Add myself to uploaders
+  * Mark cmake-doc as Multi-Arch: foreign
+
+ -- Timo Röhling <roehling@debian.org>  Tue, 14 Sep 2021 18:05:46 +0200
+
+cmake (3.18.4-2ubuntu2) impish; urgency=medium
+
+  * Backport d/patches/KWSys-2021-06-28-0648cb1a.patch from upstream to
+    fix build with glibc 2.34.
+
+ -- Michael Hudson-Doyle <michael.hudson@ubuntu.com>  Tue, 10 Aug 2021 13:51:21 +1200
+
+cmake (3.18.4-2ubuntu1) hirsute; urgency=low
+
+  * Merge from Debian unstable. Remaining changes:
+    - add support for PostgreSQL 13 (LP: #1907680)
+    - Unset proxy settings during autopkgtest. Tests try to resolve
+      no-site and match stderr, with bad network on armhf autopkgtest
+      runners instead the stderr is failing to resolve squid.internal.
+    - Append -latomic on RISCV, as some atomics need libatomic support. LP:
+      #1876814
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Sun, 07 Feb 2021 19:07:02 +0100
 
 cmake (3.18.4-2) unstable; urgency=medium
 
@@ -14,6 +179,30 @@ cmake (3.18.4-2) unstable; urgency=medium
   * Mark cmake-data as Multi-Arch: foreign. (Closes: #973392)
 
  -- Felix Geyer <fgeyer@debian.org>  Sun, 07 Feb 2021 10:23:34 +0100
+
+cmake (3.18.4-1ubuntu3) hirsute; urgency=medium
+
+  * debian/patches/f3f09f1c96e8cbd614a7f22da4055f2f8b5aa55a.patch:
+    - add support for PostgreSQL 13 (LP: #1907680)
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Sat, 12 Dec 2020 19:10:12 +0100
+
+cmake (3.18.4-1ubuntu2) hirsute; urgency=medium
+
+  * Rebuild against new libjsoncpp24.
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Mon, 07 Dec 2020 15:21:15 +0100
+
+cmake (3.18.4-1ubuntu1) hirsute; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - Unset proxy settings during autopkgtest. Tests try to resolve
+      no-site and match stderr, with bad network on armhf autopkgtest
+      runners instead the stderr is failing to resolve squid.internal.
+    - Append -latomic on RISCV, as some atomics need libatomic support. LP:
+      #1876814
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 13 Nov 2020 10:52:33 +0100
 
 cmake (3.18.4-1) unstable; urgency=medium
 
@@ -38,12 +227,45 @@ cmake (3.18.2-1) unstable; urgency=medium
 
  -- Felix Geyer <fgeyer@debian.org>  Sun, 30 Aug 2020 14:41:24 +0200
 
+cmake (3.16.3-3ubuntu2) groovy; urgency=medium
+
+  * Append -latomic on RISCV, as some atomics need libatomic support. LP:
+    #1876814
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 01 Jul 2020 13:29:05 +0100
+
+cmake (3.16.3-3ubuntu1) groovy; urgency=medium
+
+  * Merge from Debian unstable.  Remaining changes:
+    - Unset proxy settings during autopkgtest. Tests try to resolve
+      no-site and match stderr, with bad network on armhf autopkgtest
+      runners instead the stderr is failing to resolve squid.internal.
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Sun, 10 May 2020 12:31:01 +0200
+
 cmake (3.16.3-3) unstable; urgency=medium
 
   * Handle -isystem from pkg-config correctly. (Closes: #959064)
     - Cherry-pick upstream patch in FindPkgConfig_also_handle_isystem.patch
 
  -- Felix Geyer <fgeyer@debian.org>  Sat, 09 May 2020 15:40:54 +0200
+
+cmake (3.16.3-2ubuntu2) groovy; urgency=medium
+ 
+  * debian/patches/4693.patch:
+    - cherry-pick upstream merged pull request to fix change in latest
+      pkg-config behaviour (Closes: #959064, #959960, #960081)
+ 
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 08 May 2020 09:03:34 +0200
+
+cmake (3.16.3-2ubuntu1) groovy; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - Unset proxy settings during autopkgtest. Tests try to resolve
+      no-site and match stderr, with bad network on armhf autopkgtest
+      runners instead the stderr is failing to resolve squid.internal.
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Thu, 07 May 2020 15:34:17 +0200
 
 cmake (3.16.3-2) unstable; urgency=medium
 
@@ -52,11 +274,36 @@ cmake (3.16.3-2) unstable; urgency=medium
 
  -- Felix Geyer <fgeyer@debian.org>  Sun, 19 Apr 2020 18:07:42 +0200
 
+cmake (3.16.3-1ubuntu1) focal; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - Unset proxy settings during autopkgtest. Tests try to resolve
+    no-site and match stderr, with bad network on armhf autopkgtest
+    runners instead the stderr is failing to resolve squid.internal.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Thu, 06 Feb 2020 12:53:45 +0000
+
 cmake (3.16.3-1) unstable; urgency=medium
 
   * New upstream release. (Closes: #949964)
 
  -- Felix Geyer <fgeyer@debian.org>  Sun, 02 Feb 2020 14:59:35 +0100
+
+cmake (3.15.4-1ubuntu3) focal; urgency=medium
+
+  * Unset proxy settings during autopkgtest. Tests try to resolve no-site
+    and match stderr, with bad network on armhf autopkgtest runners
+    instead the stderr is failing to resolve squid.internal.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 15 Jan 2020 11:36:29 +0000
+
+cmake (3.15.4-1ubuntu2) focal; urgency=medium
+
+  * debian/patches/effafca77eacbb4988006b1f3f4d9154df6c33f8.patch:
+    - cherry-pick upstream fix for new pango related sadness
+      "fatal error: hb.h: No such file or directory"
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Sat, 21 Dec 2019 19:46:11 +0100
 
 cmake (3.15.4-1) unstable; urgency=medium
 
@@ -1725,7 +1972,7 @@ cmake (1.2-1) unstable; urgency=low
 
   * New upstream.
 
- -- A. Maitland Bottoms <bottoms@debian.org>  Thu,  9 Jan 2002 17:20:12 -0500
+ -- A. Maitland Bottoms <bottoms@debian.org>  Wed, 09 Jan 2002 17:20:12 -0500
 
 cmake (1.0-1) unstable; urgency=low
 
@@ -1734,7 +1981,7 @@ cmake (1.0-1) unstable; urgency=low
   * Patched option to disable use of -rpath using CMAKE_SKIP_RPATH
   * include cmake-mode.el
 
- -- A. Maitland Bottoms <bottoms@debian.org>  Thu,  9 Jan 2002 17:20:12 -0500
+ -- A. Maitland Bottoms <bottoms@debian.org>  Wed, 09 Jan 2002 17:20:12 -0500
 
 cmake (0.98-1) unstable; urgency=low
 
@@ -1749,7 +1996,6 @@ cmake (0.96-1) unstable; urgency=low
     (Closes: #121610)
 
  -- A. Maitland Bottoms <bottoms@debian.org>  Wed, 28 Nov 2001 08:45:22 -0500
-
 
 cmake (2.0.5-1) unstable; urgency=low
 
@@ -1870,7 +2116,7 @@ cmake (1.2-1) unstable; urgency=low
 
   * New upstream.
 
- -- A. Maitland Bottoms <bottoms@debian.org>  Thu,  9 Jan 2002 17:20:12 -0500
+ -- A. Maitland Bottoms <bottoms@debian.org>  Wed, 09 Jan 2002 17:20:12 -0500
 
 cmake (1.0-1) unstable; urgency=low
 
@@ -1879,7 +2125,7 @@ cmake (1.0-1) unstable; urgency=low
   * Patched option to disable use of -rpath using CMAKE_SKIP_RPATH
   * include cmake-mode.el
 
- -- A. Maitland Bottoms <bottoms@debian.org>  Thu,  9 Jan 2002 17:20:12 -0500
+ -- A. Maitland Bottoms <bottoms@debian.org>  Wed, 09 Jan 2002 17:20:12 -0500
 
 cmake (0.98-1) unstable; urgency=low
 
@@ -1894,5 +2140,4 @@ cmake (0.96-1) unstable; urgency=low
     (Closes: #121610)
 
  -- A. Maitland Bottoms <bottoms@debian.org>  Wed, 28 Nov 2001 08:45:22 -0500
-
 

@@ -1,2 +1,5 @@
-000_cmake_3.20.3_kill-zstd-tests.patch
-001_cmake_3.20.3_kill-fileapi-json-extra-test.patch
+0001-Prefer-Debian-default-version-of-Python.patch
+0002-Fix-check_symbol_exists-with-pedantic-errors.patch
+0003_cmake_3.22.1_kill-zstd-tests.patch
+0004_cmake_3.22.1_kill-fileapi-json-extra-test.patch
+riscv64-atomic.patch

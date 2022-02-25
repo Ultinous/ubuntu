@@ -6,10 +6,6 @@ export DEB_CXXFLAGS_MAINT_APPEND := $(shell dpkg-buildflags --get CPPFLAGS)
 export DEB_CFLAGS_MAINT_APPEND := $(shell dpkg-buildflags --get CPPFLAGS)
 export DEB_LDFLAGS_MAINT_APPEND := -Wl,--as-needed
 
-ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-    BOOTSTRAP_PARALLEL = --parallel=$(NUMJOBS)
-endif
 
 BUILD_DATE = $(shell LC_ALL=C date -u "+%B %d, %Y" -d "@$(SOURCE_DATE_EPOCH)")
 
@@ -29,8 +25,8 @@ $(BUILD_FLAGS_FILE) verify-build-flags:
 	$(call $(flag_action),CMAKE_C_FLAGS,"$(CFLAGS)","C flags")
 	$(call $(flag_action),CMAKE_CXX_FLAGS,"$(CXXFLAGS)","C++ flags")
 	$(call $(flag_action),CMAKE_SKIP_BOOTSTRAP_TEST,ON,"Skip BootstrapTest")
+ifeq (,$(filter pkg.cmake.bootstrap pkg.cmake.nogui,$(DEB_BUILD_PROFILES)))
 	$(call $(flag_action),BUILD_CursesDialog,ON,"Build curses GUI")
-ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
 	$(call $(flag_action),BUILD_QtDialog,ON,"Build Qt GUI")
 endif
 ifeq ($(DEB_HOST_ARCH_OS),hurd)
@@ -42,24 +38,50 @@ $(BUILD_FLAGS_FILE): flag_action := set_build_flag
 verify-build-flags: flag_action := verify_build_flag
 .PHONY: verify-build-flags
 
+BOOTSTRAP_FLAGS = --prefix=/usr --docdir=/share/doc/cmake-data --mandir=/share/man \
+                  --sphinx-man --sphinx-html --sphinx-flags="-D today=\"$(BUILD_DATE)\"" \
+                  --init=../$(BUILD_FLAGS_FILE) --verbose
+
+CROSS_CMAKE_FLAGS = -C../$(BUILD_FLAGS_FILE) \
+                    -DCMAKE_DOC_DIR=share/doc/cmake-data \
+                    -DCMAKE_MAN_DIR=share/man \
+                    -DSPHINX_HTML=ON -DSPHINX_MAN=ON \
+                    -DSPHINX_FLAGS="-D today=\"$(BUILD_DATE)\""
+
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    BOOTSTRAP_FLAGS += --parallel=$(NUMJOBS)
+else
+    NUMJOBS = 1
+endif
+ifeq (,$(filter pkg.cmake.bootstrap,$(DEB_BUILD_PROFILES)))
+    BOOTSTRAP_FLAGS += --system-libs
+    CROSS_CMAKE_FLAGS += -DCMAKE_USE_SYSTEM_LIBRARIES=ON
+endif
+
 override_dh_auto_configure: $(BUILD_FLAGS_FILE)
+ifeq (,$(filter cross,$(DEB_BUILD_PROFILES)))
 	rm -rf Build && mkdir -p Build
-	cd Build && ../bootstrap --prefix=/usr --docdir=/share/doc/cmake-data --mandir=/share/man \
-	                         --init=../$(BUILD_FLAGS_FILE) --system-libs \
-	                         --sphinx-man --sphinx-html --sphinx-flags="-D today=\"$(BUILD_DATE)\"" \
-	                         $(BOOTSTRAP_PARALLEL) --verbose
+	cd Build && ../bootstrap $(BOOTSTRAP_FLAGS)
+else
+	dh_auto_configure --buildsystem=cmake --builddirectory=Build -- \
+		$(CROSS_CMAKE_FLAGS)
+endif
+
+ifeq ($(DEB_HOST_ARCH_OS),kfreebsd)
+    # Workaround for Bug #815231: skip spuriously failing tests
+    EXCLUDED_TESTS = CTestTestUpload\|curl\|kwsys.testSystemTools\|BuildDepends\|RunCMake.Configure
+else
+    EXCLUDED_TESTS = CTestTestUpload\|curl
+endif
 
 override_dh_auto_test:
 	# Pass -j1 to "make test" as a workaround, see https://gitlab.kitware.com/cmake/cmake/issues/17165
-	# The tests are still run in parallel as debhelper pass -jX as ARGS to ctest.
-	dh_auto_test --buildsystem=cmake -- -j1 ARGS="-E CTestTestUpload --timeout 5000"
+	# The tests are still run in parallel as -jX is passed via ARGS to ctest.
+	dh_auto_test --buildsystem=cmake -- -j1 ARGS="-E $(EXCLUDED_TESTS) --timeout 5000 -j$(NUMJOBS)"
 
-override_dh_auto_clean:
-	dh_auto_clean
+execute_after_dh_auto_clean:
 	rm -f $(BUILD_FLAGS_FILE)
-
-override_dh_missing:
-	dh_missing --fail-missing
 
 override_dh_installdocs-arch:
 	# dh_installdocs --link-doc generates binNMU unsafe deps (Bug #747141)
@@ -74,10 +96,16 @@ override_dh_sphinxdoc:
 override_dh_dwz:
 	true
 
-override_dh_strip:
-	dh_strip --dbgsym-migration='cmake-dbg (<< 3.5.0-1~)'
+export ELPA_NAME = cmake-mode
+
+# Instead of dh --with=elpa, we manually add dh_elpa to the sequence.  This
+# way, we can restrict the dh-elpa dependency (which transitively depends on
+# emacs) to indep builds and avoid it for the more fragile port architectures
+execute_after_dh_install-indep: debian/cmake-mode-pkg.el
+	dh_elpa
+
+debian/cmake-mode-pkg.el: debian/cmake-mode-pkg.el.in
+	sed -e 's/@VERSION@/$(DEB_VERSION_UPSTREAM)/' $< > $@
 
 %:
-	dh $@ --with=sphinxdoc --builddirectory=Build
-
-.PHONY: override_dh_auto_configure override_dh_auto_clean
+	dh $@ --builddirectory=Build

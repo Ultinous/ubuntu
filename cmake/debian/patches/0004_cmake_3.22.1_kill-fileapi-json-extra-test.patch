@@ -1,0 +1,88 @@
+diff --git a/Tests/RunCMake/FileAPI/ClientStateful-check.cmake b/Tests/RunCMake/FileAPI/ClientStateful-check.cmake
+index 1e9aab6d..6080a626 100644
+--- a/Tests/RunCMake/FileAPI/ClientStateful-check.cmake
++++ b/Tests/RunCMake/FileAPI/ClientStateful-check.cmake
+@@ -4,16 +4,6 @@ set(expect
+   query/client-client-member/query.json
+   query/client-empty-array
+   query/client-empty-array/query.json
+-  query/client-empty-object
+-  query/client-empty-object/query.json
+-  query/client-json-bad-root
+-  query/client-json-bad-root/query.json
+-  query/client-json-empty
+-  query/client-json-empty/query.json
+-  query/client-json-extra
+-  query/client-json-extra/query.json
+-  query/client-not-file
+-  query/client-not-file/query.json
+   query/client-request-array-negative-major-version
+   query/client-request-array-negative-major-version/query.json
+   query/client-request-array-negative-minor-version
+diff --git a/Tests/RunCMake/FileAPI/ClientStateful-check.py b/Tests/RunCMake/FileAPI/ClientStateful-check.py
+index f3d20d13..80a5cfc8 100644
+--- a/Tests/RunCMake/FileAPI/ClientStateful-check.py
++++ b/Tests/RunCMake/FileAPI/ClientStateful-check.py
+@@ -5,11 +5,6 @@ def check_reply(q):
+     assert sorted(q.keys()) == [
+         "client-client-member",
+         "client-empty-array",
+-        "client-empty-object",
+-        "client-json-bad-root",
+-        "client-json-empty",
+-        "client-json-extra",
+-        "client-not-file",
+         "client-request-array-negative-major-version",
+         "client-request-array-negative-minor-version",
+         "client-request-array-negative-version",
+@@ -36,11 +31,6 @@ def check_reply(q):
+     expected = [
+         (check_query_client_member, "client-client-member"),
+         (check_query_empty_array, "client-empty-array"),
+-        (check_query_empty_object, "client-empty-object"),
+-        (check_query_json_bad_root, "client-json-bad-root"),
+-        (check_query_json_empty, "client-json-empty"),
+-        (check_query_json_extra, "client-json-extra"),
+-        (check_query_not_file, "client-not-file"),
+         (check_query_requests_bad, "client-requests-bad"),
+         (check_query_requests_empty, "client-requests-empty"),
+         (check_query_requests_not_kinded, "client-requests-not-kinded"),
+@@ -96,23 +86,6 @@ def check_query_client_member(q):
+ def check_query_empty_array(q):
+     check_error(q, "query root is not an object")
+ 
+-def check_query_empty_object(q):
+-    assert is_dict(q)
+-    assert sorted(q.keys()) == ["responses"]
+-    check_error(q["responses"], "'requests' member missing")
+-
+-def check_query_json_bad_root(q):
+-    check_error_re(q, "A valid JSON document must be either an array or an object value")
+-
+-def check_query_json_empty(q):
+-    check_error_re(q, "value, object or array expected")
+-
+-def check_query_json_extra(q):
+-    check_error_re(q, "Extra non-whitespace after JSON value")
+-
+-def check_query_not_file(q):
+-    check_error_re(q, "failed to read from file")
+-
+ def check_query_requests_bad(q):
+     assert is_dict(q)
+     assert sorted(q.keys()) == ["requests", "responses"]
+diff --git a/Tests/RunCMake/FileAPI/ClientStateful-prep.cmake b/Tests/RunCMake/FileAPI/ClientStateful-prep.cmake
+index 5b41d7af..9bd69e30 100644
+--- a/Tests/RunCMake/FileAPI/ClientStateful-prep.cmake
++++ b/Tests/RunCMake/FileAPI/ClientStateful-prep.cmake
+@@ -1,10 +1,5 @@
+ file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-client-member/query.json" [[{ "client": {} }]])
+ file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-empty-array/query.json" "[]")
+-file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-empty-object/query.json" "{}")
+-file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-json-bad-root/query.json" [["invalid root"]])
+-file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-json-empty/query.json" "")
+-file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-json-extra/query.json" "{}x")
+-file(MAKE_DIRECTORY "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-not-file/query.json")
+ 
+ file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-requests-bad/query.json" [[{ "requests": {} }]])
+ file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-requests-empty/query.json" [[{ "requests": [] }]])
