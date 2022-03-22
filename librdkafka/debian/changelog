@@ -1,3 +1,9 @@
+librdkafka (1.8.2-1ultinous1) bionic; urgency=medium
+
+  * New upstream release
+
+ -- Szabó Attila <attila@ultinous.com>  Tue, 22 Mar 2022 08:49:38 +0000
+
 librdkafka (1.5.2-1ultinous1) bionic; urgency=medium
 
   * New upstream release

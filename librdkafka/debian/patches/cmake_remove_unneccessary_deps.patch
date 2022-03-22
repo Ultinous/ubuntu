@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9da44be9..18ba974e 100644
+index d1129bce..2b086267 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -241,7 +241,7 @@ write_basic_package_version_file(
+@@ -246,7 +246,7 @@ write_basic_package_version_file(
  )
  
  install(
@@ -27,24 +27,24 @@ index 5cf01706..c2a25451 100644
  
  include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 3c49a902..ff140a5b 100644
+index 49f818e1..fb5aafcf 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -238,7 +238,7 @@ target_link_libraries(rdkafka PUBLIC Threads::Threads)
+@@ -240,7 +240,7 @@ target_link_libraries(rdkafka PUBLIC Threads::Threads)
  
  if(WITH_SASL_CYRUS)
-   target_include_directories(rdkafka PUBLIC ${SASL_INCLUDE_DIRS})
+   target_include_directories(rdkafka PRIVATE ${SASL_INCLUDE_DIRS})
 -  target_link_libraries(rdkafka PUBLIC ${SASL_LIBRARIES})
 +  target_link_libraries(rdkafka PRIVATE ${SASL_LIBRARIES})
  endif()
  
  if(WITH_LIBDL)
-@@ -247,7 +247,7 @@ endif()
+@@ -249,7 +249,7 @@ endif()
  
  if(WITH_LZ4_EXT)
-   target_include_directories(rdkafka PUBLIC ${LZ4_INCLUDE_DIRS})
+   target_include_directories(rdkafka PRIVATE ${LZ4_INCLUDE_DIRS})
 -  target_link_libraries(rdkafka PUBLIC LZ4::LZ4)
 +  target_link_libraries(rdkafka PRIVATE LZ4::LZ4)
  endif()
  
- # Set up path to these sources for other sub-projects (tests, examples)
+ if(WIN32)
