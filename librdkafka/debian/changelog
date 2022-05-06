@@ -1,3 +1,10 @@
+librdkafka (1.8.2-1ultinous2) bionic; urgency=medium
+
+  * patch for admin request memleaks
+    https://github.com/edenhill/librdkafka/commit/69901a44776b3215d71af5bf7b4dee8d23c275cf
+
+ -- Zsolt Santa <zssanta@ultinous.com>  Fri, 06 May 2022 08:20:12 +0200
+
 librdkafka (1.8.2-1ultinous1) bionic; urgency=medium
 
   * New upstream release

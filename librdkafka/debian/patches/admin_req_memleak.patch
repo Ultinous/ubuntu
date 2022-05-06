@@ -1,0 +1,24 @@
+commit 5f6ce2ad24e3a8198c7b7cfd894e9a19e6c4a3a6
+Author: Nikhil Benesch <nikhil.benesch@gmail.com>
+Date:   Sat Oct 16 13:38:07 2021 -0400
+
+    Fix memory leak in admin requests
+    
+    Fix a memory leak introduces in ca1b30e0 in which the arguments to an
+    admin request were not being freed. Discovered by the test suite for
+    rust-rdkafka [0].
+    
+    [0]: https://github.com/fede1024/rust-rdkafka/pull/397/checks?check_run_id=3914902373
+
+diff --git a/src/rdkafka_op.c b/src/rdkafka_op.c
+index 86d5f7e8..a3c6d526 100644
+--- a/src/rdkafka_op.c
++++ b/src/rdkafka_op.c
+@@ -383,6 +383,7 @@ void rd_kafka_op_destroy (rd_kafka_op_t *rko) {
+                 break;
+ 
+         case RD_KAFKA_OP_ADMIN_RESULT:
++                rd_list_destroy(&rko->rko_u.admin_result.args);
+                 rd_list_destroy(&rko->rko_u.admin_result.results);
+                 RD_IF_FREE(rko->rko_u.admin_result.errstr, rd_free);
+                 rd_assert(!rko->rko_u.admin_result.fanout_parent);;
