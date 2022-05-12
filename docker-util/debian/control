@@ -9,7 +9,7 @@ Build-Depends: debhelper (>= 10), dh-cargo, libssl-dev
 Standards-Version: 4.1.2
 Vcs-Git: git@github.com:Ultinous/docker-util.git
 Vcs-Browser: https://github.com:Ultinous/docker-util.git
-X-Ultinous-Upstream-Release: http://can-i-haz-files/gentoo/docker-util-release-1.20.0.tar.gz
+X-Ultinous-Upstream-Release: http://can-i-haz-files/gentoo/docker-util-release-1.20.1.tar.gz
 
 Package: docker-util
 Architecture: any
