@@ -1,3 +1,9 @@
+jetson-ffmpeg (2-2) bionic; urgency=medium
+
+  * jetpack 4.6.2 rebuild
+
+ -- Szabó Attila <attila@ultinous.com>  Thu, 07 Jul 2022 07:49:39 +0000
+
 jetson-ffmpeg (2-1) bionic; urgency=medium
 
   * Encoder

@@ -6,7 +6,7 @@ Uploaders: Kozák Miklós <garmine@ultinous.com>
 Build-Depends:
   cmake,
   debhelper (>=9),
-  nvidia-l4t-jetson-multimedia-api-dev
+  nvidia-l4t-jetson-multimedia-api
 Standards-Version: 3.9.8
 Homepage: https://github.com/jocover/jetson-ffmpeg
 X-Ultinous-Upstream-Release: http://can-i-haz-files/ubuntu/pool/src/jetson-ffmpeg-20067187641389ba309bd3ca51933718b6b475ef.tar.gz
